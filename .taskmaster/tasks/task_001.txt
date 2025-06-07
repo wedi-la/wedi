@@ -1,0 +1,11 @@
+# Task ID: 1
+# Title: Setup Project Repository
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Initialize the monorepo structure using Turborepo for the Wedi Pay project.
+# Details:
+Create a new repository and set up Turborepo to manage both frontend and backend projects. Ensure proper directory structure and version control setup. The backend will be built using FastAPI with Python, and the frontend will use Next.js. Ensure the monorepo structure accommodates both a Python-based API and a Next.js frontend.
+
+# Test Strategy:
+Verify the repository structure and ensure that both the Next.js frontend and FastAPI backend can be built and run independently. Test the integration between the frontend and backend to ensure they communicate correctly.

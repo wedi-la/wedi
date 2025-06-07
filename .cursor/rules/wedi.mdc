@@ -1,0 +1,122 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# --- Wedi Platform: Technical Blueprint & Rules ---
+# This document codifies the architectural principles, technology stack, and development
+# standards for the Wedi platform. It serves as the single source of truth for all
+# technical decisions, ensuring the team remains aligned with our core vision:
+# "To rethink payment processing using agentic computing."
+
+[project]
+name = "wedi"
+version = "0.1.0"
+description = "An AI-native, multi-tenant payment orchestration platform for B2B international payments."
+# The core philosophy guiding all technical decisions.
+philosophy = "Build an intelligent, self-orchestrating payment system by leveraging agentic computing. Abstract complexity not with layers of code, but with autonomous agents that reason and act. Start with a focused, modular monolith and evolve based on real-world constraints."
+
+[tech_stack]
+# The approved technologies for the platform.
+
+# --> Core Frameworks & Languages
+language = "TypeScript, Python"
+backend_api = "FastAPI (Python)"
+frontend = "Next.js (App Router)"
+package_manager = "Bun"
+database_orm = "Prisma"
+
+# --> UI & Styling
+ui_library = "Shadcn UI"
+styling = "Tailwind CSS"
+animation_ui = "Magic UI"
+forms = "React Hook Form"
+validation = "Zod"
+
+# --> Data & State
+database = "Neon DB (Serverless PostgreSQL)"
+authentication = "Clerk" # Integrated with Neon DB via webhooks/triggers
+frontend_data_fetching = "TanStack Query (React Query)"
+frontend_state_management = "React Context, Zustand (for complex state)"
+
+# --> Asynchronous Core & Agents
+event_streaming_bus = "Redpanda (Managed Cloud Service)"
+agent_framework = "LangGraph (Python)"
+
+# --> Infrastructure & Deployment
+monorepo_tool = "Turborepo"
+hosting_frontend = "Vercel"
+hosting_backend = "Railway (for FastAPI, Agents, Redpanda)"
+containerization = "Docker"
+documentation = "Scalar (for API docs)"
+
+[architecture]
+# The high-level architectural design of the platform.
+
+# --> Monorepo Structure (/
+#   - apps/
+#     - api-fastapi: The core Python backend. Handles DB writes, auth, and emits initial events.
+#     - web-nextjs: The primary merchant-facing Next.js application.
+#     - agent-service: The LangGraph service hosting the payment agent(s).
+#     - agent-gateway: A simple service that subscribes to Redpanda topics and triggers the correct agent via HTTP call.
+#   - packages/
+#     - db: Prisma schema, client, and generated types. The single source of truth for data models.
+#     - ui: Shared React components (built with Shadcn) used by the web app.
+#     - config-typescript: Shared TypeScript configs (tsconfig.json).
+#     - eslint-config-custom: Shared ESLint configuration.
+pattern = "Modular Monolith in a Turborepo"
+description = "Services are logically separated into `apps` but may be deployed together initially to simplify MVP operations. Communication between services is primarily asynchronous via the event bus, not direct API calls."
+
+# --> Event-Driven Core
+event_bus = "Redpanda"
+principle = "The system's backbone. The FastAPI backend is the primary event producer for new entities (e.g., `PaymentLink.Created`). Agents are the primary consumers, reacting to events to perform work. This creates a decoupled, auditable, and scalable system from day one."
+
+# --> Agent-First Logic
+primary_agent = "PaymentOrchestrationAgent"
+agent_responsibility = "To encapsulate all logic for executing a payment. It listens for `Payment.Initiated` events and orchestrates the entire flow: selecting a provider (Yoint/Trubit for MVP), calling their APIs, handling callbacks/webhooks, and emitting terminal events (`Payment.Succeeded`, `Payment.Failed`). The agent's reasoning process must be logged for auditability."
+
+# --> B2B Multitenancy Model
+tenancy_unit = "Organization"
+data_segregation_strategy = "Row-Level Security (RLS) in PostgreSQL"
+rls_policy = "All tables containing organization-specific data MUST have an `organizationId` column. RLS policies will be enforced to ensure a user's queries can only access rows matching their authenticated `organizationId`."
+user_management = "Users are invited to Organizations via a `Membership` table, which assigns them a `Role` (e.g., 'owner', 'admin', 'viewer')."
+
+# --> Frontend & AI Integration
+frontend_ai_integration = "CopilotKit"
+integration_pattern = "Use CopilotKit's `useCopilotAction` and UI components within the `web-nextjs` app. This creates a 'co-agent' system. The merchant interacts with a UI co-pilot to create payment links (e.g., 'Charge my client in Mexico $100'). The CopilotKit action translates this into a structured API call to the `api-fastapi` backend. The backend then creates the database record and emits the event that triggers the main LangGraph agent."
+
+[development_standards]
+# Specific rules and best practices for writing code.
+
+# --> General
+code_style = "Airbnb Style Guide (for TypeScript/React), Black (for Python)"
+language = "English for all code, comments, and documentation."
+naming_convention_files = "kebab-case"
+naming_convention_vars = "camelCase (TS), snake_case (Python)"
+constants = "UPPERCASE_SNAKE_CASE"
+documentation_style = "JSDoc for all public functions/classes."
+
+# --> TypeScript & React
+component_distinction = "Strict separation between Server and Client components in Next.js. Default to Server Components."
+exports = "Prefer named exports (one component per file)."
+typing = "Comprehensive TypeScript typing. Avoid `any` at all costs. Leverage Prisma-generated types."
+function_design = "Keep functions short (<20 lines) and single-purpose. Use early returns to avoid deep nesting."
+immutability = "Favor immutable patterns. Use `readonly` and `const` assertions where appropriate."
+data_access_frontend = "All data fetching from the frontend must go through TanStack Query hooks for caching, refetching, and state management."
+
+# --> Python & FastAPI
+dependencies = "Use Poetry for dependency management."
+typing_python = "Use Python's standard type hints for all functions."
+api_design = "Follow RESTful principles. Use Pydantic models for request/response validation."
+
+# --> Database & Prisma
+schema_source_of_truth = "The `packages/db/schema.prisma` file is the absolute source of truth for all data models. All changes must be made here and propagated via migrations."
+data_access_backend = "All database interactions from the `api-fastapi` service must use the Prisma Client."
+data_integrity = "Use database-level constraints (foreign keys, unique constraints) to ensure data integrity."
+
+[mvp_focus_colombia_mexico]
+# Specific constraints for the initial MVP.
+description = "The first experiment focuses exclusively on the Colombia-to-Mexico payment corridor."
+payment_providers = "Yoint (for collection in Colombia), Trubit (for payout in Mexico)."
+use_case = "B2B one-to-one payment links. A business in Colombia generates a link to charge a client in Mexico."
+scope_limitation = "Marketplace and e-commerce checkout use cases are explicitly out of scope for the MVP. Focus is on perfecting the payment link flow."

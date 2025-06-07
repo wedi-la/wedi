@@ -1,0 +1,37 @@
+# Task ID: 8
+# Title: Develop Real-Time Transaction Tracking
+# Status: pending
+# Dependencies: 7
+# Priority: medium
+# Description: Implement real-time transaction tracking using Kafka for event-driven updates.
+# Details:
+Set up Kafka for event streaming and implement event handlers for transaction status updates. Develop a dashboard for live transaction monitoring.
+
+# Test Strategy:
+Test real-time updates by simulating transaction events and verifying dashboard updates and notifications.
+
+# Subtasks:
+## 1. Set up Kafka with Redpanda Cloud [pending]
+### Dependencies: None
+### Description: Configure and deploy Kafka using Redpanda Cloud for handling event streaming.
+### Details:
+This involves creating a Redpanda Cloud account, setting up a Kafka cluster, and configuring necessary security and network settings.
+
+## 2. Design Event Schema [pending]
+### Dependencies: 8.1
+### Description: Create schemas for events such as PaymentOrderInitiated, PaymentOrderProcessing, and PaymentOrderSucceeded/Failed.
+### Details:
+Define the structure and data types for each event to ensure consistency and reliability in event processing.
+
+## 3. Implement Producer and Consumer [pending]
+### Dependencies: 8.2
+### Description: Develop the producer and consumer components to handle event publishing and processing.
+### Details:
+Write code for the producer to publish events to Kafka and for the consumer to process these events, ensuring they adhere to the designed schemas.
+
+## 4. Develop Real-time Dashboard Updates [pending]
+### Dependencies: 8.3
+### Description: Create a dashboard to display real-time updates based on the events processed.
+### Details:
+Implement a user interface that reflects the current state of payment orders, updating in real-time as events are processed.
+

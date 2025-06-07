@@ -1,0 +1,11 @@
+# Task ID: 20
+# Title: Expand Platform to New Corridors
+# Status: pending
+# Dependencies: 19
+# Priority: low
+# Description: Extend the platform to support additional payment corridors.
+# Details:
+Integrate new payment service providers and adapt the system to handle additional currencies and regions. Ensure compliance with local regulations.
+
+# Test Strategy:
+Test transactions in new corridors and verify correct processing and compliance with regional requirements.

@@ -1,0 +1,55 @@
+# Task ID: 5
+# Title: Create Payment Link Model and API
+# Status: pending
+# Dependencies: 2, 4
+# Priority: high
+# Description: Develop the model and API for creating and managing payment links with blockchain integration.
+# Details:
+Define the PaymentLink model and implement the POST /payment-links API endpoint. Integrate blockchain features such as smart contract addresses, on-chain payment metadata, and NFT-based payment receipts. Support link customization options including amount, currency, metadata, and time-locked expiration. Enable QR codes with wallet connection deep links and support gasless transactions through sponsored payments. Ensure multi-currency support with on-chain conversion rates.
+
+# Test Strategy:
+Test payment link creation with various parameters, including blockchain-specific features. Verify correct data storage, retrieval, and blockchain interactions. Ensure QR codes function correctly and test gasless transaction capabilities.
+
+# Subtasks:
+## 6. Integrate Smart Contract Address [pending]
+### Dependencies: None
+### Description: Update the PaymentLink model to include a field for smart contract addresses.
+### Details:
+
+
+## 7. Implement On-Chain Payment Metadata [pending]
+### Dependencies: None
+### Description: Support on-chain storage of payment metadata such as amount, currency, and description.
+### Details:
+
+
+## 8. Integrate NFT-based Payment Receipts [pending]
+### Dependencies: None
+### Description: Integrate with Thirdweb to support NFT-based payment receipts for each transaction.
+### Details:
+
+
+## 9. Generate QR Codes with Wallet Connection [pending]
+### Dependencies: None
+### Description: Ensure QR codes generated contain deep links for wallet connections.
+### Details:
+
+
+## 10. Support Gasless Transactions [pending]
+### Dependencies: None
+### Description: Implement sponsored payments to enable gasless transactions.
+### Details:
+
+
+## 11. Enable Multi-Currency Support [pending]
+### Dependencies: None
+### Description: Add support for multi-currency transactions with on-chain conversion rates.
+### Details:
+
+
+## 12. Implement Time-Locked Payment Links [pending]
+### Dependencies: None
+### Description: Add functionality for time-locked payment links with expiration managed on the blockchain.
+### Details:
+
+

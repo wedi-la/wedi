@@ -1,0 +1,37 @@
+# Task ID: 13
+# Title: Implement Multi-Currency Support
+# Status: pending
+# Dependencies: 7
+# Priority: medium
+# Description: Develop multi-currency handling for payments between COP and MXN.
+# Details:
+Integrate real-time exchange rate fetching and implement currency conversion logic. Ensure transparent fee calculation and rate locking at payment initiation.
+
+# Test Strategy:
+Test multi-currency transactions with various exchange rates and verify correct conversion and fee calculations.
+
+# Subtasks:
+## 1. Integrate Real-Time Exchange Rate Fetching for COP-MXN [pending]
+### Dependencies: None
+### Description: Set up a system to fetch real-time exchange rates for COP-MXN currency pair.
+### Details:
+Use a reliable API to fetch the current exchange rates for Colombian Peso (COP) to Mexican Peso (MXN) and ensure the data is updated at regular intervals.
+
+## 2. Implement Conversion Logic for COP-MXN [pending]
+### Dependencies: 13.1
+### Description: Develop the logic to convert amounts between COP and MXN using the fetched exchange rates.
+### Details:
+Create a function or module that takes an amount in COP or MXN and converts it to the other currency using the latest exchange rate data.
+
+## 3. Implement Transparent Fee Calculation [pending]
+### Dependencies: 13.2
+### Description: Calculate and apply transaction fees transparently during currency conversion.
+### Details:
+Define a fee structure for conversions and ensure that the fees are clearly displayed to the user during the conversion process.
+
+## 4. Test Rate Locking and Display Formatting [pending]
+### Dependencies: 13.3
+### Description: Ensure that the exchange rate is locked at payment initiation and that currency amounts are displayed correctly.
+### Details:
+Test the system to confirm that the exchange rate remains constant once a payment is initiated and verify that currency amounts are formatted correctly for both COP and MXN.
+

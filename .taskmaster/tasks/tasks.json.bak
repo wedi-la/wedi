@@ -1,0 +1,688 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Setup Project Repository",
+      "description": "Initialize the monorepo structure using Turborepo for the Wedi Pay project.",
+      "status": "done",
+      "dependencies": [],
+      "priority": "high",
+      "details": "Create a new repository and set up Turborepo to manage both frontend and backend projects. Ensure proper directory structure and version control setup. The backend will be built using FastAPI with Python, and the frontend will use Next.js. Ensure the monorepo structure accommodates both a Python-based API and a Next.js frontend.",
+      "testStrategy": "Verify the repository structure and ensure that both the Next.js frontend and FastAPI backend can be built and run independently. Test the integration between the frontend and backend to ensure they communicate correctly.",
+      "subtasks": []
+    },
+    {
+      "id": 2,
+      "title": "Design Core Database Schema",
+      "description": "Define the core database schema for multi-tenancy, payment processing, and Thirdweb authentication using SQLAlchemy.",
+      "status": "pending",
+      "dependencies": [
+        1
+      ],
+      "priority": "high",
+      "details": "Use SQLAlchemy ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, and Wallet. Implement multi-tenant data model with Row-Level Security (RLS). Use Alembic for database migrations. Support Thirdweb authentication by storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types.",
+      "testStrategy": "Run Alembic migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Thirdweb authentication support by testing wallet address storage and linkage with web2 identities.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Define Entities and Relationships",
+          "description": "Create a detailed design of the SQLAlchemy models including all necessary entities and their relationships.",
+          "dependencies": [],
+          "details": "Design the SQLAlchemy models to include Organization (tenant), User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLogEntry, and Wallet models. Ensure that relationships between these entities are clearly defined, considering the multi-tenancy requirements and Thirdweb authentication support. Update User to include wallet_address, wallet_type, is_smart_wallet fields. Add a new Wallet table for multiple wallets per user. Update Organization to include treasury_wallet and gas_sponsor_wallet fields.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement Multi-Tenancy",
+          "description": "Implement multi-tenancy in the SQLAlchemy models to ensure data isolation between different tenants.",
+          "dependencies": [
+            1
+          ],
+          "details": "Focus on designing the models to support multi-tenancy by ensuring that each entity is associated with an Organization (tenant). Implement Row-Level Security (RLS) for enhanced data isolation. Ensure necessary constraints and indexes are in place to maintain data integrity.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Run Alembic Migrations",
+          "description": "Execute Alembic migrations to apply the SQLAlchemy model changes.",
+          "dependencies": [
+            2
+          ],
+          "details": "Use Alembic to apply the model changes to the database. Ensure that the migrations are executed successfully and that the database reflects the new model design, including support for Thirdweb authentication and wallet management.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Test Data Isolation with SQLAlchemy",
+          "description": "Conduct tests to verify data isolation between tenants in the database using SQLAlchemy.",
+          "dependencies": [
+            5
+          ],
+          "details": "Create test cases to ensure that data for each tenant is isolated and cannot be accessed by other tenants. Verify that the multi-tenancy implementation, including Row-Level Security (RLS), is functioning as expected.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Implement Thirdweb Authentication Support",
+          "description": "Update the database schema to support Thirdweb authentication and blockchain wallets.",
+          "dependencies": [
+            1
+          ],
+          "details": "Ensure the schema supports storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types. Implement the Wallet table and update User and Organization models as specified.",
+          "status": "pending"
+        },
+        {
+          "id": 8,
+          "title": "Test Thirdweb Authentication Integration",
+          "description": "Verify the integration of Thirdweb authentication with the database schema.",
+          "dependencies": [
+            7
+          ],
+          "details": "Create test cases to ensure that wallet addresses are stored correctly, web2 identities are linked to blockchain wallets, and multiple wallets per user are supported. Verify that the organization-level wallet configurations are correctly implemented.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Implement User Authentication",
+      "description": "Set up user authentication using Thirdweb for secure access control.",
+      "status": "pending",
+      "dependencies": [
+        1
+      ],
+      "priority": "high",
+      "details": "Integrate Thirdweb authentication into the Next.js frontend for seamless web2/web3 login options, including email, social, and wallet connections. Implement Sign in with Ethereum (SIWE) standard with JWT tokens stored in cookies. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate JWTs and handle automatic blockchain wallet creation for web2 logins. Obtain Client ID and Secret Key from the Thirdweb dashboard and use a private key for JWT signing.",
+      "testStrategy": "Test user registration, login, and session persistence using Thirdweb Connect. Verify JWT token validity, expiration handling, and backend validation. Ensure seamless login via email, social, and wallet connections, and test automatic wallet creation for web2 logins.",
+      "subtasks": []
+    },
+    {
+      "id": 4,
+      "title": "Develop Organization Management",
+      "description": "Implement organization and user management features for multi-tenancy with Thirdweb authentication and blockchain wallet integration.",
+      "status": "pending",
+      "dependencies": [
+        2,
+        3
+      ],
+      "priority": "high",
+      "details": "Create APIs for organization creation, user roles management, and team invitations. Implement role-based access control (Owner, Admin, Member). Integrate Thirdweb authentication to support blockchain wallets, treasury wallets, and gas sponsor wallets. Support user identification by wallet addresses and email invitations that create wallets. Implement organization settings for gas sponsorship policies and wallet allowlists/blocklists.",
+      "testStrategy": "Test organization creation, user role assignments, and access control by simulating different user roles and permissions. Verify blockchain wallet integration, including treasury and gas sponsor wallets. Test user invitations by wallet address and email, and ensure API keys are tied to organization wallets. Validate audit logs for both traditional actions and blockchain transactions.",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design Database Schema",
+          "description": "Create a database schema to support multi-tenant organization management, including tables for organizations, users, roles, invitations, API keys, and audit logs.",
+          "dependencies": [],
+          "details": "Ensure the schema supports CRUD operations for organizations, role assignments, and logging for compliance. Include support for wallet addresses as primary keys and fields for treasury and gas sponsor wallets.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Develop Organization CRUD API",
+          "description": "Implement API endpoints for creating, reading, updating, and deleting organizations.",
+          "dependencies": [
+            1
+          ],
+          "details": "Include endpoints for organization creation, retrieval, update, and deletion with appropriate access control checks. Ensure integration with blockchain wallets and settings for gas sponsorship policies.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Implement User Invitation and Role Management",
+          "description": "Create API endpoints for inviting users to organizations and managing their roles.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Support role assignments such as OWNER, ADMIN, and MEMBER, and ensure users can be invited and assigned roles correctly. Allow invitations by wallet address or email, with email invitations creating wallets.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Develop API Key Management",
+          "description": "Implement functionality for generating and managing API keys for organizations.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Ensure API keys can be created, revoked, and associated with specific organization wallets for secure Engine access.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Implement Audit Logging for Compliance",
+          "description": "Develop a logging system to track changes and access for compliance purposes.",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "details": "Ensure all critical actions are logged, including organization changes, role assignments, API key usage, and blockchain transactions.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Implement Wallet Security Features",
+          "description": "Develop features for wallet allowlists and blocklists to enhance security.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Ensure organizations can manage allowlists and blocklists for wallets to control access and enhance security.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Create Payment Link Model and API",
+      "description": "Develop the model and API for creating and managing payment links.",
+      "details": "Define the PaymentLink model and implement the POST /payment-links API endpoint. Support link customization options such as amount, currency, and metadata.",
+      "testStrategy": "Test payment link creation with various parameters and ensure correct data storage and retrieval.",
+      "priority": "high",
+      "dependencies": [
+        2,
+        4
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 6,
+      "title": "Integrate Yoint and Trubit Payment Providers",
+      "description": "Implement basic integrations with Yoint and Trubit for payment processing.",
+      "details": "Develop integration modules for Yoint and Trubit using their respective APIs. Handle authentication, payment initiation, and status updates.",
+      "testStrategy": "Simulate payment transactions through Yoint and Trubit and verify successful processing and status updates.",
+      "priority": "high",
+      "dependencies": [
+        5
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Develop Integration Modules",
+          "description": "Create integration modules for Yoint in Colombia and Trubit/Prometeo in Mexico.",
+          "dependencies": [],
+          "details": "Design and implement the necessary integration modules to communicate with Yoint and Trubit/Prometeo APIs. This includes setting up the API clients and ensuring they can handle requests and responses correctly.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Handle Authentication",
+          "description": "Implement authentication mechanisms for Yoint and Trubit/Prometeo integrations.",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop and configure authentication processes for both Yoint and Trubit/Prometeo. Ensure secure handling of credentials and tokens, and implement any necessary OAuth or API key-based authentication flows.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Implement Payment Operations",
+          "description": "Set up payment initiation and processing for Yoint and Trubit/Prometeo.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Develop the functionality to initiate and process payments through Yoint and Trubit/Prometeo. Ensure compliance with each provider's API specifications and handle any necessary transaction states.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Test Status Updates and Error Handling",
+          "description": "Test status updates and implement error handling and logging for Yoint and Trubit/Prometeo.",
+          "dependencies": [
+            1,
+            2,
+            3
+          ],
+          "details": "Conduct thorough testing of status updates for transactions and implement comprehensive error handling and logging. Ensure that webhook handling is robust and that all potential errors are logged and managed appropriately.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Implement Payment Execution Logic",
+      "description": "Develop the logic for executing payments through integrated providers.",
+      "details": "Create a service to handle payment execution, including provider selection, transaction initiation, and status tracking. Implement retry logic for failed transactions.",
+      "testStrategy": "Test payment execution with various scenarios, including successful and failed transactions, and verify retry mechanisms.",
+      "priority": "high",
+      "dependencies": [
+        6
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Create Execution Service",
+          "description": "Develop the core execution service to handle payment transactions.",
+          "dependencies": [],
+          "details": "Design and implement the execution service that will manage the payment transactions between Colombia and Mexico. This service should be capable of handling requests, processing payments, and ensuring reliable execution.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement Provider Selection",
+          "description": "Develop logic to select the appropriate payment provider for transactions.",
+          "dependencies": [
+            1
+          ],
+          "details": "Create a mechanism to select the best payment provider based on criteria such as cost, reliability, and availability. This should be integrated into the execution service.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Develop Transaction Initiation and Idempotent Processing",
+          "description": "Implement transaction initiation logic with idempotent processing.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Ensure that transaction initiation is robust and idempotent, meaning that repeated requests do not result in duplicate transactions. This includes generating unique transaction IDs and handling repeated requests gracefully.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Implement State Machine for Payment Status and Error Handling",
+          "description": "Create a state machine to track payment status and handle errors.",
+          "dependencies": [
+            1,
+            3
+          ],
+          "details": "Design a state machine that tracks the status of payments from initiation to completion. Implement error handling to manage failures and retries, ensuring that the system can recover from errors without data loss.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Handle Provider Webhooks and Publish Events to Kafka",
+          "description": "Implement webhook handling for provider notifications and event publishing to Kafka.",
+          "dependencies": [
+            1,
+            4
+          ],
+          "details": "Develop functionality to handle incoming webhooks from payment providers, updating the payment status accordingly. Additionally, implement event publishing to Kafka to ensure that payment events are communicated to other systems.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Develop Real-Time Transaction Tracking",
+      "description": "Implement real-time transaction tracking using Kafka for event-driven updates.",
+      "details": "Set up Kafka for event streaming and implement event handlers for transaction status updates. Develop a dashboard for live transaction monitoring.",
+      "testStrategy": "Test real-time updates by simulating transaction events and verifying dashboard updates and notifications.",
+      "priority": "medium",
+      "dependencies": [
+        7
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Set up Kafka with Redpanda Cloud",
+          "description": "Configure and deploy Kafka using Redpanda Cloud for handling event streaming.",
+          "dependencies": [],
+          "details": "This involves creating a Redpanda Cloud account, setting up a Kafka cluster, and configuring necessary security and network settings.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Design Event Schema",
+          "description": "Create schemas for events such as PaymentOrderInitiated, PaymentOrderProcessing, and PaymentOrderSucceeded/Failed.",
+          "dependencies": [
+            1
+          ],
+          "details": "Define the structure and data types for each event to ensure consistency and reliability in event processing.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Implement Producer and Consumer",
+          "description": "Develop the producer and consumer components to handle event publishing and processing.",
+          "dependencies": [
+            2
+          ],
+          "details": "Write code for the producer to publish events to Kafka and for the consumer to process these events, ensuring they adhere to the designed schemas.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Develop Real-time Dashboard Updates",
+          "description": "Create a dashboard to display real-time updates based on the events processed.",
+          "dependencies": [
+            3
+          ],
+          "details": "Implement a user interface that reflects the current state of payment orders, updating in real-time as events are processed.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Design User Interface for Payment Links",
+      "description": "Create a user-friendly interface for managing and sharing payment links.",
+      "details": "Develop frontend components using Next.js and Tailwind CSS for creating, viewing, and sharing payment links. Ensure mobile-first design and multi-language support.",
+      "testStrategy": "Conduct usability testing on various devices and browsers to ensure a seamless user experience.",
+      "priority": "medium",
+      "dependencies": [
+        5
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 10,
+      "title": "Implement Webhook Notification System",
+      "description": "Develop a comprehensive webhook system for external notifications.",
+      "details": "Create APIs for webhook registration and implement event-driven notifications for payment status changes. Ensure secure signature verification.",
+      "testStrategy": "Test webhook registration and notification delivery by simulating various transaction events and verifying external system updates.",
+      "priority": "medium",
+      "dependencies": [
+        8
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 11,
+      "title": "Set Up Email Notification System",
+      "description": "Implement email notifications for key payment events using SendGrid or AWS SES.",
+      "details": "Integrate SendGrid or AWS SES for sending email notifications. Develop templates for different transaction events and user actions.",
+      "testStrategy": "Test email delivery for various events, ensuring correct content and timely delivery.",
+      "priority": "medium",
+      "dependencies": [
+        8
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 12,
+      "title": "Develop Role-Based Access Control",
+      "description": "Implement role-based access control for organization management.",
+      "details": "Enhance the user management system to support role-based permissions and access control for different organization roles.",
+      "testStrategy": "Test access control by simulating actions with different user roles and verifying permission enforcement.",
+      "priority": "medium",
+      "dependencies": [
+        4
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 13,
+      "title": "Implement Multi-Currency Support",
+      "description": "Develop multi-currency handling for payments between COP and MXN.",
+      "details": "Integrate real-time exchange rate fetching and implement currency conversion logic. Ensure transparent fee calculation and rate locking at payment initiation.",
+      "testStrategy": "Test multi-currency transactions with various exchange rates and verify correct conversion and fee calculations.",
+      "priority": "medium",
+      "dependencies": [
+        7
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Integrate Real-Time Exchange Rate Fetching for COP-MXN",
+          "description": "Set up a system to fetch real-time exchange rates for COP-MXN currency pair.",
+          "dependencies": [],
+          "details": "Use a reliable API to fetch the current exchange rates for Colombian Peso (COP) to Mexican Peso (MXN) and ensure the data is updated at regular intervals.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement Conversion Logic for COP-MXN",
+          "description": "Develop the logic to convert amounts between COP and MXN using the fetched exchange rates.",
+          "dependencies": [
+            1
+          ],
+          "details": "Create a function or module that takes an amount in COP or MXN and converts it to the other currency using the latest exchange rate data.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Implement Transparent Fee Calculation",
+          "description": "Calculate and apply transaction fees transparently during currency conversion.",
+          "dependencies": [
+            2
+          ],
+          "details": "Define a fee structure for conversions and ensure that the fees are clearly displayed to the user during the conversion process.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Test Rate Locking and Display Formatting",
+          "description": "Ensure that the exchange rate is locked at payment initiation and that currency amounts are displayed correctly.",
+          "dependencies": [
+            3
+          ],
+          "details": "Test the system to confirm that the exchange rate remains constant once a payment is initiated and verify that currency amounts are formatted correctly for both COP and MXN.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Create Analytics Dashboard",
+      "description": "Develop a dashboard for transaction history and analytics.",
+      "details": "Implement frontend components for displaying transaction history, analytics, and insights. Use TanStack Query for data fetching and visualization.",
+      "testStrategy": "Test dashboard functionality by verifying data accuracy and visualization for different transaction scenarios.",
+      "priority": "medium",
+      "dependencies": [
+        8
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 15,
+      "title": "Enhance Security Features",
+      "description": "Implement enhanced security measures for the platform.",
+      "details": "Ensure end-to-end encryption, API key authentication, and webhook signature verification. Plan for PCI compliance and SOC 2 Type II standards.",
+      "testStrategy": "Conduct security testing, including penetration testing and vulnerability assessments, to ensure compliance and robustness.",
+      "priority": "medium",
+      "dependencies": [
+        1,
+        3
+      ],
+      "status": "pending",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement End-to-End Encryption",
+          "description": "Develop and integrate end-to-end encryption for data protection.",
+          "dependencies": [],
+          "details": "Research suitable encryption algorithms, implement encryption for data in transit and at rest, and ensure compatibility with existing systems.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement API Key Authentication",
+          "description": "Set up API key authentication to secure API access.",
+          "dependencies": [],
+          "details": "Design a system for generating, distributing, and validating API keys, and integrate it with the existing API infrastructure.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Implement Webhook Signature Verification",
+          "description": "Develop a mechanism to verify webhook signatures for security.",
+          "dependencies": [],
+          "details": "Create a system to generate and verify signatures for incoming webhooks to ensure they are from trusted sources.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Consider PCI Compliance",
+          "description": "Evaluate and implement necessary changes for PCI compliance.",
+          "dependencies": [],
+          "details": "Review current systems against PCI DSS requirements, identify gaps, and implement necessary changes to achieve compliance.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Conduct Comprehensive Security Testing",
+          "description": "Perform extensive security testing to ensure the robustness of the implemented security measures.",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4
+          ],
+          "details": "Conduct penetration testing, vulnerability assessments, and code reviews to identify and mitigate security risks.",
+          "status": "pending"
+        }
+      ]
+    },
+    {
+      "id": 16,
+      "title": "Develop Mobile App for Payment Links",
+      "description": "Create a mobile application for managing and sharing payment links.",
+      "details": "Develop a mobile app using React Native to allow users to create, view, and share payment links on mobile devices. Ensure seamless integration with the backend.",
+      "testStrategy": "Test the mobile app on various devices and operating systems to ensure functionality and usability.",
+      "priority": "low",
+      "dependencies": [
+        9
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 17,
+      "title": "Implement Advanced Payment Routing Logic",
+      "description": "Develop AI-driven payment routing for optimal provider selection.",
+      "details": "Use AI agents to analyze transaction data and optimize routing based on fees, speed, and success rates. Implement dynamic provider selection logic.",
+      "testStrategy": "Test routing logic with historical transaction data and verify improvements in cost and success rates.",
+      "priority": "low",
+      "dependencies": [
+        7,
+        13
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 18,
+      "title": "Develop Bulk Payment Link Creation Feature",
+      "description": "Implement functionality for creating multiple payment links at once.",
+      "details": "Enhance the payment link system to support bulk creation via CSV upload or API. Ensure efficient processing and error handling.",
+      "testStrategy": "Test bulk creation with various CSV files and API requests, verifying correct link generation and error reporting.",
+      "priority": "low",
+      "dependencies": [
+        5
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 19,
+      "title": "Implement AI-Native Features",
+      "description": "Develop AI-native features for payment orchestration and optimization.",
+      "details": "Integrate LangGraph and CopilotKit for AI-driven fee optimization, predictive success scoring, and automated reconciliation.",
+      "testStrategy": "Test AI features with real transaction data and verify improvements in efficiency and accuracy.",
+      "priority": "low",
+      "dependencies": [
+        17
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 20,
+      "title": "Expand Platform to New Corridors",
+      "description": "Extend the platform to support additional payment corridors.",
+      "details": "Integrate new payment service providers and adapt the system to handle additional currencies and regions. Ensure compliance with local regulations.",
+      "testStrategy": "Test transactions in new corridors and verify correct processing and compliance with regional requirements.",
+      "priority": "low",
+      "dependencies": [
+        19
+      ],
+      "status": "pending",
+      "subtasks": []
+    },
+    {
+      "id": 21,
+      "title": "Integrate Thirdweb Engine with FastAPI Backend",
+      "description": "Integrate Thirdweb Engine with the FastAPI backend following the v2 documentation, including setup, token management, API client implementation, wallet management, transaction monitoring, webhook creation, and concurrent transaction handling.",
+      "details": "1. Set up Thirdweb Engine Cloud or self-hosted instance according to https://portal.thirdweb.com/engine/v2 documentation.\n2. Create Engine access tokens and configure appropriate permissions for backend operations.\n3. Implement a Python client to interact with Engine API endpoints, ensuring all necessary functionality is accessible from the FastAPI backend.\n4. Set up backend wallet management through the Engine, including secure storage and usage of wallets for transactions.\n5. Implement transaction queue monitoring to track the status of outgoing transactions.\n6. Create webhook endpoints in the FastAPI backend to handle Engine callbacks for transaction events.\n7. Handle concurrent transactions with automatic nonce management to prevent conflicts.\n\nEnsure all components are properly integrated and tested within the existing FastAPI architecture, following best practices for security and performance.",
+      "testStrategy": "1. Verify that Thirdweb Engine is correctly set up and accessible from the backend.\n2. Test token creation and permission configuration by attempting API calls with different tokens.\n3. Validate Python client implementation by successfully calling all Engine API endpoints.\n4. Confirm wallet management functionality by creating, retrieving, and using wallets for test transactions.\n5. Check transaction queue monitoring by submitting transactions and verifying their status updates.\n6. Test webhook endpoints by triggering Engine callbacks and verifying proper handling of events.\n7. Verify concurrent transaction handling by simulating multiple simultaneous transactions and checking for correct nonce management.\n\nPerform integration testing to ensure all components work together seamlessly within the FastAPI backend.",
+      "status": "pending",
+      "dependencies": [
+        1,
+        2,
+        3
+      ],
+      "priority": "high",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Set Up Thirdweb Engine Instance",
+          "description": "Deploy and configure a Thirdweb Engine instance, either cloud-hosted or self-hosted, following the v2 documentation.",
+          "dependencies": [],
+          "details": "Choose between a cloud-hosted or self-hosted Thirdweb Engine instance. For self-hosting, ensure Docker, PostgresDB (version 14+), and Redis (version 7.2.4+) are installed. Follow the setup instructions provided in the Thirdweb Engine v2 documentation.",
+          "status": "pending",
+          "testStrategy": "Verify the Engine instance is running by accessing its URL and confirming the response indicates a successful setup."
+        },
+        {
+          "id": 2,
+          "title": "Generate and Configure Engine Access Tokens",
+          "description": "Create access tokens with appropriate permissions for backend operations.",
+          "dependencies": [
+            1
+          ],
+          "details": "In the Thirdweb dashboard, navigate to the Engine section and generate access tokens. Assign necessary permissions to these tokens to enable backend operations.",
+          "status": "pending",
+          "testStrategy": "Use the generated access tokens to make authenticated API requests to the Engine and confirm successful responses."
+        },
+        {
+          "id": 3,
+          "title": "Implement Python Client for Engine API",
+          "description": "Develop a Python client to interact with Thirdweb Engine API endpoints from the FastAPI backend.",
+          "dependencies": [
+            2
+          ],
+          "details": "Utilize the Thirdweb Engine API documentation to implement a Python client that can perform necessary operations such as deploying contracts, sending transactions, and querying data.",
+          "status": "pending",
+          "testStrategy": "Execute test API calls using the Python client and verify correct interactions with the Engine."
+        },
+        {
+          "id": 4,
+          "title": "Set Up Backend Wallet Management",
+          "description": "Configure secure storage and management of backend wallets for transaction processing.",
+          "dependencies": [
+            3
+          ],
+          "details": "Create or import backend wallets within the Engine dashboard. Ensure secure storage practices are followed, such as using AWS KMS or Google Cloud KMS for key management.",
+          "status": "pending",
+          "testStrategy": "Perform test transactions using the backend wallets to confirm proper setup and functionality."
+        },
+        {
+          "id": 5,
+          "title": "Implement Transaction Monitoring and Webhooks",
+          "description": "Set up monitoring for transaction statuses and create webhook endpoints to handle Engine callbacks.",
+          "dependencies": [
+            4
+          ],
+          "details": "Configure the FastAPI backend to monitor transaction queues and statuses. Implement webhook endpoints to receive and process callbacks from the Engine for transaction events.",
+          "status": "pending",
+          "testStrategy": "Initiate test transactions and verify that the webhook endpoints receive and correctly process the callbacks."
+        },
+        {
+          "id": 6,
+          "title": "Handle Concurrent Transactions with Nonce Management",
+          "description": "Implement mechanisms to manage concurrent transactions and prevent nonce conflicts.",
+          "dependencies": [
+            5
+          ],
+          "details": "Utilize the Engine's built-in nonce management features to handle multiple transactions simultaneously without conflicts. Ensure the FastAPI backend is configured to support concurrent transaction processing.",
+          "status": "pending",
+          "testStrategy": "Simulate concurrent transaction scenarios and verify that nonce conflicts are effectively managed and transactions are processed correctly."
+        }
+      ]
+    }
+  ]
+}

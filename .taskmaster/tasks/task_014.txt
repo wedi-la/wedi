@@ -1,0 +1,11 @@
+# Task ID: 14
+# Title: Create Analytics Dashboard
+# Status: pending
+# Dependencies: 8
+# Priority: medium
+# Description: Develop a dashboard for transaction history and analytics.
+# Details:
+Implement frontend components for displaying transaction history, analytics, and insights. Use TanStack Query for data fetching and visualization.
+
+# Test Strategy:
+Test dashboard functionality by verifying data accuracy and visualization for different transaction scenarios.

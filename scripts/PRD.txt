@@ -1,0 +1,348 @@
+# Wedi Pay - Product Requirements Document
+
+# Overview
+
+Wedi Pay is an AI-native payment orchestration platform that enables businesses to offer intelligent international payment solutions through simple, embeddable payment links. The platform leverages Open Banking and blockchain technologies to provide faster, cheaper cross-border payments compared to traditional methods like SWIFT or card networks.
+
+**Problem Solved**: International B2B payments are expensive, slow, and complex. Businesses struggle with high fees (3-5%), long settlement times (3-5 days), and complicated integration requirements.
+
+**Target Users**: B2B companies (SaaS, freelancers, service providers) that need to collect international payments from their clients, starting with the Colombia-Mexico corridor.
+
+**Value Proposition**: 
+- 70% lower costs than traditional payment methods
+- Same-day settlement instead of 3-5 days
+- Simple integration via payment links (no complex checkout modifications)
+- Transparent, AI-optimized payment routing
+
+# Core Features
+
+## 1. Payment Link Generation
+- **What it does**: Allows B2B clients to create customizable payment links that can be shared via email, WhatsApp, or embedded in websites
+- **Why it's important**: Eliminates integration complexity - businesses can start accepting international payments immediately
+- **How it works**: 
+  - Authenticated users create links specifying amount, currency, and description
+  - System generates unique short URLs with QR codes
+  - Links can be one-time use or reusable
+  - Supports metadata for internal reference tracking
+
+## 2. Multi-Currency Support
+- **What it does**: Handles payments between Colombian Pesos (COP) and Mexican Pesos (MXN) with automatic currency conversion
+- **Why it's important**: Removes friction for cross-border transactions
+- **How it works**:
+  - Real-time exchange rate fetching
+  - Transparent fee calculation
+  - Lock-in rates at payment initiation
+  - Support for both collection and payout in either currency
+
+## 3. Intelligent Payment Routing
+- **What it does**: Automatically selects the optimal payment service provider and rail for each transaction
+- **Why it's important**: Minimizes costs and maximizes success rates
+- **How it works**:
+  - Colombia: Routes through Yoint for banking rails
+  - Mexico: Routes through Trubit or Prometeo based on availability
+  - Future: AI agents will optimize routing based on fees, speed, and success rates
+
+## 4. Real-Time Transaction Tracking
+- **What it does**: Provides live status updates for all payment transactions
+- **Why it's important**: Gives businesses visibility and control over their payment flows
+- **How it works**:
+  - Event-driven updates via Kafka
+  - Webhook notifications for status changes
+  - Dashboard with transaction history and analytics
+  - Email notifications for key events
+
+## 5. Multi-Tenant Organization Management
+- **What it does**: Enables businesses to manage teams, permissions, and API access
+- **Why it's important**: Supports enterprise use cases with proper access control
+- **How it works**:
+  - Role-based access control (Owner, Admin, Member)
+  - Team invitation system
+  - API key management for programmatic access
+  - Audit logging for compliance
+
+# User Experience
+
+## User Personas
+
+### 1. Maria - SaaS Founder
+- Runs a project management SaaS with clients in Mexico
+- Needs to collect monthly subscriptions in MXN
+- Currently loses 5% to payment processors
+- Wants simple, reliable payment collection
+
+### 2. Carlos - Freelance Developer
+- Colombian developer with US and Mexican clients
+- Invoices $5,000-10,000 per project
+- Frustrated with 3-5 day wire transfer delays
+- Needs professional payment links to include in invoices
+
+### 3. Sofia - Finance Manager
+- Manages payments for a consulting firm
+- Handles 50+ international transactions monthly
+- Requires detailed reporting and reconciliation
+- Needs team access for payment operations
+
+## Key User Flows
+
+### Flow 1: First-Time Setup
+1. Sign up with email/Google
+2. Create organization and verify email
+3. Add team members (optional)
+4. Configure payment preferences
+5. Create first payment link
+
+### Flow 2: Payment Link Creation
+1. Click "Create Payment Link"
+2. Enter amount and select currency
+3. Add description and reference ID
+4. Configure options (expiry, redirect URLs)
+5. Generate and share link
+
+### Flow 3: End-Customer Payment
+1. Receive payment link via email/WhatsApp
+2. Click link to open payment page
+3. Review amount and merchant details
+4. Provide email and accept terms
+5. Complete payment via local payment method
+6. Receive confirmation
+
+## UI/UX Considerations
+- Mobile-first design for payment pages (60% of end-users on mobile)
+- Clean, trustworthy design with security indicators
+- Multi-language support (Spanish, English)
+- Accessibility compliance (WCAG AA)
+- Progressive disclosure for complex features
+- Real-time feedback and loading states
+
+# Technical Architecture
+
+## System Components
+
+### 1. Frontend (Next.js)
+- Server-side rendered React application
+- Tailwind CSS for styling
+- Shadcn UI component library
+- TanStack Query for data fetching
+- Stack Auth for authentication
+
+### 2. Backend (FastAPI)
+- Python 3.11+ async API
+- Pydantic for data validation
+- Asyncpg for PostgreSQL access
+- Event publishing to Kafka
+- Modular service architecture
+
+### 3. Database (Neon DB)
+- Serverless PostgreSQL
+- Prisma schema definition
+- Multi-tenant data model
+- Event sourcing for payment orders
+
+### 4. Event Bus (Redpanda Cloud)
+- Kafka-compatible event streaming
+- Decoupled service communication
+- Audit trail and replay capability
+- Real-time status updates
+
+### 5. Payment Service Providers
+- Yoint: Colombian banking rails
+- Trubit: Mexican payment processing
+- Prometeo: Mexican Open Banking
+
+## Data Models
+
+### Core Entities
+- Organization (tenant)
+- User (with roles)
+- PaymentLink
+- PaymentOrder
+- ProviderTransaction
+- AuditLog
+
+### Event Types
+- PaymentLinkCreated
+- PaymentOrderInitiated
+- PaymentOrderProcessing
+- PaymentOrderSucceeded/Failed
+- ManualInterventionRequired
+
+## APIs and Integrations
+
+### Public API Endpoints
+- POST /payment-links - Create payment link
+- GET /payment-links/{id} - Get link details
+- GET /payment-orders - List transactions
+- POST /webhooks/register - Register webhooks
+
+### Provider Integrations
+- Yoint API: REST + Webhooks
+- Trubit API: REST + Webhooks  
+- Prometeo API: Open Banking OAuth flow
+
+### Third-Party Services
+- Stack Auth: Authentication
+- SendGrid/AWS SES: Email notifications
+- Sentry: Error tracking
+- Datadog: Monitoring
+
+## Infrastructure Requirements
+
+### Hosting
+- Frontend: Vercel (global CDN)
+- Backend: Railway (containerized)
+- Database: Neon DB (serverless)
+- Events: Redpanda Cloud
+
+### Security
+- End-to-end encryption
+- API key authentication
+- Webhook signature verification
+- PCI compliance considerations
+
+# Development Roadmap
+
+## Phase 1: MVP Foundation (Current Focus)
+- Basic monorepo structure with Turborepo
+- Core database schema and multi-tenancy
+- User authentication with Stack Auth
+- Organization and user management
+- Payment link CRUD operations
+- Simple payment execution flow
+- Yoint and Trubit basic integrations
+- Public payment page
+- Basic email notifications
+
+## Phase 2: Enhanced Features
+- Advanced payment routing logic
+- Comprehensive webhook system
+- Detailed analytics dashboard
+- Bulk payment link creation
+- CSV export functionality
+- Mobile app for payment links
+- Enhanced security features
+- Rate limiting and DDoS protection
+
+## Phase 3: AI-Native Evolution
+- LangGraph payment orchestration agents
+- CopilotKit integration for AI assistance
+- Intelligent fee optimization
+- Predictive payment success scoring
+- Automated reconciliation
+- Natural language payment creation
+- Fraud detection agents
+- Dynamic currency hedging
+
+## Phase 4: Platform Expansion
+- Additional payment corridors (Brazil, Argentina)
+- More PSP integrations
+- Embedded checkout SDK
+- White-label solutions
+- Marketplace payments
+- Subscription management
+- Virtual accounts
+- Banking-as-a-Service features
+
+# Logical Dependency Chain
+
+## 1. Foundation (Must be built first)
+- Monorepo setup → Database schema → Authentication
+- These provide the core infrastructure everything else depends on
+
+## 2. Core User Management
+- Organization management → User roles → API keys
+- Required for multi-tenancy and access control
+
+## 3. Payment Link System
+- Link model → Link creation API → Link management UI
+- The primary user-facing feature for MVP
+
+## 4. Payment Processing
+- PSP integrations → Payment execution logic → Status tracking
+- Core value proposition - actually moving money
+
+## 5. User Interface
+- Dashboard layout → Payment link pages → Transaction views
+- Makes the system usable by non-technical users
+
+## 6. Operational Features
+- Event system → Notifications → Webhooks
+- Enables real-time updates and integrations
+
+## 7. Future Enhancements
+- AI agents → Advanced routing → Analytics
+- Built on top of stable foundation
+
+# Risks and Mitigations
+
+## Technical Risks
+
+### 1. PSP Integration Complexity
+- **Risk**: Yoint/Trubit APIs may have undocumented quirks
+- **Mitigation**: Build robust error handling, implement circuit breakers, maintain direct contact with PSP technical teams
+
+### 2. Multi-Tenancy Data Isolation
+- **Risk**: Data leakage between organizations
+- **Mitigation**: Strict application-layer filtering, comprehensive testing, plan for Row-Level Security
+
+### 3. Payment Processing Failures
+- **Risk**: Failed transactions damage user trust
+- **Mitigation**: Implement retry logic, manual intervention queue, clear error messaging
+
+## Business Risks
+
+### 1. Regulatory Compliance
+- **Risk**: Payment regulations in Colombia/Mexico
+- **Mitigation**: Partner with licensed PSPs, implement KYC/AML checks, maintain audit trails
+
+### 2. Market Adoption
+- **Risk**: Users reluctant to try new payment system
+- **Mitigation**: Start with tech-savvy early adopters, provide exceptional support, offer aggressive pricing
+
+### 3. Competitive Response
+- **Risk**: Established players reduce prices
+- **Mitigation**: Focus on superior UX, leverage AI capabilities, build strong relationships
+
+## Resource Constraints
+
+### 1. Two-Person Team
+- **Risk**: Limited bandwidth for development and operations
+- **Mitigation**: Use managed services, automate everything possible, focus on MVP features only
+
+### 2. Customer Support
+- **Risk**: Cannot provide 24/7 support initially
+- **Mitigation**: Comprehensive documentation, self-service tools, AI-powered chat support
+
+# Appendix
+
+## Market Research
+- Cross-border B2B payments: $150 trillion annually
+- Average fees: 3-5% for traditional methods
+- Settlement time: 3-5 days typically
+- Colombia-Mexico corridor: $6 billion annually
+- 40% of businesses cite high fees as biggest pain point
+
+## Technical Specifications
+
+### Performance Requirements
+- API response time: <200ms p95
+- Payment page load: <2 seconds
+- Uptime SLA: 99.9%
+- Transaction success rate: >95%
+
+### Security Standards
+- TLS 1.3 for all communications
+- AES-256 encryption at rest
+- OWASP Top 10 compliance
+- SOC 2 Type II (future)
+
+### Scalability Targets
+- 10,000 transactions/day by month 6
+- 100,000 transactions/day by year 1
+- Support for 1,000 concurrent users
+- Multi-region deployment capability
+
+## Competitive Analysis
+- **Stripe**: 2.9% + $0.30, complex integration
+- **Wise**: 0.5-2%, slow onboarding  
+- **PayPal**: 3.9% + fees, poor Latin America support
+- **Wedi Advantage**: Lower fees, faster settlement, AI optimization, simple integration 

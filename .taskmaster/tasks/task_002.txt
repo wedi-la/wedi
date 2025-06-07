@@ -1,0 +1,49 @@
+# Task ID: 2
+# Title: Design Core Database Schema
+# Status: pending
+# Dependencies: 1
+# Priority: high
+# Description: Define the core database schema for multi-tenancy, payment processing, and Thirdweb authentication using SQLAlchemy.
+# Details:
+Use SQLAlchemy ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, and Wallet. Implement multi-tenant data model with Row-Level Security (RLS). Use Alembic for database migrations. Support Thirdweb authentication by storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types.
+
+# Test Strategy:
+Run Alembic migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Thirdweb authentication support by testing wallet address storage and linkage with web2 identities.
+
+# Subtasks:
+## 1. Define Entities and Relationships [pending]
+### Dependencies: None
+### Description: Create a detailed design of the SQLAlchemy models including all necessary entities and their relationships.
+### Details:
+Design the SQLAlchemy models to include Organization (tenant), User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLogEntry, and Wallet models. Ensure that relationships between these entities are clearly defined, considering the multi-tenancy requirements and Thirdweb authentication support. Update User to include wallet_address, wallet_type, is_smart_wallet fields. Add a new Wallet table for multiple wallets per user. Update Organization to include treasury_wallet and gas_sponsor_wallet fields.
+
+## 2. Implement Multi-Tenancy [pending]
+### Dependencies: 2.1
+### Description: Implement multi-tenancy in the SQLAlchemy models to ensure data isolation between different tenants.
+### Details:
+Focus on designing the models to support multi-tenancy by ensuring that each entity is associated with an Organization (tenant). Implement Row-Level Security (RLS) for enhanced data isolation. Ensure necessary constraints and indexes are in place to maintain data integrity.
+
+## 5. Run Alembic Migrations [pending]
+### Dependencies: 2.2
+### Description: Execute Alembic migrations to apply the SQLAlchemy model changes.
+### Details:
+Use Alembic to apply the model changes to the database. Ensure that the migrations are executed successfully and that the database reflects the new model design, including support for Thirdweb authentication and wallet management.
+
+## 6. Test Data Isolation with SQLAlchemy [pending]
+### Dependencies: 2.5
+### Description: Conduct tests to verify data isolation between tenants in the database using SQLAlchemy.
+### Details:
+Create test cases to ensure that data for each tenant is isolated and cannot be accessed by other tenants. Verify that the multi-tenancy implementation, including Row-Level Security (RLS), is functioning as expected.
+
+## 7. Implement Thirdweb Authentication Support [pending]
+### Dependencies: 2.1
+### Description: Update the database schema to support Thirdweb authentication and blockchain wallets.
+### Details:
+Ensure the schema supports storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types. Implement the Wallet table and update User and Organization models as specified.
+
+## 8. Test Thirdweb Authentication Integration [pending]
+### Dependencies: 2.7
+### Description: Verify the integration of Thirdweb authentication with the database schema.
+### Details:
+Create test cases to ensure that wallet addresses are stored correctly, web2 identities are linked to blockchain wallets, and multiple wallets per user are supported. Verify that the organization-level wallet configurations are correctly implemented.
+
