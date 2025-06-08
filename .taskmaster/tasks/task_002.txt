@@ -5,10 +5,10 @@
 # Priority: high
 # Description: Define the core database schema for multi-tenancy, payment processing, and Thirdweb authentication using Prisma ORM.
 # Details:
-Use Prisma ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, and Wallet. Implement multi-tenant data model with Organization-based data isolation. Configure Prisma to work with Neon DB (serverless PostgreSQL). Support Thirdweb authentication by storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types. Set up the Prisma client and migrations. Ensure the packages structure includes packages/prisma for schema and client configuration, packages/ui for shared React components with Shadcn UI, and packages/types for shared TypeScript types.
+Use Prisma ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, Wallet, Agent, Customer, Product, and Price. Implement multi-tenant data model with Organization-based data isolation. Configure Prisma to work with Neon DB (serverless PostgreSQL). Support Thirdweb authentication by storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types. Set up the Prisma client and migrations. Ensure the packages structure includes packages/prisma for schema and client configuration, packages/ui for shared React components with Shadcn UI, and packages/types for shared TypeScript types. Integrate Agents as the primary execution layer, linking PaymentLink to Agent (executingAgentId) and Agent to Wallet (agentWalletId).
 
 # Test Strategy:
-Run Prisma migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Thirdweb authentication support by testing wallet address storage and linkage with web2 identities. Ensure the workspace configuration supports the proper structure.
+Run Prisma migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Thirdweb authentication support by testing wallet address storage and linkage with web2 identities. Ensure the workspace configuration supports the proper structure. Test the integration of Agents with PaymentLink and Wallet, and validate the new Customer, Product, and Price entities.
 
 # Subtasks:
 ## 1. Review Prisma Schema and Data Model Specifications [done]
@@ -61,4 +61,16 @@ Use Prisma's migration capabilities to create and apply migration scripts that r
 ### Description: Develop the remaining SQLAlchemy models to match the Prisma schema.
 ### Details:
 Create SQLAlchemy models for PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, and Wallet in apps/api/app/models/ to ensure full compatibility with the Prisma schema.
+
+## 16. Integrate Agent Model with PaymentLink and Wallet [done]
+### Dependencies: 2.11
+### Description: Enhance the Agent model to reflect its execution role and integrate it with PaymentLink and Wallet.
+### Details:
+Add executingAgentId to PaymentLink and agentWalletId to Agent. Ensure the Agent model reflects its role in executing orders and managing smart wallets.
+
+## 17. Add Customer, Product, and Price Entities [done]
+### Dependencies: 2.11
+### Description: Introduce new entities for Customer, Product, and Price to support end-customer management and flexible pricing.
+### Details:
+Define Customer, Product, and Price models in the Prisma schema. Ensure these entities are linked to the Organization for multi-tenancy support.
 

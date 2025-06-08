@@ -37,6 +37,8 @@ model Organization {
   // Relations
   ownerId               String
   users                 OrganizationUser[]
+  customers             Customer[]
+  products              Product[]
   wallets               Wallet[]
   paymentLinks          PaymentLink[]
   paymentOrders         PaymentOrder[]
@@ -97,6 +99,161 @@ enum ComplianceStatus {
 }
 
 // ==========================================
+// CUSTOMER MODEL (End-customers of Tenants)
+// ==========================================
+
+model Customer {
+  id                    String                 @id @default(cuid())
+  organizationId        String
+  organization          Organization           @relation(fields: [organizationId], references: [id])
+  
+  // Customer Details
+  email                 String
+  name                  String?
+  phone                 String?
+  
+  // Billing Information
+  billingAddress        Json?                  // {line1, line2, city, state, postal_code, country}
+  shippingAddress       Json?
+  
+  // Web3 Integration
+  walletAddress         String?
+  preferredChainId      Int?
+  
+  // Status
+  isActive              Boolean                @default(true)
+  emailVerified         Boolean                @default(false)
+  
+  // Metadata
+  metadata              Json?                  // Custom fields defined by tenant
+  
+  // Timestamps
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  
+  // Relations
+  paymentOrders         PaymentOrder[]
+  paymentMethods        CustomerPaymentMethod[]
+  subscriptions         Subscription[]
+  
+  @@unique([organizationId, email])
+  @@index([organizationId])
+  @@index([email])
+}
+
+// ==========================================
+// CUSTOMER PAYMENT & SUBSCRIPTION MODELS
+// ==========================================
+
+model CustomerPaymentMethod {
+  id                    String                 @id @default(cuid())
+  customerId            String
+  customer              Customer               @relation(fields: [customerId], references: [id])
+  
+  // Payment Method Details
+  type                  PaymentMethodType
+  provider              String                 // STRIPE, YOINT, TRUBIT, etc.
+  externalId            String?                // Provider's ID for this method
+  
+  // Card Details (if applicable)
+  last4                 String?
+  brand                 String?
+  expiryMonth           Int?
+  expiryYear            Int?
+  
+  // Bank Details (if applicable)
+  bankName              String?
+  accountLast4          String?
+  
+  // Wallet Details (if applicable)
+  walletAddress         String?
+  chainId               Int?
+  
+  // Status
+  isDefault             Boolean                @default(false)
+  isActive              Boolean                @default(true)
+  
+  // Metadata
+  metadata              Json?
+  
+  // Timestamps
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  
+  @@index([customerId])
+}
+
+enum PaymentMethodType {
+  CARD
+  BANK_ACCOUNT
+  WALLET
+  CASH
+}
+
+model Subscription {
+  id                    String                 @id @default(cuid())
+  customerId            String
+  customer              Customer               @relation(fields: [customerId], references: [id])
+  organizationId        String                 // Denormalized for easier queries
+  
+  // Subscription Details
+  status                SubscriptionStatus     @default(ACTIVE)
+  
+  // Billing
+  currentPeriodStart    DateTime
+  currentPeriodEnd      DateTime
+  cancelAt              DateTime?
+  canceledAt            DateTime?
+  endedAt               DateTime?
+  
+  // Trial
+  trialStart            DateTime?
+  trialEnd              DateTime?
+  
+  // Metadata
+  metadata              Json?
+  
+  // Timestamps
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  
+  // Relations
+  items                 SubscriptionItem[]
+  
+  @@index([customerId])
+  @@index([organizationId])
+  @@index([status])
+}
+
+model SubscriptionItem {
+  id                    String                 @id @default(cuid())
+  subscriptionId        String
+  subscription          Subscription           @relation(fields: [subscriptionId], references: [id])
+  priceId               String
+  price                 Price                  @relation(fields: [priceId], references: [id])
+  
+  // Quantity
+  quantity              Int                    @default(1)
+  
+  // Metadata
+  metadata              Json?
+  
+  // Timestamps
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  
+  @@index([subscriptionId])
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  UNPAID
+  TRIALING
+}
+
+// ==========================================
 // WEB3 INTEGRATION MODELS
 // ==========================================
 
@@ -127,6 +284,7 @@ model Wallet {
   
   // Relations
   primaryForUsers       User[]                 @relation("PrimaryWallet")
+  agent                 Agent?                 // Agent that owns this wallet
   transactions          BlockchainTransaction[]
   gasSponsorship        GasSponsorship[]
   
@@ -213,8 +371,87 @@ model GasSponsorship {
 }
 
 // ==========================================
-// PAYMENT MODELS
+// PRODUCT & PRICING MODELS
 // ==========================================
+
+model Product {
+  id                    String                 @id @default(cuid())
+  organizationId        String
+  organization          Organization           @relation(fields: [organizationId], references: [id])
+  
+  // Product Details
+  name                  String
+  description           String?
+  type                  ProductType            @default(SERVICE)
+  
+  // Status
+  isActive              Boolean                @default(true)
+  
+  // Metadata
+  metadata              Json?                  // Custom fields
+  images                String[]               // Array of image URLs
+  
+  // Timestamps
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  
+  // Relations
+  prices                Price[]
+  
+  @@index([organizationId])
+}
+
+enum ProductType {
+  SERVICE
+  GOOD
+  SUBSCRIPTION
+}
+
+model Price {
+  id                    String                 @id @default(cuid())
+  productId             String
+  product               Product                @relation(fields: [productId], references: [id])
+  
+  // Price Details
+  amount                Decimal                @db.Decimal(20, 8)
+  currency              String                 // ISO code
+  
+  // Billing
+  type                  PriceType              @default(ONE_TIME)
+  interval              BillingInterval?       // For recurring prices
+  intervalCount         Int                    @default(1)
+  
+  // Trial
+  trialPeriodDays       Int?
+  
+  // Status
+  isActive              Boolean                @default(true)
+  
+  // Metadata
+  metadata              Json?
+  
+  // Timestamps
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  
+  // Relations
+  subscriptionItems     SubscriptionItem[]
+  paymentLinks          PaymentLink[]
+  
+  @@index([productId])
+}
+
+enum PriceType {
+  ONE_TIME
+  RECURRING
+}
+
+enum BillingInterval {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
 
 model PaymentLink {
   id                    String                 @id @default(cuid())
@@ -222,6 +459,10 @@ model PaymentLink {
   organization          Organization           @relation(fields: [organizationId], references: [id])
   createdById           String
   createdBy             User                   @relation(fields: [createdById], references: [id])
+  
+  // Agent Execution
+  executingAgentId      String                 // The agent that will execute this payment
+  executingAgent        Agent                  @relation(fields: [executingAgentId], references: [id])
   
   // Link Details
   title                 String
@@ -231,6 +472,8 @@ model PaymentLink {
   qrCode                String?                // Base64 encoded QR
   
   // Payment Configuration
+  priceId               String?                // Optional link to a specific price
+  price                 Price?                 @relation(fields: [priceId], references: [id])
   amount                Decimal                @db.Decimal(20, 8)
   currency              String                 // ISO code
   targetAmount          Decimal?               @db.Decimal(20, 8)
@@ -262,6 +505,7 @@ model PaymentLink {
   @@index([organizationId])
   @@index([shortCode])
   @@index([status])
+  @@index([executingAgentId])
 }
 
 enum PaymentLinkStatus {
@@ -279,6 +523,10 @@ model PaymentOrder {
   organization          Organization           @relation(fields: [organizationId], references: [id])
   paymentLinkId         String
   paymentLink           PaymentLink            @relation(fields: [paymentLinkId], references: [id])
+  
+  // Customer Info
+  customerId            String?                // Link to tenant's customer
+  customer              Customer?              @relation(fields: [customerId], references: [id])
   
   // Order Details
   orderNumber           String                 @unique
@@ -301,7 +549,7 @@ model PaymentOrder {
   networkFee            Decimal                @default(0) @db.Decimal(20, 8)
   totalFee              Decimal                @default(0) @db.Decimal(20, 8)
   
-  // Customer Info
+  // Additional Customer Info (for non-registered customers)
   customerEmail         String?
   customerName          String?
   customerWallet        String?
@@ -336,6 +584,7 @@ model PaymentOrder {
   @@index([organizationId, status])
   @@index([orderNumber])
   @@index([paymentLinkId])
+  @@index([customerId])
 }
 
 enum PaymentOrderStatus {
@@ -521,10 +770,19 @@ model Agent {
   version               String
   model                 String                 // LLM model used
   
+  // Blockchain Wallet
+  agentWalletId         String?                @unique
+  agentWallet           Wallet?                @relation(fields: [agentWalletId], references: [id])
+  
   // LangGraph Configuration
   graphDefinition       Json                   // LangGraph structure
   tools                 String[]               // Available tools
   systemPrompt          String?
+  
+  // Integration Capabilities
+  supportedProviders    String[]               // List of provider codes this agent can work with
+  supportedChains       Int[]                  // List of blockchain chain IDs
+  capabilities          Json?                  // Detailed capability configuration
   
   // Status
   isActive              Boolean                @default(true)
@@ -539,6 +797,7 @@ model Agent {
   updatedAt             DateTime               @updatedAt
   
   // Relations
+  paymentLinks          PaymentLink[]          // Payment links this agent executes
   decisions             AgentDecision[]
   checkpoints           AgentCheckpoint[]
   

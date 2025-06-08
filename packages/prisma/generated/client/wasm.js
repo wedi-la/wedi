@@ -153,6 +153,71 @@ exports.Prisma.UserScalarFieldEnum = {
   lastLoginAt: 'lastLoginAt'
 };
 
+exports.Prisma.CustomerScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  email: 'email',
+  name: 'name',
+  phone: 'phone',
+  billingAddress: 'billingAddress',
+  shippingAddress: 'shippingAddress',
+  walletAddress: 'walletAddress',
+  preferredChainId: 'preferredChainId',
+  isActive: 'isActive',
+  emailVerified: 'emailVerified',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CustomerPaymentMethodScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  type: 'type',
+  provider: 'provider',
+  externalId: 'externalId',
+  last4: 'last4',
+  brand: 'brand',
+  expiryMonth: 'expiryMonth',
+  expiryYear: 'expiryYear',
+  bankName: 'bankName',
+  accountLast4: 'accountLast4',
+  walletAddress: 'walletAddress',
+  chainId: 'chainId',
+  isDefault: 'isDefault',
+  isActive: 'isActive',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SubscriptionScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  organizationId: 'organizationId',
+  status: 'status',
+  currentPeriodStart: 'currentPeriodStart',
+  currentPeriodEnd: 'currentPeriodEnd',
+  cancelAt: 'cancelAt',
+  canceledAt: 'canceledAt',
+  endedAt: 'endedAt',
+  trialStart: 'trialStart',
+  trialEnd: 'trialEnd',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SubscriptionItemScalarFieldEnum = {
+  id: 'id',
+  subscriptionId: 'subscriptionId',
+  priceId: 'priceId',
+  quantity: 'quantity',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.WalletScalarFieldEnum = {
   id: 'id',
   address: 'address',
@@ -203,15 +268,45 @@ exports.Prisma.GasSponsorshipScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ProductScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  name: 'name',
+  description: 'description',
+  type: 'type',
+  isActive: 'isActive',
+  metadata: 'metadata',
+  images: 'images',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PriceScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  amount: 'amount',
+  currency: 'currency',
+  type: 'type',
+  interval: 'interval',
+  intervalCount: 'intervalCount',
+  trialPeriodDays: 'trialPeriodDays',
+  isActive: 'isActive',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.PaymentLinkScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   createdById: 'createdById',
+  executingAgentId: 'executingAgentId',
   title: 'title',
   description: 'description',
   referenceId: 'referenceId',
   shortCode: 'shortCode',
   qrCode: 'qrCode',
+  priceId: 'priceId',
   amount: 'amount',
   currency: 'currency',
   targetAmount: 'targetAmount',
@@ -234,6 +329,7 @@ exports.Prisma.PaymentOrderScalarFieldEnum = {
   id: 'id',
   organizationId: 'organizationId',
   paymentLinkId: 'paymentLinkId',
+  customerId: 'customerId',
   orderNumber: 'orderNumber',
   status: 'status',
   requestedAmount: 'requestedAmount',
@@ -338,9 +434,13 @@ exports.Prisma.AgentScalarFieldEnum = {
   type: 'type',
   version: 'version',
   model: 'model',
+  agentWalletId: 'agentWalletId',
   graphDefinition: 'graphDefinition',
   tools: 'tools',
   systemPrompt: 'systemPrompt',
+  supportedProviders: 'supportedProviders',
+  supportedChains: 'supportedChains',
+  capabilities: 'capabilities',
   isActive: 'isActive',
   totalExecutions: 'totalExecutions',
   avgExecutionTime: 'avgExecutionTime',
@@ -532,6 +632,21 @@ exports.AuthProvider = exports.$Enums.AuthProvider = {
   WALLET_CONNECT: 'WALLET_CONNECT'
 };
 
+exports.PaymentMethodType = exports.$Enums.PaymentMethodType = {
+  CARD: 'CARD',
+  BANK_ACCOUNT: 'BANK_ACCOUNT',
+  WALLET: 'WALLET',
+  CASH: 'CASH'
+};
+
+exports.SubscriptionStatus = exports.$Enums.SubscriptionStatus = {
+  ACTIVE: 'ACTIVE',
+  PAST_DUE: 'PAST_DUE',
+  CANCELED: 'CANCELED',
+  UNPAID: 'UNPAID',
+  TRIALING: 'TRIALING'
+};
+
 exports.WalletType = exports.$Enums.WalletType = {
   EOA: 'EOA',
   SMART_WALLET: 'SMART_WALLET',
@@ -544,6 +659,24 @@ exports.BlockchainTxStatus = exports.$Enums.BlockchainTxStatus = {
   CONFIRMED: 'CONFIRMED',
   FAILED: 'FAILED',
   DROPPED: 'DROPPED'
+};
+
+exports.ProductType = exports.$Enums.ProductType = {
+  SERVICE: 'SERVICE',
+  GOOD: 'GOOD',
+  SUBSCRIPTION: 'SUBSCRIPTION'
+};
+
+exports.PriceType = exports.$Enums.PriceType = {
+  ONE_TIME: 'ONE_TIME',
+  RECURRING: 'RECURRING'
+};
+
+exports.BillingInterval = exports.$Enums.BillingInterval = {
+  DAY: 'DAY',
+  WEEK: 'WEEK',
+  MONTH: 'MONTH',
+  YEAR: 'YEAR'
 };
 
 exports.PaymentLinkStatus = exports.$Enums.PaymentLinkStatus = {
@@ -655,9 +788,15 @@ exports.UserRole = exports.$Enums.UserRole = {
 exports.Prisma.ModelName = {
   Organization: 'Organization',
   User: 'User',
+  Customer: 'Customer',
+  CustomerPaymentMethod: 'CustomerPaymentMethod',
+  Subscription: 'Subscription',
+  SubscriptionItem: 'SubscriptionItem',
   Wallet: 'Wallet',
   BlockchainTransaction: 'BlockchainTransaction',
   GasSponsorship: 'GasSponsorship',
+  Product: 'Product',
+  Price: 'Price',
   PaymentLink: 'PaymentLink',
   PaymentOrder: 'PaymentOrder',
   Provider: 'Provider',
