@@ -128,19 +128,10 @@ def create_application() -> FastAPI:
     register_exception_handlers(app)
     
     # Register API routers
-    # TODO: Uncomment as routers are implemented
-    # from app.api.v1 import auth, organizations, users, agents, payment_links, payment_orders, customers, products, webhooks
+    from app.api.v1 import router as v1_router
     
-    # API v1 routes
-    # app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
-    # app.include_router(organizations.router, prefix="/api/v1/organizations", tags=["Organizations"])
-    # app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
-    # app.include_router(agents.router, prefix="/api/v1/agents", tags=["Agents"])
-    # app.include_router(payment_links.router, prefix="/api/v1/payment-links", tags=["Payment Links"])
-    # app.include_router(payment_orders.router, prefix="/api/v1/payment-orders", tags=["Payment Orders"])
-    # app.include_router(customers.router, prefix="/api/v1/customers", tags=["Customers"])
-    # app.include_router(products.router, prefix="/api/v1/products", tags=["Products"])
-    # app.include_router(webhooks.router, prefix="/api/v1/webhooks", tags=["Webhooks"])
+    # Include the v1 router which contains all v1 endpoints
+    app.include_router(v1_router)
     
     # Root endpoints
     @app.get("/", include_in_schema=False)

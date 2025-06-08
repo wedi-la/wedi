@@ -37,6 +37,10 @@ class Settings(BaseSettings):
     
     # CORS
     ALLOWED_ORIGINS: list[str] = ["http://localhost:3000"]
+    ALLOWED_HOSTS: list[str] = ["localhost", "127.0.0.1"]
+    
+    # Frontend
+    FRONTEND_URL: str = "localhost:3000"
     
     # Logging
     LOG_LEVEL: str = "INFO"

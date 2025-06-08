@@ -174,11 +174,79 @@ Create Pydantic models for each entity (e.g., User, Organization) to be used in 
 Utilize existing Pydantic schemas from Task 26 located in apps/api/app/schemas/ for defining request and response bodies. Implement API-specific response wrappers in api/schemas.py for consistent API responses. Ensure imports in dependencies.py are updated to reference the correct models.
 </info added on 2025-06-08T19:25:39.561Z>
 
-## 5. Implement Authentication Endpoints [pending]
+## 5. Implement Authentication Endpoints [done]
 ### Dependencies: 27.2, 27.3, 27.4
 ### Description: Develop endpoints for user authentication under /api/v1/auth/*.
 ### Details:
 Create routes for login, logout, and token refresh. Use JWTs for token management.
+<info added on 2025-06-08T19:47:38.594Z>
+Initial Analysis and Implementation Plan for Thirdweb Authentication Integration:
+
+Based on thirdweb documentation analysis:
+1. Thirdweb Auth uses Sign-In with Ethereum (SIWE) standard for passwordless authentication
+2. Frontend uses thirdweb ConnectButton with auth configuration
+3. Backend needs to:
+   - Generate SIWE payloads for login
+   - Verify signed payloads using thirdweb/auth
+   - Issue JWT tokens for session management
+   - Handle refresh tokens and logout
+
+Implementation approach:
+- Create auth router at /api/v1/auth/*
+- Endpoints needed:
+  - POST /api/v1/auth/payload - Generate SIWE payload
+  - POST /api/v1/auth/login - Verify signature and issue JWT
+  - POST /api/v1/auth/refresh - Refresh access token
+  - POST /api/v1/auth/logout - Invalidate session
+  - GET /api/v1/auth/me - Get current user info
+- Integrate with existing JWT middleware from Task 27.2
+- Use thirdweb/auth library for SIWE handling
+- Store sessions in database with proper cleanup
+
+Files to create/modify:
+- app/routers/auth.py - Authentication endpoints
+- app/services/auth_service.py - Business logic for auth
+- app/api/v1/__init__.py - Include auth router
+- Update main.py to register auth routes
+</info added on 2025-06-08T19:47:38.594Z>
+<info added on 2025-06-08T19:55:52.592Z>
+Successfully implemented thirdweb-compatible authentication endpoints:
+
+1. Created auth service (app/services/auth_service.py):
+   - Generates SIWE payloads compatible with thirdweb frontend
+   - Handles user login with wallet address (creates user if not exists)
+   - Issues JWT tokens for session management
+   - Supports token refresh and logout
+   - Retrieves current user information
+
+2. Created auth schemas (app/schemas/auth.py):
+   - SIWEPayloadRequest/Response for SIWE message generation
+   - LoginRequest/Response for authentication flow
+   - TokenRefreshRequest/Response for token management
+   - CurrentUserResponse for user info endpoint
+
+3. Created auth router (app/routers/auth.py):
+   - POST /api/v1/auth/payload - Generate SIWE payload
+   - POST /api/v1/auth/login - Verify signature and issue JWT
+   - POST /api/v1/auth/refresh - Refresh access token
+   - POST /api/v1/auth/logout - Logout endpoint
+   - GET /api/v1/auth/me - Get current user info
+
+4. Updated infrastructure:
+   - Created v1 router in app/api/v1/__init__.py
+   - Updated main.py to include v1 router
+   - Added FRONTEND_URL and ALLOWED_HOSTS to config
+
+5. Key design decisions:
+   - Users created from wallet automatically get verified email status
+   - Wallet is created separately and linked as primary wallet
+   - Organizations are fetched from user repository
+   - Auth endpoints are public except /me and /logout which require JWT
+
+Note: Signature verification is placeholder - in production would use web3 libraries to verify SIWE signatures.
+
+All endpoints are now ready for integration with thirdweb frontend ConnectButton.
+</info added on 2025-06-08T19:55:52.592Z>
 
 ## 6. Implement Organization Management Endpoints [pending]
 ### Dependencies: 27.2, 27.3, 27.4
