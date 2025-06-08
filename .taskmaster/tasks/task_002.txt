@@ -3,12 +3,12 @@
 # Status: in-progress
 # Dependencies: 1
 # Priority: high
-# Description: Define the core database schema for multi-tenancy, payment processing, and Thirdweb authentication using SQLAlchemy.
+# Description: Define the core database schema for multi-tenancy, payment processing, and Thirdweb authentication using Prisma ORM.
 # Details:
-Use SQLAlchemy ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, and Wallet. Implement multi-tenant data model with Row-Level Security (RLS). Use Alembic for database migrations. Support Thirdweb authentication by storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types.
+Use Prisma ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, and Wallet. Implement multi-tenant data model with Organization-based data isolation. Configure Prisma to work with Neon DB (serverless PostgreSQL). Support Thirdweb authentication by storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types. Set up the Prisma client and migrations. Ensure the packages structure includes packages/prisma for schema and client configuration, packages/ui for shared React components with Shadcn UI, and packages/types for shared TypeScript types.
 
 # Test Strategy:
-Run Alembic migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Thirdweb authentication support by testing wallet address storage and linkage with web2 identities.
+Run Prisma migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Thirdweb authentication support by testing wallet address storage and linkage with web2 identities. Ensure the workspace configuration supports the proper structure.
 
 # Subtasks:
 ## 1. Review Prisma Schema and Data Model Specifications [done]
@@ -20,57 +20,45 @@ Examine the 'docs/data-models-specification.md' document and the Prisma schema t
 Include multi-tenancy implementation details, provider abstraction layer, and Web3/blockchain models in the conversion process.
 </info added on 2025-06-08T01:05:52.363Z>
 
-## 2. Convert Prisma Models to SQLAlchemy ORM Models [pending]
+## 2. Convert Prisma Models to SQLAlchemy ORM Models [done]
 ### Dependencies: 2.1
 ### Description: Translate the Prisma models into SQLAlchemy ORM models, ensuring all fields and data types are accurately represented.
 ### Details:
 For each model in the Prisma schema, create a corresponding SQLAlchemy model class with appropriate fields and data types.
+<info added on 2025-06-08T01:24:07.263Z>
+The project architecture specifies the use of Prisma ORM instead of SQLAlchemy. Ensure the Prisma schema is correctly set up in the packages/prisma directory and integrate the Prisma client with the existing api app. Verify that the turborepo structure includes the necessary packages: prisma, ui, and types. Use Bun as the package manager for consistency with the architectural guidelines.
+</info added on 2025-06-08T01:24:07.263Z>
+<info added on 2025-06-08T01:32:02.699Z>
+Create SQLAlchemy models in apps/api/app/models/ that match the Prisma schema structure to ensure the FastAPI backend can interact with the same database schema.
+</info added on 2025-06-08T01:32:02.699Z>
 
-## 3. Implement Multi-Tenancy with Organization-Based Filtering [pending]
-### Dependencies: 2.2
-### Description: Set up multi-tenancy by implementing organization-based filtering to ensure data isolation between different organizations.
+## 11. Set Up Prisma Schema and Client [done]
+### Dependencies: 2.1
+### Description: Configure the Prisma schema and set up the Prisma client for database interactions.
 ### Details:
-Add an 'organization_id' field to relevant models and configure SQLAlchemy to filter queries based on the current user's organization context.
+Define the Prisma schema in packages/prisma/schema.prisma. Set up the Prisma client to interact with Neon DB and integrate it with the FastAPI backend.
 
-## 4. Set Up Relationships and Foreign Keys [pending]
-### Dependencies: 2.2
-### Description: Define relationships and foreign keys between models to accurately represent associations.
+## 12. Implement Multi-Tenancy with Organization-Based Data Isolation [pending]
+### Dependencies: 2.11
+### Description: Set up multi-tenancy by implementing organization-based data isolation using Prisma.
 ### Details:
-Use SQLAlchemy's relationship and foreign key constructs to establish one-to-one, one-to-many, and many-to-many relationships as defined in the data model specifications.
+Add an 'organization_id' field to relevant models and configure Prisma to filter queries based on the current user's organization context. Ensure the FastAPI backend supports multi-tenancy by implementing necessary middleware or context management.
 
-## 5. Create Database Utilities and Session Management [pending]
-### Dependencies: 2.2
-### Description: Develop utility functions and session management to handle database connections and transactions efficiently.
+## 13. Configure Prisma with Neon DB [done]
+### Dependencies: 2.11
+### Description: Set up Prisma to work with Neon DB (serverless PostgreSQL) for database operations.
 ### Details:
-Implement functions for creating database sessions, handling transactions, and managing connection pooling using SQLAlchemy's sessionmaker.
+Ensure the Prisma configuration is compatible with Neon DB, including connection settings and any necessary environment variables. Verify the connection by running test queries.
 
-## 6. Implement Audit Logging Mixins [pending]
-### Dependencies: 2.2
-### Description: Create mixin classes to add audit logging capabilities to models, tracking changes and user actions.
+## 14. Create Prisma Migrations [done]
+### Dependencies: 2.11
+### Description: Develop migration scripts using Prisma to manage database schema changes.
 ### Details:
-Develop mixins that can be inherited by models to automatically log creation, modification, and deletion events, including timestamps and user information.
+Use Prisma's migration capabilities to create and apply migration scripts that reflect the current schema. Ensure migrations are tested and applied in the development environment.
 
-## 7. Set Up Alembic for Database Migrations [pending]
+## 15. Complete Remaining SQLAlchemy Models [pending]
 ### Dependencies: 2.2
-### Description: Configure Alembic to manage database schema migrations for the SQLAlchemy models.
+### Description: Develop the remaining SQLAlchemy models to match the Prisma schema.
 ### Details:
-Initialize Alembic, configure it to work with the SQLAlchemy models, and create initial migration scripts to reflect the current schema.
-
-## 8. Create Indexes and Constraints [pending]
-### Dependencies: 2.2
-### Description: Define indexes and constraints to optimize database performance and ensure data integrity.
-### Details:
-Add indexes to frequently queried fields and define constraints such as unique, not null, and foreign key constraints as per the data model specifications.
-
-## 9. Implement the Provider Abstraction Layer [pending]
-### Dependencies: 2.2
-### Description: Develop an abstraction layer to handle interactions with different data providers or external services.
-### Details:
-Create a provider interface and implement concrete classes for each data provider, ensuring a consistent API for data access.
-
-## 10. Add Web3/Blockchain and Event Sourcing Models [pending]
-### Dependencies: 2.2
-### Description: Create models for Web3/blockchain entities and event sourcing to support blockchain transactions and payment events.
-### Details:
-Define models such as 'Wallet', 'BlockchainTransaction', and 'PaymentEvent' to represent blockchain-related data and event-driven architecture components.
+Create SQLAlchemy models for PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, and Wallet in apps/api/app/models/ to ensure full compatibility with the Prisma schema.
 
