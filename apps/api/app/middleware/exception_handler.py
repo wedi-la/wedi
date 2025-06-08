@@ -2,7 +2,10 @@
 Exception handler middleware for FastAPI.
 """
 import traceback
-from typing import Any, Dict, Optional
+from typing import TYPE_CHECKING, Any, Dict, Optional
+
+if TYPE_CHECKING:
+    from app.api.exceptions import APIException
 
 from fastapi import FastAPI, Request, status
 from fastapi.exception_handlers import (
@@ -300,14 +303,61 @@ async def general_exception_handler(
     )
 
 
+async def api_exception_handler(
+    request: Request,
+    exc: "APIException"
+) -> JSONResponse:
+    """Handle custom API exceptions.
+    
+    Args:
+        request: FastAPI request
+        exc: APIException instance
+        
+    Returns:
+        JSONResponse with error details
+    """
+    from app.api.exceptions import APIException
+    
+    request_id = request.headers.get("X-Request-ID", str(request.state.request_id))
+    
+    # Log the exception
+    log_level = "error" if exc.status_code >= 500 else "warning"
+    getattr(logger, log_level)(
+        "api_exception",
+        error_code=getattr(exc, "error_code", "API_ERROR"),
+        status_code=exc.status_code,
+        detail=exc.detail,
+        context=getattr(exc, "context", {}),
+        request_id=request_id,
+        path=request.url.path,
+        method=request.method
+    )
+    
+    details = None
+    if hasattr(exc, "context") and exc.context:
+        details = exc.context
+    
+    return create_error_response(
+        error_code=getattr(exc, "error_code", "API_ERROR"),
+        message=exc.detail,
+        status_code=exc.status_code,
+        details=details,
+        request_id=request_id
+    )
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     """Register all exception handlers with the FastAPI app.
     
     Args:
         app: FastAPI application instance
     """
+    # Import here to avoid circular imports
+    from app.api.exceptions import APIException
+    
     # Custom exceptions
     app.add_exception_handler(WediException, wedi_exception_handler)
+    app.add_exception_handler(APIException, api_exception_handler)
     
     # FastAPI exceptions
     app.add_exception_handler(RequestValidationError, validation_exception_handler)

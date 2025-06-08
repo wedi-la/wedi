@@ -2005,7 +2005,7 @@
       "description": "Set up a FastAPI application structure with routers, dependency injection, and middleware for a RESTful API.",
       "details": "1. **Set Up FastAPI Application Structure**: Initialize a FastAPI application with a modular structure using routers for different API sections (auth, organizations, users, etc.).\n\n2. **Implement Dependency Injection**: Use FastAPI's dependency injection system to inject repositories into endpoints. Ensure each endpoint uses the repository pattern for data access and manipulation.\n\n3. **Create DTOs with Pydantic**: Define request and response DTOs using Pydantic models for data validation and serialization.\n\n4. **Implement Authentication Middleware**: Use JWT tokens for authentication. Implement middleware to validate JWTs and attach user information to requests.\n\n5. **Organization Context Middleware**: Develop middleware to handle multi-tenancy by determining the organization context from request headers or tokens.\n\n6. **API Versioning**: Set up API versioning by organizing endpoints under the `/api/v1` path.\n\n7. **Error Handling and Exception Middleware**: Implement global error handling and exception middleware to standardize error responses.\n\n8. **OpenAPI Documentation**: Automatically generate OpenAPI documentation with examples for each endpoint using FastAPI's built-in support.\n\n9. **CORS Configuration**: Configure CORS to allow cross-origin requests from trusted domains.\n\n10. **Request Validation and Sanitization**: Ensure all incoming requests are validated and sanitized to prevent injection attacks.\n\n11. **RESTful Endpoint Design**: Implement endpoints following RESTful principles for authentication, organization management, user management, agent management, payment link CRUD, payment order tracking, customer management, product catalog, and webhook management. Ensure each endpoint emits events after state changes.",
       "testStrategy": "1. **Unit Tests**: Write unit tests for each endpoint to verify correct routing, request handling, and response generation.\n\n2. **Integration Tests**: Develop integration tests to ensure that dependency injection works correctly and that repositories are properly utilized.\n\n3. **Middleware Tests**: Test authentication and organization context middleware to ensure they correctly process requests and attach necessary information.\n\n4. **API Documentation Verification**: Check that the OpenAPI documentation is generated correctly and includes all endpoints with examples.\n\n5. **Security Tests**: Conduct security testing to verify JWT validation, CORS configuration, and request sanitization.\n\n6. **Functional Tests**: Perform end-to-end tests to ensure that the API endpoints function as expected and emit events correctly after state changes.",
-      "status": "pending",
+      "status": "in-progress",
       "dependencies": [
         26
       ],
@@ -2016,8 +2016,8 @@
           "title": "Initialize FastAPI Application",
           "description": "Set up the base FastAPI application with a modular structure.",
           "dependencies": [],
-          "details": "Create a new FastAPI project. Set up the main application file with an instance of FastAPI. Organize the project into directories for routers, models, and services.",
-          "status": "pending",
+          "details": "Create a new FastAPI project. Set up the main application file with an instance of FastAPI. Organize the project into directories for routers, models, and services.\n<info added on 2025-06-08T19:14:23.655Z>\nSuccessfully initialized FastAPI application structure:\n\n1. Updated main.py with comprehensive application setup:\n   - Created create_application() factory function\n   - Added proper lifespan management for startup/shutdown\n   - Integrated with event publisher from previous task\n   - Added middleware stack (RequestID, TrustedHost, CORS)\n   - Set up exception handlers\n   - Configured API documentation (disabled in production)\n   - Added health check and status endpoints\n\n2. Created modular structure:\n   - app/api/ directory for API versions\n   - app/api/v1/ for version 1 endpoints\n   - app/api/dependencies.py for dependency injection utilities\n\n3. Implemented dependency injection utilities:\n   - get_unit_of_work(): For transaction management\n   - get_current_user(): JWT authentication dependency\n   - require_organization_context(): Multi-tenancy support\n   - PaginationParams: Common pagination handling\n\nThe application now has a solid foundation with proper structure, middleware stack, and dependency injection ready for endpoint implementation.\n</info added on 2025-06-08T19:14:23.655Z>",
+          "status": "done",
           "testStrategy": "Run the application and check if it starts without errors."
         },
         {
@@ -2027,8 +2027,8 @@
           "dependencies": [
             1
           ],
-          "details": "Add JWT authentication middleware to validate tokens and attach user information to requests. Implement organization context middleware to handle multi-tenancy.",
-          "status": "pending",
+          "details": "Add JWT authentication middleware to validate tokens and attach user information to requests. Implement organization context middleware to handle multi-tenancy.\n<info added on 2025-06-08T19:18:24.898Z>\nSuccessfully set up the middleware stack:\n\n1. Created JWT security utilities (core/security.py):\n   - Password hashing with bcrypt\n   - JWT token creation (access & refresh tokens)\n   - Token decoding and validation\n   - Special tokens for email verification and password reset\n   - API key generation\n\n2. Implemented JWT Authentication middleware (middleware/auth.py):\n   - JWTAuthMiddleware class for automatic token validation\n   - Extracts tokens from Authorization header\n   - Validates and decodes JWT tokens\n   - Attaches user info to request state\n   - Public path configuration for endpoints that don't require auth\n   - Helper functions for endpoint dependencies\n\n3. Enhanced multi-tenancy middleware:\n   - Already existed as MultiTenancyMiddleware\n   - Extracts organization ID from authenticated user or headers\n   - Uses context variables for organization scoping\n   - Provides helper functions for getting/requiring organization context\n\n4. Updated main.py:\n   - Added middleware in correct order (reverse application)\n   - RequestID → JWT Auth → Multi-tenancy → TrustedHost → CORS\n   - Ensures proper context flow through the request lifecycle\n\n5. Updated dependencies.py:\n   - Fixed imports to use existing multi-tenancy functions\n   - Ready for use in endpoints\n\nThe middleware stack is now complete with authentication and multi-tenancy support.\n</info added on 2025-06-08T19:18:24.898Z>",
+          "status": "done",
           "testStrategy": "Test middleware by sending requests with and without valid JWTs and organization headers."
         },
         {
@@ -2038,8 +2038,8 @@
           "dependencies": [
             1
           ],
-          "details": "Define repository interfaces and implement them. Use FastAPI's Depends to inject these repositories into endpoint functions.",
-          "status": "pending",
+          "details": "Define repository interfaces and implement them. Use FastAPI's Depends to inject these repositories into endpoint functions.\n<info added on 2025-06-08T19:20:06.146Z>\nSuccessfully implemented comprehensive dependency injection utilities:\n\n1. Enhanced api/dependencies.py with multiple categories of dependencies:\n\n   a) Repository Dependencies:\n   - get_unit_of_work(): For transaction management\n   - Individual repository getters for all domain repositories\n   - Clean dependency injection pattern for database access\n\n   b) Authentication Dependencies:\n   - get_current_user_optional(): Returns user or None\n   - get_current_user(): Requires authentication\n   - get_current_active_user(): Additional status checks\n\n   c) Organization Context Dependencies:\n   - get_organization_id(): Extract from header or user context\n   - require_organization_context(): Enforce multi-tenancy\n\n   d) Pagination Dependencies:\n   - PaginationParams class with skip/limit\n   - get_pagination(): Standard pagination handling\n\n   e) Rate Limiting Dependencies:\n   - RateLimitDep class (placeholder for Redis implementation)\n   - Configurable calls/period\n\n   f) Permission Dependencies:\n   - check_organization_access(): Verify user access to org\n\n   g) Query Filter Dependencies:\n   - QueryFilters class for common search/filter params\n   - Handles date ranges, sorting, search queries\n\n   h) Service Dependencies:\n   - Placeholders for email and payment services\n\n   i) Background Task Dependencies:\n   - get_background_tasks(): For async task execution\n\n2. Fixed all imports and type hints\n\n3. Ready for use in API endpoints with clean dependency injection\n\nThe dependency injection system provides a clean, testable way to inject repositories, services, and common functionality into API endpoints.\n</info added on 2025-06-08T19:20:06.146Z>",
+          "status": "done",
           "testStrategy": "Create unit tests for endpoints to ensure dependencies are correctly injected."
         },
         {
@@ -2049,8 +2049,8 @@
           "dependencies": [
             1
           ],
-          "details": "Create Pydantic models for each entity (e.g., User, Organization) to be used in request and response bodies.",
-          "status": "pending",
+          "details": "Create Pydantic models for each entity (e.g., User, Organization) to be used in request and response bodies.\n<info added on 2025-06-08T19:25:39.561Z>\nUtilize existing Pydantic schemas from Task 26 located in apps/api/app/schemas/ for defining request and response bodies. Implement API-specific response wrappers in api/schemas.py for consistent API responses. Ensure imports in dependencies.py are updated to reference the correct models.\n</info added on 2025-06-08T19:25:39.561Z>",
+          "status": "done",
           "testStrategy": "Validate DTOs with sample data to ensure correct validation and serialization."
         },
         {
@@ -2112,8 +2112,8 @@
           "dependencies": [
             1
           ],
-          "details": "Create custom exception handlers and middleware to catch and format exceptions consistently.",
-          "status": "pending",
+          "details": "Create custom exception handlers and middleware to catch and format exceptions consistently.\n<info added on 2025-06-08T19:27:45.184Z>\nEnhanced error handling and exception middleware:\n\n1. Fixed import in main.py (setup_exception_handlers → register_exception_handlers).\n\n2. Verified comprehensive exception handling in middleware/exception_handler.py:\n   - Handlers for WediException, RequestValidationError, HTTPException, SQLAlchemyError, and general exceptions.\n   - Standardized error response format.\n   - Request ID tracking.\n   - Proper logging with different levels.\n\n3. Created api/exceptions.py with API-specific exceptions:\n   - APIException base class with error_code and context.\n   - UnauthorizedException (401), ForbiddenException (403), NotFoundException (404), ConflictException (409), BadRequestException (400), RateLimitException (429), PaymentRequiredException (402), ServiceUnavailableException (503).\n\n4. Added handler for APIException to extract additional context.\n</info added on 2025-06-08T19:27:45.184Z>",
+          "status": "done",
           "testStrategy": "Trigger various exceptions and verify standardized error responses."
         },
         {

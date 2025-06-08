@@ -1,6 +1,6 @@
 # Task ID: 27
 # Title: Implement FastAPI Endpoint Structure with Dependency Injection
-# Status: pending
+# Status: in-progress
 # Dependencies: 26
 # Priority: high
 # Description: Set up a FastAPI application structure with routers, dependency injection, and middleware for a RESTful API.
@@ -41,29 +41,138 @@
 6. **Functional Tests**: Perform end-to-end tests to ensure that the API endpoints function as expected and emit events correctly after state changes.
 
 # Subtasks:
-## 1. Initialize FastAPI Application [pending]
+## 1. Initialize FastAPI Application [done]
 ### Dependencies: None
 ### Description: Set up the base FastAPI application with a modular structure.
 ### Details:
 Create a new FastAPI project. Set up the main application file with an instance of FastAPI. Organize the project into directories for routers, models, and services.
+<info added on 2025-06-08T19:14:23.655Z>
+Successfully initialized FastAPI application structure:
 
-## 2. Set Up Middleware Stack [pending]
+1. Updated main.py with comprehensive application setup:
+   - Created create_application() factory function
+   - Added proper lifespan management for startup/shutdown
+   - Integrated with event publisher from previous task
+   - Added middleware stack (RequestID, TrustedHost, CORS)
+   - Set up exception handlers
+   - Configured API documentation (disabled in production)
+   - Added health check and status endpoints
+
+2. Created modular structure:
+   - app/api/ directory for API versions
+   - app/api/v1/ for version 1 endpoints
+   - app/api/dependencies.py for dependency injection utilities
+
+3. Implemented dependency injection utilities:
+   - get_unit_of_work(): For transaction management
+   - get_current_user(): JWT authentication dependency
+   - require_organization_context(): Multi-tenancy support
+   - PaginationParams: Common pagination handling
+
+The application now has a solid foundation with proper structure, middleware stack, and dependency injection ready for endpoint implementation.
+</info added on 2025-06-08T19:14:23.655Z>
+
+## 2. Set Up Middleware Stack [done]
 ### Dependencies: 27.1
 ### Description: Implement middleware for authentication and organization context.
 ### Details:
 Add JWT authentication middleware to validate tokens and attach user information to requests. Implement organization context middleware to handle multi-tenancy.
+<info added on 2025-06-08T19:18:24.898Z>
+Successfully set up the middleware stack:
 
-## 3. Implement Dependency Injection [pending]
+1. Created JWT security utilities (core/security.py):
+   - Password hashing with bcrypt
+   - JWT token creation (access & refresh tokens)
+   - Token decoding and validation
+   - Special tokens for email verification and password reset
+   - API key generation
+
+2. Implemented JWT Authentication middleware (middleware/auth.py):
+   - JWTAuthMiddleware class for automatic token validation
+   - Extracts tokens from Authorization header
+   - Validates and decodes JWT tokens
+   - Attaches user info to request state
+   - Public path configuration for endpoints that don't require auth
+   - Helper functions for endpoint dependencies
+
+3. Enhanced multi-tenancy middleware:
+   - Already existed as MultiTenancyMiddleware
+   - Extracts organization ID from authenticated user or headers
+   - Uses context variables for organization scoping
+   - Provides helper functions for getting/requiring organization context
+
+4. Updated main.py:
+   - Added middleware in correct order (reverse application)
+   - RequestID → JWT Auth → Multi-tenancy → TrustedHost → CORS
+   - Ensures proper context flow through the request lifecycle
+
+5. Updated dependencies.py:
+   - Fixed imports to use existing multi-tenancy functions
+   - Ready for use in endpoints
+
+The middleware stack is now complete with authentication and multi-tenancy support.
+</info added on 2025-06-08T19:18:24.898Z>
+
+## 3. Implement Dependency Injection [done]
 ### Dependencies: 27.1
 ### Description: Set up dependency injection for repositories and services using FastAPI's dependency system.
 ### Details:
 Define repository interfaces and implement them. Use FastAPI's Depends to inject these repositories into endpoint functions.
+<info added on 2025-06-08T19:20:06.146Z>
+Successfully implemented comprehensive dependency injection utilities:
 
-## 4. Create Pydantic DTOs [pending]
+1. Enhanced api/dependencies.py with multiple categories of dependencies:
+
+   a) Repository Dependencies:
+   - get_unit_of_work(): For transaction management
+   - Individual repository getters for all domain repositories
+   - Clean dependency injection pattern for database access
+
+   b) Authentication Dependencies:
+   - get_current_user_optional(): Returns user or None
+   - get_current_user(): Requires authentication
+   - get_current_active_user(): Additional status checks
+
+   c) Organization Context Dependencies:
+   - get_organization_id(): Extract from header or user context
+   - require_organization_context(): Enforce multi-tenancy
+
+   d) Pagination Dependencies:
+   - PaginationParams class with skip/limit
+   - get_pagination(): Standard pagination handling
+
+   e) Rate Limiting Dependencies:
+   - RateLimitDep class (placeholder for Redis implementation)
+   - Configurable calls/period
+
+   f) Permission Dependencies:
+   - check_organization_access(): Verify user access to org
+
+   g) Query Filter Dependencies:
+   - QueryFilters class for common search/filter params
+   - Handles date ranges, sorting, search queries
+
+   h) Service Dependencies:
+   - Placeholders for email and payment services
+
+   i) Background Task Dependencies:
+   - get_background_tasks(): For async task execution
+
+2. Fixed all imports and type hints
+
+3. Ready for use in API endpoints with clean dependency injection
+
+The dependency injection system provides a clean, testable way to inject repositories, services, and common functionality into API endpoints.
+</info added on 2025-06-08T19:20:06.146Z>
+
+## 4. Create Pydantic DTOs [done]
 ### Dependencies: 27.1
 ### Description: Define request and response DTOs using Pydantic models for data validation and serialization.
 ### Details:
 Create Pydantic models for each entity (e.g., User, Organization) to be used in request and response bodies.
+<info added on 2025-06-08T19:25:39.561Z>
+Utilize existing Pydantic schemas from Task 26 located in apps/api/app/schemas/ for defining request and response bodies. Implement API-specific response wrappers in api/schemas.py for consistent API responses. Ensure imports in dependencies.py are updated to reference the correct models.
+</info added on 2025-06-08T19:25:39.561Z>
 
 ## 5. Implement Authentication Endpoints [pending]
 ### Dependencies: 27.2, 27.3, 27.4
@@ -89,11 +198,28 @@ Create CRUD endpoints for user management. Ensure proper validation and permissi
 ### Details:
 Create endpoints for creating, updating, and deleting payment links. Ensure data integrity and validation.
 
-## 9. Set Up Error Handling and Exception Middleware [pending]
+## 9. Set Up Error Handling and Exception Middleware [done]
 ### Dependencies: 27.1
 ### Description: Implement global error handling and exception middleware to standardize error responses.
 ### Details:
 Create custom exception handlers and middleware to catch and format exceptions consistently.
+<info added on 2025-06-08T19:27:45.184Z>
+Enhanced error handling and exception middleware:
+
+1. Fixed import in main.py (setup_exception_handlers → register_exception_handlers).
+
+2. Verified comprehensive exception handling in middleware/exception_handler.py:
+   - Handlers for WediException, RequestValidationError, HTTPException, SQLAlchemyError, and general exceptions.
+   - Standardized error response format.
+   - Request ID tracking.
+   - Proper logging with different levels.
+
+3. Created api/exceptions.py with API-specific exceptions:
+   - APIException base class with error_code and context.
+   - UnauthorizedException (401), ForbiddenException (403), NotFoundException (404), ConflictException (409), BadRequestException (400), RateLimitException (429), PaymentRequiredException (402), ServiceUnavailableException (503).
+
+4. Added handler for APIException to extract additional context.
+</info added on 2025-06-08T19:27:45.184Z>
 
 ## 10. Configure OpenAPI Documentation [pending]
 ### Dependencies: 27.5, 27.6, 27.7, 27.8
