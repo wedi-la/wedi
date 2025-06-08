@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from .models import Base
 
-from app.config import settings
+from app.core.config import settings
 
 
 @asynccontextmanager

@@ -286,7 +286,7 @@ async def general_exception_handler(
     message = "An unexpected error occurred"
     details = None
     
-    from app.config import settings
+    from app.core.config import settings
     if settings.ENVIRONMENT != "production":
         message = str(exc)
         details = {"error_type": type(exc).__name__}

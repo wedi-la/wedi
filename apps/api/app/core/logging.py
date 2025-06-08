@@ -13,7 +13,7 @@ from typing import Any, Callable, Dict, Optional, Union
 import structlog
 from structlog.processors import CallsiteParameter, CallsiteParameterAdder
 
-from app.config import settings
+from app.core.config import settings
 
 
 # Configure structlog for structured logging
