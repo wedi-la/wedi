@@ -1,6 +1,6 @@
 # Task ID: 26
 # Title: Implement Repository Pattern and Database Layer
-# Status: pending
+# Status: in-progress
 # Dependencies: 25
 # Priority: high
 # Description: Design and implement a repository pattern with a database layer using SQLAlchemy 2.0, supporting multi-tenancy, transaction management, and event emission.
@@ -41,71 +41,193 @@
 6. **Async Operations**: Verify that all repository operations support async/await and do not block the event loop.
 
 # Subtasks:
-## 1. Design Base Repository Abstract Class [pending]
+## 1. Design Base Repository Abstract Class [done]
 ### Dependencies: None
 ### Description: Create a base repository class with generic CRUD operations using SQLAlchemy 2.0 with async support.
 ### Details:
 Define an abstract class with methods for create, read, update, delete, and list operations. Ensure methods are async and handle transaction management.
 
-## 2. Implement Database Session Factory [pending]
+## 2. Implement Database Session Factory [done]
 ### Dependencies: None
 ### Description: Set up a session factory for managing database sessions and connection pooling.
 ### Details:
 Configure SQLAlchemy to use a session factory with async support. Ensure connection pooling is optimized for performance.
 
-## 3. Develop Multi-Tenancy Middleware [pending]
+## 3. Develop Multi-Tenancy Middleware [done]
 ### Dependencies: 26.2
 ### Description: Create middleware to filter queries by organizationId for multi-tenancy support.
 ### Details:
 Implement middleware that intercepts database queries and applies a filter based on the current tenant's organizationId.
 
-## 4. Implement Unit of Work Pattern [pending]
+## 4. Implement Unit of Work Pattern [done]
 ### Dependencies: 26.1, 26.2
 ### Description: Develop a Unit of Work pattern to manage transactions across multiple repositories.
 ### Details:
 Create a Unit of Work class that manages the lifecycle of a database session and coordinates transaction commits and rollbacks.
 
-## 5. Create UserRepository with Auth-Specific Queries [pending]
+## 5. Create UserRepository with Auth-Specific Queries [done]
 ### Dependencies: 26.1
 ### Description: Implement a UserRepository extending the base repository with authentication-specific queries.
 ### Details:
 Add methods for user-specific operations such as finding users by email or username.
+<info added on 2025-06-08T06:59:16.981Z>
+Successfully implemented UserRepository with the following authentication-specific queries:
+- get_by_email(): Retrieve user by email with optional organization loading
+- get_by_auth_provider(): Find user by OAuth provider (Google, Thirdweb, etc.)
+- get_by_wallet_address(): Look up user by their primary wallet address
+- get_organizations(): Get all organizations a user belongs to
+- search(): Search users by email or name with pagination
+- update_last_login(): Update last login timestamp
+- verify_email(): Mark email as verified
+- set_primary_wallet(): Set user's primary wallet with validation
+- get_by_organization(): Get all users in a specific organization
 
-## 6. Create OrganizationRepository with Membership Management [pending]
+Also created comprehensive user schemas using Pydantic:
+- UserBase, UserCreate, UserUpdate for CRUD operations
+- UserAuthInfo for authentication context
+- UserWithOrganizations for related data loading
+
+The repository properly extends BaseRepository and handles authentication-specific concerns while maintaining clean separation of concerns.
+</info added on 2025-06-08T06:59:16.981Z>
+
+## 6. Create OrganizationRepository with Membership Management [done]
 ### Dependencies: 26.1
 ### Description: Implement an OrganizationRepository with methods for managing organization memberships.
 ### Details:
 Add methods to handle operations like adding or removing members from an organization.
 
-## 7. Create AgentRepository with Capability Queries [pending]
+## 7. Create AgentRepository with Capability Queries [done]
 ### Dependencies: 26.1
 ### Description: Implement an AgentRepository with methods for querying agent capabilities.
 ### Details:
 Add methods to retrieve agents based on their capabilities or roles.
 
-## 8. Create PaymentLinkRepository with Status Filters [pending]
+## 8. Create PaymentLinkRepository with Status Filters [done]
 ### Dependencies: 26.1
 ### Description: Implement a PaymentLinkRepository with methods for filtering by payment status.
 ### Details:
 Add methods to retrieve payment links based on their current status.
 
-## 9. Create PaymentOrderRepository with Complex Queries [pending]
+## 9. Create PaymentOrderRepository with Complex Queries [done]
 ### Dependencies: 26.1
 ### Description: Implement a PaymentOrderRepository with support for complex queries.
 ### Details:
 Add methods to handle complex queries involving multiple criteria and joins.
+<info added on 2025-06-08T07:10:15.925Z>
+Successfully implemented PaymentOrderRepository with comprehensive features for reporting and analytics:
 
-## 10. Create CustomerRepository with Payment Method Management [pending]
+Key Methods Implemented:
+- create(): Creates new payment orders with auto-generated order numbers (format: YYYYMMDD-000001)
+- get_by_order_number(): Retrieve orders by their unique order number
+- get_by_status(): Filter orders by status (PENDING, PROCESSING, COMPLETED, FAILED)
+- get_orders_for_retry(): Intelligent retry logic that excludes permanent failures
+- search(): Advanced filtering with 13+ filter criteria including amounts, dates, KYC status, risk scores
+- get_organization_stats(): Comprehensive statistics including success rates, volume by currency, processing times
+- get_recent_orders_with_events(): Eager loading of related data for performance
+- calculate_daily_volume(): Time-series data for volume analytics and dashboards
+- update_status(): Status transitions with automatic timestamp tracking
+
+Also created PaymentOrderSchemas:
+- PaymentOrderCreate, PaymentOrderUpdate for CRUD operations
+- PaymentOrderFilter for advanced search capabilities
+- PaymentOrderStats for analytics responses
+- PaymentOrderWithRelations for loading related entities
+
+The repository properly handles:
+- Multi-tenancy via organization_id filtering
+- Decimal precision for financial amounts
+- Timezone-aware datetime handling
+- Complex aggregation queries for reporting
+- Performance optimizations with eager loading
+</info added on 2025-06-08T07:10:15.925Z>
+
+## 10. Create CustomerRepository with Payment Method Management [done]
 ### Dependencies: 26.1
 ### Description: Implement a CustomerRepository with methods for managing customer payment methods.
 ### Details:
 Add methods to add, update, or remove payment methods for customers.
+<info added on 2025-06-08T07:13:02.982Z>
+Successfully implemented CustomerRepository with comprehensive payment method management:
 
-## 11. Create ProductRepository and PriceRepository [pending]
+Customer Operations:
+- get_by_email(): Find customer by email within organization
+- get_by_external_id(): Find by merchant's reference ID
+- get_or_create(): Create customer if doesn't exist
+- search(): Advanced filtering with 7 criteria (email, name, country, KYC status, date ranges, payment method presence)
+- get_with_payment_methods(): Eager loading for performance
+
+Payment Method Management:
+- add_payment_method(): Secure addition with automatic data masking
+- update_payment_method(): Controlled updates with validation
+- remove_payment_method(): Safe deletion with pending order checks
+- get_payment_methods(): List all methods with optional type filtering
+- get_default_payment_method(): Quick access to default method
+- verify_payment_method(): Mark methods as verified
+
+Security Features:
+- Automatic PCI compliance through data masking (only last 4 digits stored)
+- Card number validation and brand detection
+- Bank account masking
+- Wallet address storage for crypto payments
+- Automatic expiration date calculation for cards
+
+Business Logic:
+- Automatic default payment method assignment
+- Prevention of deleting payment methods with pending orders
+- Smart default reassignment when primary method is removed
+- Support for multiple payment method types (card, bank, wallet)
+
+Also created comprehensive schemas for Customer and PaymentMethod entities with proper validation.
+</info added on 2025-06-08T07:13:02.982Z>
+
+## 11. Create ProductRepository and PriceRepository [done]
 ### Dependencies: 26.1
 ### Description: Implement repositories for managing products and their pricing.
 ### Details:
 Add methods to handle CRUD operations and price adjustments for products.
+<info added on 2025-06-08T07:16:47.784Z>
+Successfully implemented ProductRepository and PriceRepository:
+
+ProductRepository Features:
+- get_by_sku(): Find products by unique SKU
+- create(): Create with SKU uniqueness validation
+- get_with_prices(): Eager loading of related prices
+- get_active_products(): Filter active products only
+- search(): Advanced search with 8 filter criteria
+- get_by_category(): Category-based filtering
+- get_by_tags(): Tag-based filtering with match_all option
+- get_categories(): List all unique categories
+- get_all_tags(): Extract all unique tags
+- archive_product(): Soft delete with cascade to prices
+
+PriceRepository Features:
+- create(): Create with product existence validation
+- get_active_price_for_product(): Smart price selection based on currency and quantity
+- get_prices_for_product(): List all prices for a product
+- get_recurring_prices(): Filter subscription prices
+- search(): Advanced search with 8 filter criteria
+- get_with_product(): Eager loading of parent product
+- get_price_summary_by_currency(): Aggregated statistics by currency
+- archive_price(): Soft delete functionality
+- duplicate_price(): Clone prices with modifications
+- validate_tiered_pricing(): Complex tiered pricing validation
+
+Both repositories support:
+- Multi-tenancy via organization_id
+- Advanced filtering and search
+- Soft deletes for data retention
+- Eager loading for performance
+- Business logic validation
+- Currency normalization (auto-uppercase)
+
+Created comprehensive schemas for Product and Price entities with:
+- Proper validation for SKU, currency, billing intervals
+- Support for one-time and recurring pricing
+- Tiered pricing structures
+- Trial periods for subscriptions
+- Min/max quantity constraints
+- Product categorization and tagging
+</info added on 2025-06-08T07:16:47.784Z>
 
 ## 12. Create WalletRepository with Blockchain Integration [pending]
 ### Dependencies: 26.1

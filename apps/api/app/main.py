@@ -21,9 +21,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     """
     # Startup
     print("Starting Wedi Pay API...")
-    engine = create_engine(settings.DATABASE_URL)
-    async_session = async_sessionmaker(engine, class_=AsyncSession)
-    Base.metadata.create_all(bind=engine)
     # Initialize database connections, Redis, Kafka, etc.
     
     yield

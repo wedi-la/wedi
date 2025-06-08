@@ -1831,7 +1831,7 @@
       "description": "Design and implement a repository pattern with a database layer using SQLAlchemy 2.0, supporting multi-tenancy, transaction management, and event emission.",
       "details": "1. **Design Base Repository Pattern**: Implement a base repository class with generic CRUD operations using SQLAlchemy 2.0 with async support. Ensure it handles both read and write operations with proper transaction management.\n\n2. **Domain-Specific Repositories**: Create repositories for each aggregate root such as User, Organization, Agent, PaymentLink, and PaymentOrder. These should extend the base repository and include domain-specific logic.\n\n3. **Unit of Work Pattern**: Implement a Unit of Work pattern to manage transactions across multiple repositories. Ensure that it supports rollback and commit operations.\n\n4. **Multi-Tenancy Middleware**: Develop middleware to automatically filter queries by organizationId, ensuring data isolation per tenant.\n\n5. **Query Specification Pattern**: Implement a pattern to handle complex queries, allowing for flexible and reusable query logic.\n\n6. **Database Session Management**: Set up session management and connection pooling to optimize database interactions.\n\n7. **Repository Interfaces**: Define interfaces for repositories with async/await support to ensure non-blocking operations.\n\n8. **Event Emission**: Integrate event emission after database operations to support Redpanda integration. Emit domain events after successful operations.\n\n9. **Error Handling and Logging**: Implement comprehensive error handling and logging to capture and manage exceptions effectively.\n\n10. **Row Level Security (RLS)**: Apply RLS patterns at the application level to ensure security and data integrity.\n\n11. **Integration with SQLAlchemy Models**: Ensure integration with the SQLAlchemy models generated in Task 25, maintaining consistency with the database schema.",
       "testStrategy": "1. **Unit Tests**: Write unit tests for each repository method using pytest to ensure CRUD operations work as expected.\n\n2. **Integration Tests**: Develop integration tests to verify multi-tenancy middleware, transaction management, and event emission.\n\n3. **Load Testing**: Conduct load testing to ensure connection pooling and session management handle concurrent requests efficiently.\n\n4. **Security Testing**: Test RLS implementation to ensure data isolation and security.\n\n5. **Logging Verification**: Check logs to ensure errors and events are captured correctly.\n\n6. **Async Operations**: Verify that all repository operations support async/await and do not block the event loop.",
-      "status": "pending",
+      "status": "in-progress",
       "dependencies": [
         25
       ],
@@ -1843,7 +1843,7 @@
           "description": "Create a base repository class with generic CRUD operations using SQLAlchemy 2.0 with async support.",
           "dependencies": [],
           "details": "Define an abstract class with methods for create, read, update, delete, and list operations. Ensure methods are async and handle transaction management.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Write unit tests to verify CRUD operations work as expected with mock data."
         },
         {
@@ -1852,7 +1852,7 @@
           "description": "Set up a session factory for managing database sessions and connection pooling.",
           "dependencies": [],
           "details": "Configure SQLAlchemy to use a session factory with async support. Ensure connection pooling is optimized for performance.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Test session creation and closure to ensure connections are managed correctly."
         },
         {
@@ -1863,7 +1863,7 @@
             2
           ],
           "details": "Implement middleware that intercepts database queries and applies a filter based on the current tenant's organizationId.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Test with multiple tenants to ensure data isolation is maintained."
         },
         {
@@ -1875,7 +1875,7 @@
             2
           ],
           "details": "Create a Unit of Work class that manages the lifecycle of a database session and coordinates transaction commits and rollbacks.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Test transaction commit and rollback scenarios to ensure data consistency."
         },
         {
@@ -1885,8 +1885,8 @@
           "dependencies": [
             1
           ],
-          "details": "Add methods for user-specific operations such as finding users by email or username.",
-          "status": "pending",
+          "details": "Add methods for user-specific operations such as finding users by email or username.\n<info added on 2025-06-08T06:59:16.981Z>\nSuccessfully implemented UserRepository with the following authentication-specific queries:\n- get_by_email(): Retrieve user by email with optional organization loading\n- get_by_auth_provider(): Find user by OAuth provider (Google, Thirdweb, etc.)\n- get_by_wallet_address(): Look up user by their primary wallet address\n- get_organizations(): Get all organizations a user belongs to\n- search(): Search users by email or name with pagination\n- update_last_login(): Update last login timestamp\n- verify_email(): Mark email as verified\n- set_primary_wallet(): Set user's primary wallet with validation\n- get_by_organization(): Get all users in a specific organization\n\nAlso created comprehensive user schemas using Pydantic:\n- UserBase, UserCreate, UserUpdate for CRUD operations\n- UserAuthInfo for authentication context\n- UserWithOrganizations for related data loading\n\nThe repository properly extends BaseRepository and handles authentication-specific concerns while maintaining clean separation of concerns.\n</info added on 2025-06-08T06:59:16.981Z>",
+          "status": "done",
           "testStrategy": "Test user-specific queries to ensure they return expected results."
         },
         {
@@ -1897,7 +1897,7 @@
             1
           ],
           "details": "Add methods to handle operations like adding or removing members from an organization.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Test membership management operations for correctness."
         },
         {
@@ -1908,7 +1908,7 @@
             1
           ],
           "details": "Add methods to retrieve agents based on their capabilities or roles.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Test capability queries to ensure they filter agents correctly."
         },
         {
@@ -1919,7 +1919,7 @@
             1
           ],
           "details": "Add methods to retrieve payment links based on their current status.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Test status filters to ensure they return the correct payment links."
         },
         {
@@ -1929,8 +1929,8 @@
           "dependencies": [
             1
           ],
-          "details": "Add methods to handle complex queries involving multiple criteria and joins.",
-          "status": "pending",
+          "details": "Add methods to handle complex queries involving multiple criteria and joins.\n<info added on 2025-06-08T07:10:15.925Z>\nSuccessfully implemented PaymentOrderRepository with comprehensive features for reporting and analytics:\n\nKey Methods Implemented:\n- create(): Creates new payment orders with auto-generated order numbers (format: YYYYMMDD-000001)\n- get_by_order_number(): Retrieve orders by their unique order number\n- get_by_status(): Filter orders by status (PENDING, PROCESSING, COMPLETED, FAILED)\n- get_orders_for_retry(): Intelligent retry logic that excludes permanent failures\n- search(): Advanced filtering with 13+ filter criteria including amounts, dates, KYC status, risk scores\n- get_organization_stats(): Comprehensive statistics including success rates, volume by currency, processing times\n- get_recent_orders_with_events(): Eager loading of related data for performance\n- calculate_daily_volume(): Time-series data for volume analytics and dashboards\n- update_status(): Status transitions with automatic timestamp tracking\n\nAlso created PaymentOrderSchemas:\n- PaymentOrderCreate, PaymentOrderUpdate for CRUD operations\n- PaymentOrderFilter for advanced search capabilities\n- PaymentOrderStats for analytics responses\n- PaymentOrderWithRelations for loading related entities\n\nThe repository properly handles:\n- Multi-tenancy via organization_id filtering\n- Decimal precision for financial amounts\n- Timezone-aware datetime handling\n- Complex aggregation queries for reporting\n- Performance optimizations with eager loading\n</info added on 2025-06-08T07:10:15.925Z>",
+          "status": "done",
           "testStrategy": "Test complex queries to ensure they execute correctly and efficiently."
         },
         {
@@ -1940,8 +1940,8 @@
           "dependencies": [
             1
           ],
-          "details": "Add methods to add, update, or remove payment methods for customers.",
-          "status": "pending",
+          "details": "Add methods to add, update, or remove payment methods for customers.\n<info added on 2025-06-08T07:13:02.982Z>\nSuccessfully implemented CustomerRepository with comprehensive payment method management:\n\nCustomer Operations:\n- get_by_email(): Find customer by email within organization\n- get_by_external_id(): Find by merchant's reference ID\n- get_or_create(): Create customer if doesn't exist\n- search(): Advanced filtering with 7 criteria (email, name, country, KYC status, date ranges, payment method presence)\n- get_with_payment_methods(): Eager loading for performance\n\nPayment Method Management:\n- add_payment_method(): Secure addition with automatic data masking\n- update_payment_method(): Controlled updates with validation\n- remove_payment_method(): Safe deletion with pending order checks\n- get_payment_methods(): List all methods with optional type filtering\n- get_default_payment_method(): Quick access to default method\n- verify_payment_method(): Mark methods as verified\n\nSecurity Features:\n- Automatic PCI compliance through data masking (only last 4 digits stored)\n- Card number validation and brand detection\n- Bank account masking\n- Wallet address storage for crypto payments\n- Automatic expiration date calculation for cards\n\nBusiness Logic:\n- Automatic default payment method assignment\n- Prevention of deleting payment methods with pending orders\n- Smart default reassignment when primary method is removed\n- Support for multiple payment method types (card, bank, wallet)\n\nAlso created comprehensive schemas for Customer and PaymentMethod entities with proper validation.\n</info added on 2025-06-08T07:13:02.982Z>",
+          "status": "done",
           "testStrategy": "Test payment method management operations for accuracy."
         },
         {
@@ -1951,8 +1951,8 @@
           "dependencies": [
             1
           ],
-          "details": "Add methods to handle CRUD operations and price adjustments for products.",
-          "status": "pending",
+          "details": "Add methods to handle CRUD operations and price adjustments for products.\n<info added on 2025-06-08T07:16:47.784Z>\nSuccessfully implemented ProductRepository and PriceRepository:\n\nProductRepository Features:\n- get_by_sku(): Find products by unique SKU\n- create(): Create with SKU uniqueness validation\n- get_with_prices(): Eager loading of related prices\n- get_active_products(): Filter active products only\n- search(): Advanced search with 8 filter criteria\n- get_by_category(): Category-based filtering\n- get_by_tags(): Tag-based filtering with match_all option\n- get_categories(): List all unique categories\n- get_all_tags(): Extract all unique tags\n- archive_product(): Soft delete with cascade to prices\n\nPriceRepository Features:\n- create(): Create with product existence validation\n- get_active_price_for_product(): Smart price selection based on currency and quantity\n- get_prices_for_product(): List all prices for a product\n- get_recurring_prices(): Filter subscription prices\n- search(): Advanced search with 8 filter criteria\n- get_with_product(): Eager loading of parent product\n- get_price_summary_by_currency(): Aggregated statistics by currency\n- archive_price(): Soft delete functionality\n- duplicate_price(): Clone prices with modifications\n- validate_tiered_pricing(): Complex tiered pricing validation\n\nBoth repositories support:\n- Multi-tenancy via organization_id\n- Advanced filtering and search\n- Soft deletes for data retention\n- Eager loading for performance\n- Business logic validation\n- Currency normalization (auto-uppercase)\n\nCreated comprehensive schemas for Product and Price entities with:\n- Proper validation for SKU, currency, billing intervals\n- Support for one-time and recurring pricing\n- Tiered pricing structures\n- Trial periods for subscriptions\n- Min/max quantity constraints\n- Product categorization and tagging\n</info added on 2025-06-08T07:16:47.784Z>",
+          "status": "done",
           "testStrategy": "Test product and price operations to ensure data integrity."
         },
         {
