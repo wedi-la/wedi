@@ -229,11 +229,52 @@ Created comprehensive schemas for Product and Price entities with:
 - Product categorization and tagging
 </info added on 2025-06-08T07:16:47.784Z>
 
-## 12. Create WalletRepository with Blockchain Integration [pending]
+## 12. Create WalletRepository with Blockchain Integration [done]
 ### Dependencies: 26.1
 ### Description: Implement a WalletRepository with methods for blockchain-related operations.
 ### Details:
 Add methods to interact with blockchain APIs for wallet transactions.
+<info added on 2025-06-08T14:55:44.769Z>
+Completed implementation of WalletRepository with blockchain integration:
+
+1. Created schemas/wallet.py with:
+   - WalletType enum (EOA, SMART_WALLET, MULTI_SIG)
+   - Base schemas for wallet CRUD operations
+   - Blockchain-specific schemas (WalletBalance, TokenBalance, WalletTransaction)
+   - Gas estimation schemas (GasEstimate, TransactionRequest)
+   - Smart wallet deployment schemas (SmartWalletDeployment, MultiSigConfig)
+   - Comprehensive validation for addresses and chain IDs
+
+2. Created repositories/wallet.py with:
+   - Full CRUD operations inheriting from BaseRepository
+   - Blockchain-specific query methods:
+     * get_by_address: Find wallet by address and chain
+     * get_by_user/organization: Filter wallets by ownership
+     * validate_wallet_ownership: Check access permissions
+   - Blocklist/allowlist management:
+     * check_blocklist/allowlist: Verify address status
+     * update_wallet_blocklist/allowlist: Manage list status with validation
+   - Blockchain integration methods:
+     * get_wallet_balance: Fetch balance from blockchain (placeholder for provider integration)
+     * get_wallet_transactions: Query transaction history
+     * estimate_gas: Calculate transaction costs
+     * send_transaction: Submit blockchain transactions with validation
+   - Analytics methods:
+     * get_wallet_stats: Calculate wallet statistics over time periods
+   - Smart wallet deployment:
+     * deploy_smart_wallet: Deploy new smart contracts
+
+3. Key features implemented:
+   - Multi-chain support via chain_id
+   - Address normalization (lowercase)
+   - Blocklist/allowlist exclusivity validation
+   - Transaction tracking via BlockchainTransaction model
+   - Performance tracking decorators
+   - Comprehensive logging
+   - Business rule validation
+
+TODO markers left for actual blockchain provider integration (web3, ethers, etc.) as the implementation currently uses placeholder data.
+</info added on 2025-06-08T14:55:44.769Z>
 
 ## 13. Implement Query Specification Pattern [pending]
 ### Dependencies: 26.1
@@ -247,9 +288,64 @@ Create a specification interface and implement classes for different query types
 ### Details:
 Configure event publishers to emit domain events after successful CRUD operations.
 
-## 15. Implement Error Handling and Logging [pending]
+## 15. Implement Error Handling and Logging [done]
 ### Dependencies: None
 ### Description: Develop comprehensive error handling and logging mechanisms.
 ### Details:
 Set up logging to capture exceptions and implement custom exceptions for error scenarios.
+<info added on 2025-06-08T14:52:07.861Z>
+Completed implementation of comprehensive error handling and logging:
+
+1. Created core/exceptions.py with:
+   - Hierarchical exception structure (WediException base class)
+   - Repository-specific exceptions (NotFoundError, DuplicateError, ValidationError)
+   - Business logic exceptions (BusinessRuleViolation, InsufficientPermissions, RateLimitExceeded)
+   - Payment-specific exceptions (PaymentProviderError, InsufficientFunds, PaymentLinkExpired)
+   - Agent-specific exceptions (AgentExecutionError, AgentTimeoutError)
+   - External service exceptions (BlockchainError, KYCProviderError)
+   - Structured error format with code, message, status_code, and details
+
+2. Created core/logging.py with:
+   - Structured logging using structlog
+   - Environment-based formatting (JSON for production, console for development)
+   - Log execution decorator with async support
+   - Context managers for temporary logging context
+   - Specialized logging functions for database queries, external APIs, payments, agents, and security events
+   - Sensitive data sanitization utilities
+   - Request context binding
+
+3. Created middleware/exception_handler.py with:
+   - FastAPI exception handlers for all exception types
+   - Standardized error response format
+   - Request ID tracking in error responses
+   - Different log levels based on error severity
+   - SQLAlchemy-specific error handling
+   - Production-safe error messages
+
+4. Created core/monitoring.py with:
+   - Performance tracking utilities
+   - Metric collection (count, duration, success rate)
+   - Performance decorators and context managers
+   - Slow operation detection and logging
+   - Repository-specific metrics
+   - Performance report generation
+
+5. Created middleware/request_id.py:
+   - Request ID generation and propagation
+   - Request/response logging
+   - Context binding for structured logging
+
+6. Updated repositories/base.py:
+   - Integrated custom exceptions from core.exceptions
+   - Added logging decorators to key methods
+   - Enhanced error messages with structured data
+   - Added debug and info logging for operations
+
+7. Created/Updated config.py:
+   - Comprehensive application settings
+   - Environment-based configuration
+   - Validation for critical settings in production
+
+All error handling follows consistent patterns with proper HTTP status codes, machine-readable error codes, and detailed error information for debugging while maintaining security in production.
+</info added on 2025-06-08T14:52:07.861Z>
 

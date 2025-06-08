@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "wedi-api"
+name = "app"
 version = "0.0.1"
 description = "Wedi Pay API - AI-native payment orchestration platform"
 authors = ["Wedi Team"]
@@ -63,3 +63,6 @@ python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 asyncio_mode = "auto" 
+
+[tool.poetry.scripts]
+api = "run:run"

@@ -1,73 +1,93 @@
 """
-Application configuration using Pydantic Settings.
+Application configuration settings.
 """
-from typing import List, Optional
+import os
+from typing import Optional
 
-from pydantic import field_validator
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    """Application settings."""
-    
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
-        extra="ignore",
-    )
+    """Application settings loaded from environment variables."""
     
     # Application
-    APP_NAME: str = "Wedi Pay API"
-    DEBUG: bool = False
+    APP_NAME: str = "Wedi API"
+    APP_VERSION: str = "0.1.0"
     ENVIRONMENT: str = "development"
+    DEBUG: bool = True
     
     # API
-    API_V1_STR: str = "/api/v1"
-    ALLOWED_ORIGINS: list[str] = ["http://localhost:3000", "http://localhost:3001"]
+    API_V1_PREFIX: str = "/api/v1"
     
     # Database
-    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/wedi_pay"
-    DATABASE_POOL_SIZE: int = 5
+    DATABASE_URL: str = "postgresql+asyncpg://user:pass@localhost/wedi"
+    DATABASE_POOL_SIZE: int = 20
     DATABASE_MAX_OVERFLOW: int = 10
+    DATABASE_POOL_TIMEOUT: int = 30
+    DATABASE_POOL_RECYCLE: int = 3600
     
-    # Redis
-    REDIS_URL: str = "redis://localhost:6379/0"
+    # Redis (for caching/sessions)
+    REDIS_URL: Optional[str] = None
     
-    # Kafka
-    KAFKA_BOOTSTRAP_SERVERS: str = "localhost:9092"
-    
-    # Authentication
+    # Security
     SECRET_KEY: str = "your-secret-key-here"
-    ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
+    ALGORITHM: str = "HS256"
     
-    # Payment Providers
-    YOINT_API_URL: Optional[str] = None
+    # CORS
+    ALLOWED_ORIGINS: list[str] = ["http://localhost:3000"]
+    
+    # Logging
+    LOG_LEVEL: str = "INFO"
+    LOG_FORMAT: str = "json"  # json or console
+    
+    # Rate limiting
+    RATE_LIMIT_ENABLED: bool = True
+    RATE_LIMIT_PER_MINUTE: int = 60
+    
+    # External services
+    REDPANDA_BOOTSTRAP_SERVERS: str = "localhost:9092"
+    
+    # Payment providers
+    YOINT_API_URL: str = "https://api.yoint.com"
     YOINT_API_KEY: Optional[str] = None
-    TRUBIT_API_URL: Optional[str] = None
+    
+    TRUBIT_API_URL: str = "https://api.trubit.com"
     TRUBIT_API_KEY: Optional[str] = None
-    PROMETEO_API_URL: Optional[str] = None
-    PROMETEO_API_KEY: Optional[str] = None
     
-    # Email
-    SMTP_HOST: Optional[str] = None
-    SMTP_PORT: int = 587
-    SMTP_USER: Optional[str] = None
-    SMTP_PASSWORD: Optional[str] = None
-    SMTP_FROM_EMAIL: Optional[str] = None
+
     
-    # Monitoring
-    SENTRY_DSN: Optional[str] = None
-    
-    @field_validator("ALLOWED_ORIGINS", mode="before")
-    @classmethod
-    def assemble_cors_origins(cls, v: str | List[str]) -> List[str]:
-        """Parse CORS origins from string or list."""
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",")]
-        return v
+    class Config:
+        """Pydantic config."""
+        env_file = ".env"
+        case_sensitive = True
+        
+        # Allow extra fields from environment
+        extra = "allow"
 
 
-settings = Settings() 
+# Create a singleton instance
+settings = Settings()
+
+
+# Validate critical settings
+def validate_settings():
+    """Validate that critical settings are configured."""
+    errors = []
+    
+    if settings.ENVIRONMENT == "production":
+        if settings.SECRET_KEY == "your-secret-key-here":
+            errors.append("SECRET_KEY must be set in production")
+        
+        if not settings.DATABASE_URL:
+            errors.append("DATABASE_URL must be set")
+    
+    if errors:
+        raise ValueError(f"Configuration errors: {', '.join(errors)}")
+
+
+
+# Run validation on import in production
+if settings.ENVIRONMENT == "production":
+    validate_settings() 

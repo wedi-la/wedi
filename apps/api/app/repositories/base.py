@@ -10,26 +10,13 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.core.exceptions import DuplicateError, NotFoundError, RepositoryException
+from app.core.logging import log_database_query, log_execution, logger
 from app.models import Base as SQLAlchemyBase
 
 ModelType = TypeVar("ModelType", bound=SQLAlchemyBase)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
 UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
-
-
-class RepositoryException(Exception):
-    """Base exception for repository operations."""
-    pass
-
-
-class NotFoundError(RepositoryException):
-    """Raised when an entity is not found."""
-    pass
-
-
-class DuplicateError(RepositoryException):
-    """Raised when attempting to create a duplicate entity."""
-    pass
 
 
 class BaseRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
@@ -72,6 +59,7 @@ class BaseRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchemaType]
             )
         return query
     
+    @log_execution(log_args=False, log_result=False)
     async def create(
         self,
         db: AsyncSession,
@@ -106,20 +94,53 @@ class BaseRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchemaType]
             # Add any additional fields
             obj_data.update(kwargs)
             
+            # Log the creation attempt
+            logger.debug(
+                "creating_entity",
+                model=self.model.__name__,
+                organization_id=organization_id,
+                fields=list(obj_data.keys())
+            )
+            
             # Create model instance
             db_obj = self.model(**obj_data)
             db.add(db_obj)
             await db.flush()
             await db.refresh(db_obj)
             
+            # Log successful creation
+            logger.info(
+                "entity_created",
+                model=self.model.__name__,
+                entity_id=str(db_obj.id),
+                organization_id=organization_id
+            )
+            
             return db_obj
         except IntegrityError as e:
             await db.rollback()
+            logger.error(
+                "integrity_error",
+                model=self.model.__name__,
+                error=str(e),
+                organization_id=organization_id
+            )
             if "unique" in str(e).lower():
-                raise DuplicateError(f"Entity already exists: {e}")
+                raise DuplicateError(
+                    resource=self.model.__name__,
+                    field="unknown",  # Would need to parse from error
+                    value="duplicate"
+                )
             raise RepositoryException(f"Database integrity error: {e}")
         except SQLAlchemyError as e:
             await db.rollback()
+            logger.error(
+                "database_error",
+                model=self.model.__name__,
+                error=str(e),
+                error_type=type(e).__name__,
+                organization_id=organization_id
+            )
             raise RepositoryException(f"Database error: {e}")
     
     async def get(
@@ -183,7 +204,16 @@ class BaseRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchemaType]
             load_options=load_options
         )
         if not obj:
-            raise NotFoundError(f"{self.model.__name__} with id {id} not found")
+            logger.warning(
+                "entity_not_found",
+                model=self.model.__name__,
+                entity_id=str(id),
+                organization_id=organization_id
+            )
+            raise NotFoundError(
+                resource=self.model.__name__,
+                identifier=id
+            )
         return obj
     
     async def get_multi(
@@ -287,6 +317,7 @@ class BaseRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchemaType]
             await db.rollback()
             raise RepositoryException(f"Database error: {e}")
     
+    @log_execution(log_args=False)
     async def delete(
         self,
         db: AsyncSession,
@@ -319,9 +350,32 @@ class BaseRepository(ABC, Generic[ModelType, CreateSchemaType, UpdateSchemaType]
             result = await db.execute(query)
             await db.flush()
             
-            return result.rowcount > 0
+            if result.rowcount > 0:
+                logger.info(
+                    "entity_deleted",
+                    model=self.model.__name__,
+                    entity_id=str(id),
+                    organization_id=organization_id
+                )
+                return True
+            else:
+                logger.warning(
+                    "entity_not_found_for_deletion",
+                    model=self.model.__name__,
+                    entity_id=str(id),
+                    organization_id=organization_id
+                )
+                return False
         except SQLAlchemyError as e:
             await db.rollback()
+            logger.error(
+                "delete_error",
+                model=self.model.__name__,
+                entity_id=str(id),
+                error=str(e),
+                error_type=type(e).__name__,
+                organization_id=organization_id
+            )
             raise RepositoryException(f"Database error: {e}")
     
     async def count(
