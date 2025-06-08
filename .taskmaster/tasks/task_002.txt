@@ -1,6 +1,6 @@
 # Task ID: 2
 # Title: Design Core Database Schema
-# Status: pending
+# Status: in-progress
 # Dependencies: 1
 # Priority: high
 # Description: Define the core database schema for multi-tenancy, payment processing, and Thirdweb authentication using SQLAlchemy.
@@ -11,39 +11,66 @@ Use SQLAlchemy ORM to define the schema for core entities such as Organization, 
 Run Alembic migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Thirdweb authentication support by testing wallet address storage and linkage with web2 identities.
 
 # Subtasks:
-## 1. Define Entities and Relationships [pending]
+## 1. Review Prisma Schema and Data Model Specifications [done]
 ### Dependencies: None
-### Description: Create a detailed design of the SQLAlchemy models including all necessary entities and their relationships.
+### Description: Analyze the existing Prisma schema and the comprehensive data model specifications to understand the structure and relationships of the data.
 ### Details:
-Design the SQLAlchemy models to include Organization (tenant), User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLogEntry, and Wallet models. Ensure that relationships between these entities are clearly defined, considering the multi-tenancy requirements and Thirdweb authentication support. Update User to include wallet_address, wallet_type, is_smart_wallet fields. Add a new Wallet table for multiple wallets per user. Update Organization to include treasury_wallet and gas_sponsor_wallet fields.
+Examine the 'docs/data-models-specification.md' document and the Prisma schema to identify all models, fields, and relationships.
+<info added on 2025-06-08T01:05:52.363Z>
+Include multi-tenancy implementation details, provider abstraction layer, and Web3/blockchain models in the conversion process.
+</info added on 2025-06-08T01:05:52.363Z>
 
-## 2. Implement Multi-Tenancy [pending]
+## 2. Convert Prisma Models to SQLAlchemy ORM Models [pending]
 ### Dependencies: 2.1
-### Description: Implement multi-tenancy in the SQLAlchemy models to ensure data isolation between different tenants.
+### Description: Translate the Prisma models into SQLAlchemy ORM models, ensuring all fields and data types are accurately represented.
 ### Details:
-Focus on designing the models to support multi-tenancy by ensuring that each entity is associated with an Organization (tenant). Implement Row-Level Security (RLS) for enhanced data isolation. Ensure necessary constraints and indexes are in place to maintain data integrity.
+For each model in the Prisma schema, create a corresponding SQLAlchemy model class with appropriate fields and data types.
 
-## 5. Run Alembic Migrations [pending]
+## 3. Implement Multi-Tenancy with Organization-Based Filtering [pending]
 ### Dependencies: 2.2
-### Description: Execute Alembic migrations to apply the SQLAlchemy model changes.
+### Description: Set up multi-tenancy by implementing organization-based filtering to ensure data isolation between different organizations.
 ### Details:
-Use Alembic to apply the model changes to the database. Ensure that the migrations are executed successfully and that the database reflects the new model design, including support for Thirdweb authentication and wallet management.
+Add an 'organization_id' field to relevant models and configure SQLAlchemy to filter queries based on the current user's organization context.
 
-## 6. Test Data Isolation with SQLAlchemy [pending]
-### Dependencies: 2.5
-### Description: Conduct tests to verify data isolation between tenants in the database using SQLAlchemy.
+## 4. Set Up Relationships and Foreign Keys [pending]
+### Dependencies: 2.2
+### Description: Define relationships and foreign keys between models to accurately represent associations.
 ### Details:
-Create test cases to ensure that data for each tenant is isolated and cannot be accessed by other tenants. Verify that the multi-tenancy implementation, including Row-Level Security (RLS), is functioning as expected.
+Use SQLAlchemy's relationship and foreign key constructs to establish one-to-one, one-to-many, and many-to-many relationships as defined in the data model specifications.
 
-## 7. Implement Thirdweb Authentication Support [pending]
-### Dependencies: 2.1
-### Description: Update the database schema to support Thirdweb authentication and blockchain wallets.
+## 5. Create Database Utilities and Session Management [pending]
+### Dependencies: 2.2
+### Description: Develop utility functions and session management to handle database connections and transactions efficiently.
 ### Details:
-Ensure the schema supports storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types. Implement the Wallet table and update User and Organization models as specified.
+Implement functions for creating database sessions, handling transactions, and managing connection pooling using SQLAlchemy's sessionmaker.
 
-## 8. Test Thirdweb Authentication Integration [pending]
-### Dependencies: 2.7
-### Description: Verify the integration of Thirdweb authentication with the database schema.
+## 6. Implement Audit Logging Mixins [pending]
+### Dependencies: 2.2
+### Description: Create mixin classes to add audit logging capabilities to models, tracking changes and user actions.
 ### Details:
-Create test cases to ensure that wallet addresses are stored correctly, web2 identities are linked to blockchain wallets, and multiple wallets per user are supported. Verify that the organization-level wallet configurations are correctly implemented.
+Develop mixins that can be inherited by models to automatically log creation, modification, and deletion events, including timestamps and user information.
+
+## 7. Set Up Alembic for Database Migrations [pending]
+### Dependencies: 2.2
+### Description: Configure Alembic to manage database schema migrations for the SQLAlchemy models.
+### Details:
+Initialize Alembic, configure it to work with the SQLAlchemy models, and create initial migration scripts to reflect the current schema.
+
+## 8. Create Indexes and Constraints [pending]
+### Dependencies: 2.2
+### Description: Define indexes and constraints to optimize database performance and ensure data integrity.
+### Details:
+Add indexes to frequently queried fields and define constraints such as unique, not null, and foreign key constraints as per the data model specifications.
+
+## 9. Implement the Provider Abstraction Layer [pending]
+### Dependencies: 2.2
+### Description: Develop an abstraction layer to handle interactions with different data providers or external services.
+### Details:
+Create a provider interface and implement concrete classes for each data provider, ensuring a consistent API for data access.
+
+## 10. Add Web3/Blockchain and Event Sourcing Models [pending]
+### Dependencies: 2.2
+### Description: Create models for Web3/blockchain entities and event sourcing to support blockchain transactions and payment events.
+### Details:
+Define models such as 'Wallet', 'BlockchainTransaction', and 'PaymentEvent' to represent blockchain-related data and event-driven architecture components.
 

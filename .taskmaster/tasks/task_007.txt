@@ -11,33 +11,63 @@ Create a service to handle payment execution, including provider selection, tran
 Test payment execution with various scenarios, including successful and failed transactions, and verify retry mechanisms.
 
 # Subtasks:
-## 1. Create Execution Service [pending]
+## 1. Design Payment State Machine [pending]
 ### Dependencies: None
-### Description: Develop the core execution service to handle payment transactions.
+### Description: Develop a state machine to manage payment states: CREATED, AWAITING_PAYMENT, PROCESSING, COMPLETED, and FAILED.
 ### Details:
-Design and implement the execution service that will manage the payment transactions between Colombia and Mexico. This service should be capable of handling requests, processing payments, and ensuring reliable execution.
+Define state transitions and ensure consistency across the payment lifecycle.
 
-## 2. Implement Provider Selection [pending]
+## 2. Implement Provider Routing Logic for Colombia-Mexico Corridor [pending]
 ### Dependencies: 7.1
-### Description: Develop logic to select the appropriate payment provider for transactions.
+### Description: Develop logic to route payments between Colombia and Mexico through appropriate providers.
 ### Details:
-Create a mechanism to select the best payment provider based on criteria such as cost, reliability, and availability. This should be integrated into the execution service.
+Analyze provider capabilities and establish routing rules for optimal transaction processing.
 
-## 3. Develop Transaction Initiation and Idempotent Processing [pending]
-### Dependencies: 7.1, 7.2
-### Description: Implement transaction initiation logic with idempotent processing.
+## 3. Implement Idempotency Handling for Payment Operations [pending]
+### Dependencies: 7.1
+### Description: Ensure all payment operations are idempotent to prevent duplicate processing.
 ### Details:
-Ensure that transaction initiation is robust and idempotent, meaning that repeated requests do not result in duplicate transactions. This includes generating unique transaction IDs and handling repeated requests gracefully.
+Generate unique idempotency keys and store operation results to handle retries gracefully.
 
-## 4. Implement State Machine for Payment Status and Error Handling [pending]
-### Dependencies: 7.1, 7.3
-### Description: Create a state machine to track payment status and handle errors.
+## 4. Set Up Transaction Event Emission to Kafka [pending]
+### Dependencies: 7.1
+### Description: Configure the system to emit transaction events to a Kafka topic for downstream processing.
 ### Details:
-Design a state machine that tracks the status of payments from initiation to completion. Implement error handling to manage failures and retries, ensuring that the system can recover from errors without data loss.
+Define event schemas and integrate Kafka producers to publish payment state changes.
 
-## 5. Handle Provider Webhooks and Publish Events to Kafka [pending]
-### Dependencies: 7.1, 7.4
-### Description: Implement webhook handling for provider notifications and event publishing to Kafka.
+## 5. Develop Fee Calculation and Breakdown Tracking [pending]
+### Dependencies: 7.1
+### Description: Implement logic to calculate transaction fees and track their breakdown for transparency.
 ### Details:
-Develop functionality to handle incoming webhooks from payment providers, updating the payment status accordingly. Additionally, implement event publishing to Kafka to ensure that payment events are communicated to other systems.
+Define fee structures and ensure accurate computation and recording of fees for each transaction.
+
+## 6. Implement Exchange Rate Locking Mechanism [pending]
+### Dependencies: 7.1
+### Description: Develop a mechanism to lock exchange rates during transactions to mitigate currency fluctuation risks.
+### Details:
+Integrate with exchange rate providers and store locked rates for the duration of the transaction.
+
+## 7. Develop Provider API Integration Layer [pending]
+### Dependencies: 7.1
+### Description: Create an abstraction layer to integrate with various payment providers' APIs.
+### Details:
+Standardize API interactions and handle provider-specific nuances for seamless integration.
+
+## 8. Implement Error Handling and Retry Logic [pending]
+### Dependencies: 7.1
+### Description: Develop robust error handling and retry mechanisms for payment operations.
+### Details:
+Classify errors, implement retries for transient failures, and ensure system resilience.
+
+## 9. Design Manual Intervention Workflow [pending]
+### Dependencies: 7.1
+### Description: Establish a workflow for manual intervention in case of payment processing issues.
+### Details:
+Define procedures and tools for operators to resolve payment exceptions effectively.
+
+## 10. Implement Payment Order Status Synchronization [pending]
+### Dependencies: 7.1
+### Description: Ensure synchronization of payment order statuses across all system components.
+### Details:
+Develop mechanisms to update and propagate payment statuses to maintain consistency.
 

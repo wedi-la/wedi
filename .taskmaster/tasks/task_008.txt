@@ -11,27 +11,45 @@ Set up Kafka for event streaming and implement event handlers for transaction st
 Test real-time updates by simulating transaction events and verifying dashboard updates and notifications.
 
 # Subtasks:
-## 1. Set up Kafka with Redpanda Cloud [pending]
+## 1. Set Up Redpanda Cloud Managed Kafka Service [pending]
 ### Dependencies: None
-### Description: Configure and deploy Kafka using Redpanda Cloud for handling event streaming.
+### Description: Provision and configure a Redpanda Cloud managed Kafka service to handle real-time transaction events.
 ### Details:
-This involves creating a Redpanda Cloud account, setting up a Kafka cluster, and configuring necessary security and network settings.
+Choose between BYOC (Bring Your Own Cloud) or Dedicated clusters based on data sovereignty and compliance requirements. Configure the cluster to meet performance and scalability needs.
 
-## 2. Design Event Schema [pending]
-### Dependencies: 8.1
-### Description: Create schemas for events such as PaymentOrderInitiated, PaymentOrderProcessing, and PaymentOrderSucceeded/Failed.
+## 2. Define Event Schemas for Payment Events [pending]
+### Dependencies: None
+### Description: Design and document schemas for all payment-related events to ensure consistent data structure across the system.
 ### Details:
-Define the structure and data types for each event to ensure consistency and reliability in event processing.
+Utilize a schema registry to manage and version event schemas, ensuring compatibility and ease of evolution over time.
 
-## 3. Implement Producer and Consumer [pending]
-### Dependencies: 8.2
-### Description: Develop the producer and consumer components to handle event publishing and processing.
+## 3. Implement Event Producers in FastAPI [pending]
+### Dependencies: 8.1, 8.2
+### Description: Develop FastAPI endpoints that produce payment events and publish them to the Redpanda Kafka topics.
 ### Details:
-Write code for the producer to publish events to Kafka and for the consumer to process these events, ensuring they adhere to the designed schemas.
+Use the aiokafka library to integrate Kafka producers within FastAPI, ensuring asynchronous and efficient event publishing.
 
-## 4. Develop Real-time Dashboard Updates [pending]
-### Dependencies: 8.3
-### Description: Create a dashboard to display real-time updates based on the events processed.
+## 4. Create Event Consumers for Real-Time Updates [pending]
+### Dependencies: 8.1, 8.2
+### Description: Develop consumers that subscribe to payment event topics and process events for real-time transaction tracking.
 ### Details:
-Implement a user interface that reflects the current state of payment orders, updating in real-time as events are processed.
+Implement consumers using aiokafka to handle event processing, ensuring they can scale and handle high-throughput scenarios.
+
+## 5. Build WebSocket/SSE Endpoints for UI Updates [pending]
+### Dependencies: 8.3, 8.4
+### Description: Create WebSocket or Server-Sent Events (SSE) endpoints in FastAPI to push real-time transaction updates to the user interface.
+### Details:
+Leverage FastAPI's support for WebSockets and SSE to establish persistent connections with clients, enabling instant updates.
+
+## 6. Implement Event Sourcing and Replay Capabilities [pending]
+### Dependencies: 8.1, 8.2
+### Description: Design the system to support event sourcing, allowing for the reconstruction of transaction states and replaying events as needed.
+### Details:
+Utilize Redpanda's tiered storage to retain events indefinitely, enabling historical analysis and system state reconstruction.
+
+## 7. Implement Dead Letter Queue Handling [pending]
+### Dependencies: 8.4
+### Description: Set up mechanisms to handle events that cannot be processed successfully, ensuring they are logged and retried appropriately.
+### Details:
+Configure dead letter queues within Redpanda to capture failed events, and implement retry logic to process them after resolving issues.
 

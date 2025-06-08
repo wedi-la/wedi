@@ -15,7 +15,7 @@
       "id": 2,
       "title": "Design Core Database Schema",
       "description": "Define the core database schema for multi-tenancy, payment processing, and Thirdweb authentication using SQLAlchemy.",
-      "status": "pending",
+      "status": "in-progress",
       "dependencies": [
         1
       ],
@@ -25,60 +25,100 @@
       "subtasks": [
         {
           "id": 1,
-          "title": "Define Entities and Relationships",
-          "description": "Create a detailed design of the SQLAlchemy models including all necessary entities and their relationships.",
+          "title": "Review Prisma Schema and Data Model Specifications",
+          "description": "Analyze the existing Prisma schema and the comprehensive data model specifications to understand the structure and relationships of the data.",
           "dependencies": [],
-          "details": "Design the SQLAlchemy models to include Organization (tenant), User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLogEntry, and Wallet models. Ensure that relationships between these entities are clearly defined, considering the multi-tenancy requirements and Thirdweb authentication support. Update User to include wallet_address, wallet_type, is_smart_wallet fields. Add a new Wallet table for multiple wallets per user. Update Organization to include treasury_wallet and gas_sponsor_wallet fields.",
-          "status": "pending"
+          "details": "Examine the 'docs/data-models-specification.md' document and the Prisma schema to identify all models, fields, and relationships.\n<info added on 2025-06-08T01:05:52.363Z>\nInclude multi-tenancy implementation details, provider abstraction layer, and Web3/blockchain models in the conversion process.\n</info added on 2025-06-08T01:05:52.363Z>",
+          "status": "done"
         },
         {
           "id": 2,
-          "title": "Implement Multi-Tenancy",
-          "description": "Implement multi-tenancy in the SQLAlchemy models to ensure data isolation between different tenants.",
+          "title": "Convert Prisma Models to SQLAlchemy ORM Models",
+          "description": "Translate the Prisma models into SQLAlchemy ORM models, ensuring all fields and data types are accurately represented.",
           "dependencies": [
             1
           ],
-          "details": "Focus on designing the models to support multi-tenancy by ensuring that each entity is associated with an Organization (tenant). Implement Row-Level Security (RLS) for enhanced data isolation. Ensure necessary constraints and indexes are in place to maintain data integrity.",
+          "details": "For each model in the Prisma schema, create a corresponding SQLAlchemy model class with appropriate fields and data types.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Implement Multi-Tenancy with Organization-Based Filtering",
+          "description": "Set up multi-tenancy by implementing organization-based filtering to ensure data isolation between different organizations.",
+          "dependencies": [
+            2
+          ],
+          "details": "Add an 'organization_id' field to relevant models and configure SQLAlchemy to filter queries based on the current user's organization context.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Set Up Relationships and Foreign Keys",
+          "description": "Define relationships and foreign keys between models to accurately represent associations.",
+          "dependencies": [
+            2
+          ],
+          "details": "Use SQLAlchemy's relationship and foreign key constructs to establish one-to-one, one-to-many, and many-to-many relationships as defined in the data model specifications.",
           "status": "pending"
         },
         {
           "id": 5,
-          "title": "Run Alembic Migrations",
-          "description": "Execute Alembic migrations to apply the SQLAlchemy model changes.",
+          "title": "Create Database Utilities and Session Management",
+          "description": "Develop utility functions and session management to handle database connections and transactions efficiently.",
           "dependencies": [
             2
           ],
-          "details": "Use Alembic to apply the model changes to the database. Ensure that the migrations are executed successfully and that the database reflects the new model design, including support for Thirdweb authentication and wallet management.",
+          "details": "Implement functions for creating database sessions, handling transactions, and managing connection pooling using SQLAlchemy's sessionmaker.",
           "status": "pending"
         },
         {
           "id": 6,
-          "title": "Test Data Isolation with SQLAlchemy",
-          "description": "Conduct tests to verify data isolation between tenants in the database using SQLAlchemy.",
+          "title": "Implement Audit Logging Mixins",
+          "description": "Create mixin classes to add audit logging capabilities to models, tracking changes and user actions.",
           "dependencies": [
-            5
+            2
           ],
-          "details": "Create test cases to ensure that data for each tenant is isolated and cannot be accessed by other tenants. Verify that the multi-tenancy implementation, including Row-Level Security (RLS), is functioning as expected.",
+          "details": "Develop mixins that can be inherited by models to automatically log creation, modification, and deletion events, including timestamps and user information.",
           "status": "pending"
         },
         {
           "id": 7,
-          "title": "Implement Thirdweb Authentication Support",
-          "description": "Update the database schema to support Thirdweb authentication and blockchain wallets.",
+          "title": "Set Up Alembic for Database Migrations",
+          "description": "Configure Alembic to manage database schema migrations for the SQLAlchemy models.",
           "dependencies": [
-            1
+            2
           ],
-          "details": "Ensure the schema supports storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types. Implement the Wallet table and update User and Organization models as specified.",
+          "details": "Initialize Alembic, configure it to work with the SQLAlchemy models, and create initial migration scripts to reflect the current schema.",
           "status": "pending"
         },
         {
           "id": 8,
-          "title": "Test Thirdweb Authentication Integration",
-          "description": "Verify the integration of Thirdweb authentication with the database schema.",
+          "title": "Create Indexes and Constraints",
+          "description": "Define indexes and constraints to optimize database performance and ensure data integrity.",
           "dependencies": [
-            7
+            2
           ],
-          "details": "Create test cases to ensure that wallet addresses are stored correctly, web2 identities are linked to blockchain wallets, and multiple wallets per user are supported. Verify that the organization-level wallet configurations are correctly implemented.",
+          "details": "Add indexes to frequently queried fields and define constraints such as unique, not null, and foreign key constraints as per the data model specifications.",
+          "status": "pending"
+        },
+        {
+          "id": 9,
+          "title": "Implement the Provider Abstraction Layer",
+          "description": "Develop an abstraction layer to handle interactions with different data providers or external services.",
+          "dependencies": [
+            2
+          ],
+          "details": "Create a provider interface and implement concrete classes for each data provider, ensuring a consistent API for data access.",
+          "status": "pending"
+        },
+        {
+          "id": 10,
+          "title": "Add Web3/Blockchain and Event Sourcing Models",
+          "description": "Create models for Web3/blockchain entities and event sourcing to support blockchain transactions and payment events.",
+          "dependencies": [
+            2
+          ],
+          "details": "Define models such as 'Wallet', 'BlockchainTransaction', and 'PaymentEvent' to represent blockchain-related data and event-driven architecture components.",
           "status": "pending"
         }
       ]
@@ -370,53 +410,100 @@
       "subtasks": [
         {
           "id": 1,
-          "title": "Create Execution Service",
-          "description": "Develop the core execution service to handle payment transactions.",
+          "title": "Design Payment State Machine",
+          "description": "Develop a state machine to manage payment states: CREATED, AWAITING_PAYMENT, PROCESSING, COMPLETED, and FAILED.",
           "dependencies": [],
-          "details": "Design and implement the execution service that will manage the payment transactions between Colombia and Mexico. This service should be capable of handling requests, processing payments, and ensuring reliable execution.",
+          "details": "Define state transitions and ensure consistency across the payment lifecycle.",
           "status": "pending"
         },
         {
           "id": 2,
-          "title": "Implement Provider Selection",
-          "description": "Develop logic to select the appropriate payment provider for transactions.",
+          "title": "Implement Provider Routing Logic for Colombia-Mexico Corridor",
+          "description": "Develop logic to route payments between Colombia and Mexico through appropriate providers.",
           "dependencies": [
             1
           ],
-          "details": "Create a mechanism to select the best payment provider based on criteria such as cost, reliability, and availability. This should be integrated into the execution service.",
+          "details": "Analyze provider capabilities and establish routing rules for optimal transaction processing.",
           "status": "pending"
         },
         {
           "id": 3,
-          "title": "Develop Transaction Initiation and Idempotent Processing",
-          "description": "Implement transaction initiation logic with idempotent processing.",
+          "title": "Implement Idempotency Handling for Payment Operations",
+          "description": "Ensure all payment operations are idempotent to prevent duplicate processing.",
           "dependencies": [
-            1,
-            2
+            1
           ],
-          "details": "Ensure that transaction initiation is robust and idempotent, meaning that repeated requests do not result in duplicate transactions. This includes generating unique transaction IDs and handling repeated requests gracefully.",
+          "details": "Generate unique idempotency keys and store operation results to handle retries gracefully.",
           "status": "pending"
         },
         {
           "id": 4,
-          "title": "Implement State Machine for Payment Status and Error Handling",
-          "description": "Create a state machine to track payment status and handle errors.",
+          "title": "Set Up Transaction Event Emission to Kafka",
+          "description": "Configure the system to emit transaction events to a Kafka topic for downstream processing.",
           "dependencies": [
-            1,
-            3
+            1
           ],
-          "details": "Design a state machine that tracks the status of payments from initiation to completion. Implement error handling to manage failures and retries, ensuring that the system can recover from errors without data loss.",
+          "details": "Define event schemas and integrate Kafka producers to publish payment state changes.",
           "status": "pending"
         },
         {
           "id": 5,
-          "title": "Handle Provider Webhooks and Publish Events to Kafka",
-          "description": "Implement webhook handling for provider notifications and event publishing to Kafka.",
+          "title": "Develop Fee Calculation and Breakdown Tracking",
+          "description": "Implement logic to calculate transaction fees and track their breakdown for transparency.",
           "dependencies": [
-            1,
-            4
+            1
           ],
-          "details": "Develop functionality to handle incoming webhooks from payment providers, updating the payment status accordingly. Additionally, implement event publishing to Kafka to ensure that payment events are communicated to other systems.",
+          "details": "Define fee structures and ensure accurate computation and recording of fees for each transaction.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Implement Exchange Rate Locking Mechanism",
+          "description": "Develop a mechanism to lock exchange rates during transactions to mitigate currency fluctuation risks.",
+          "dependencies": [
+            1
+          ],
+          "details": "Integrate with exchange rate providers and store locked rates for the duration of the transaction.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Develop Provider API Integration Layer",
+          "description": "Create an abstraction layer to integrate with various payment providers' APIs.",
+          "dependencies": [
+            1
+          ],
+          "details": "Standardize API interactions and handle provider-specific nuances for seamless integration.",
+          "status": "pending"
+        },
+        {
+          "id": 8,
+          "title": "Implement Error Handling and Retry Logic",
+          "description": "Develop robust error handling and retry mechanisms for payment operations.",
+          "dependencies": [
+            1
+          ],
+          "details": "Classify errors, implement retries for transient failures, and ensure system resilience.",
+          "status": "pending"
+        },
+        {
+          "id": 9,
+          "title": "Design Manual Intervention Workflow",
+          "description": "Establish a workflow for manual intervention in case of payment processing issues.",
+          "dependencies": [
+            1
+          ],
+          "details": "Define procedures and tools for operators to resolve payment exceptions effectively.",
+          "status": "pending"
+        },
+        {
+          "id": 10,
+          "title": "Implement Payment Order Status Synchronization",
+          "description": "Ensure synchronization of payment order statuses across all system components.",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop mechanisms to update and propagate payment statuses to maintain consistency.",
           "status": "pending"
         }
       ]
@@ -435,40 +522,72 @@
       "subtasks": [
         {
           "id": 1,
-          "title": "Set up Kafka with Redpanda Cloud",
-          "description": "Configure and deploy Kafka using Redpanda Cloud for handling event streaming.",
+          "title": "Set Up Redpanda Cloud Managed Kafka Service",
+          "description": "Provision and configure a Redpanda Cloud managed Kafka service to handle real-time transaction events.",
           "dependencies": [],
-          "details": "This involves creating a Redpanda Cloud account, setting up a Kafka cluster, and configuring necessary security and network settings.",
+          "details": "Choose between BYOC (Bring Your Own Cloud) or Dedicated clusters based on data sovereignty and compliance requirements. Configure the cluster to meet performance and scalability needs.",
           "status": "pending"
         },
         {
           "id": 2,
-          "title": "Design Event Schema",
-          "description": "Create schemas for events such as PaymentOrderInitiated, PaymentOrderProcessing, and PaymentOrderSucceeded/Failed.",
-          "dependencies": [
-            1
-          ],
-          "details": "Define the structure and data types for each event to ensure consistency and reliability in event processing.",
+          "title": "Define Event Schemas for Payment Events",
+          "description": "Design and document schemas for all payment-related events to ensure consistent data structure across the system.",
+          "dependencies": [],
+          "details": "Utilize a schema registry to manage and version event schemas, ensuring compatibility and ease of evolution over time.",
           "status": "pending"
         },
         {
           "id": 3,
-          "title": "Implement Producer and Consumer",
-          "description": "Develop the producer and consumer components to handle event publishing and processing.",
+          "title": "Implement Event Producers in FastAPI",
+          "description": "Develop FastAPI endpoints that produce payment events and publish them to the Redpanda Kafka topics.",
           "dependencies": [
+            1,
             2
           ],
-          "details": "Write code for the producer to publish events to Kafka and for the consumer to process these events, ensuring they adhere to the designed schemas.",
+          "details": "Use the aiokafka library to integrate Kafka producers within FastAPI, ensuring asynchronous and efficient event publishing.",
           "status": "pending"
         },
         {
           "id": 4,
-          "title": "Develop Real-time Dashboard Updates",
-          "description": "Create a dashboard to display real-time updates based on the events processed.",
+          "title": "Create Event Consumers for Real-Time Updates",
+          "description": "Develop consumers that subscribe to payment event topics and process events for real-time transaction tracking.",
           "dependencies": [
-            3
+            1,
+            2
           ],
-          "details": "Implement a user interface that reflects the current state of payment orders, updating in real-time as events are processed.",
+          "details": "Implement consumers using aiokafka to handle event processing, ensuring they can scale and handle high-throughput scenarios.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Build WebSocket/SSE Endpoints for UI Updates",
+          "description": "Create WebSocket or Server-Sent Events (SSE) endpoints in FastAPI to push real-time transaction updates to the user interface.",
+          "dependencies": [
+            3,
+            4
+          ],
+          "details": "Leverage FastAPI's support for WebSockets and SSE to establish persistent connections with clients, enabling instant updates.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Implement Event Sourcing and Replay Capabilities",
+          "description": "Design the system to support event sourcing, allowing for the reconstruction of transaction states and replaying events as needed.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Utilize Redpanda's tiered storage to retain events indefinitely, enabling historical analysis and system state reconstruction.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Implement Dead Letter Queue Handling",
+          "description": "Set up mechanisms to handle events that cannot be processed successfully, ensuring they are logged and retried appropriately.",
+          "dependencies": [
+            4
+          ],
+          "details": "Configure dead letter queues within Redpanda to capture failed events, and implement retry logic to process them after resolving issues.",
           "status": "pending"
         }
       ]
@@ -484,7 +603,83 @@
         5
       ],
       "status": "pending",
-      "subtasks": []
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design B2B Merchant Dashboard for Payment Links",
+          "description": "Create a user interface for merchants to create and manage payment links.",
+          "dependencies": [],
+          "details": "Develop a dashboard that allows merchants to generate, edit, and monitor payment links. Include features such as link customization, expiration settings, and status tracking. Ensure the interface is intuitive and aligns with the overall design language.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Design Public Payment Page for End Customers",
+          "description": "Create a user-friendly payment page for customers to complete transactions.",
+          "dependencies": [],
+          "details": "Develop a responsive payment page where customers can securely enter payment details and complete transactions. Ensure the design is consistent with the merchant's branding and provides clear instructions to the user.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Design Transaction History and Analytics Views",
+          "description": "Create interfaces for merchants to view transaction histories and analytics.",
+          "dependencies": [],
+          "details": "Develop pages that display transaction histories with filtering and search capabilities. Include analytics dashboards that provide insights into sales performance, customer behavior, and other relevant metrics.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Design Organization Settings and Team Management Interface",
+          "description": "Create interfaces for managing organization settings and team roles.",
+          "dependencies": [],
+          "details": "Develop settings pages where merchants can configure organization details, manage team members, assign roles, and set permissions. Ensure the interface is secure and user-friendly.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Design API Key Management Interface",
+          "description": "Create an interface for merchants to manage API keys.",
+          "dependencies": [],
+          "details": "Develop a secure page where merchants can generate, view, and revoke API keys. Include features such as key usage statistics and access controls.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Implement Real-Time Transaction Status Updates",
+          "description": "Integrate real-time updates for transaction statuses in the UI.",
+          "dependencies": [
+            1,
+            3
+          ],
+          "details": "Utilize WebSocket or similar technologies to provide merchants with live updates on transaction statuses. Ensure the UI reflects changes promptly and accurately.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Ensure Mobile-Responsive Design Using Shadcn UI and Tailwind",
+          "description": "Implement responsive design principles using Shadcn UI and Tailwind CSS.",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "details": "Ensure all interfaces are mobile-friendly by leveraging Shadcn UI components and Tailwind CSS. Test designs across various devices to guarantee a consistent user experience.",
+          "status": "pending"
+        },
+        {
+          "id": 8,
+          "title": "Integrate Thirdweb Wallet Connection",
+          "description": "Implement wallet connection functionality using Thirdweb.",
+          "dependencies": [
+            2
+          ],
+          "details": "Integrate Thirdweb's wallet connection features to allow customers to connect their wallets for payments. Ensure the integration is seamless and supports various wallet providers.",
+          "status": "pending"
+        }
+      ]
     },
     {
       "id": 10,
@@ -497,7 +692,80 @@
         8
       ],
       "status": "pending",
-      "subtasks": []
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design Webhook Registration API Endpoints",
+          "description": "Create API endpoints that allow clients to register and manage their webhook subscriptions.",
+          "dependencies": [],
+          "details": "Develop endpoints for clients to register webhook URLs, specify event types, and manage their subscriptions. Ensure endpoints are secure and validate input data.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement Event Type Subscription Management",
+          "description": "Develop functionality to manage client subscriptions to specific event types.",
+          "dependencies": [
+            1
+          ],
+          "details": "Allow clients to select and modify the event types they wish to receive notifications for. Ensure the system can handle multiple subscriptions per client and provide mechanisms to update or cancel subscriptions.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Develop Webhook Delivery System with Retry Logic",
+          "description": "Create a system to deliver webhook events to client endpoints, including robust retry mechanisms.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Implement a delivery system that sends events to client URLs. Incorporate exponential backoff with jitter for retries to handle transient failures, and consider a dead-letter queue for undeliverable messages. ([svix.com](https://www.svix.com/resources/webhook-best-practices/retries/?utm_source=openai))",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Implement Signature Verification for Security",
+          "description": "Ensure the integrity and authenticity of webhook payloads through signature verification.",
+          "dependencies": [
+            1,
+            3
+          ],
+          "details": "Generate HMAC signatures for each webhook payload using a shared secret. Clients should verify these signatures to confirm the payload's authenticity and integrity. ([snyk.io](https://snyk.io/blog/creating-secure-webhooks/?utm_source=openai))",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Define Webhook Event Payload Formatting",
+          "description": "Standardize the structure and content of webhook event payloads.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Design a consistent and clear payload format that includes necessary event details, timestamps, and unique identifiers to ensure idempotency and facilitate client processing.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Implement Delivery Status Tracking and Monitoring",
+          "description": "Create mechanisms to track and monitor the delivery status of webhook events.",
+          "dependencies": [
+            3
+          ],
+          "details": "Log all delivery attempts, responses, and failures. Provide tools for monitoring delivery metrics and alerting on issues to ensure timely detection and resolution of problems. ([techtarget.com](https://www.techtarget.com/searchapparchitecture/tip/Implementing-webhooks-Benefits-and-best-practices?utm_source=openai))",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Apply Rate Limiting and Circuit Breaker Patterns",
+          "description": "Implement rate limiting and circuit breaker patterns to protect the system from overload and failures.",
+          "dependencies": [
+            3,
+            6
+          ],
+          "details": "Set rate limits on outgoing webhook deliveries to prevent overwhelming client systems. Implement circuit breakers to halt delivery attempts to endpoints that consistently fail, resuming only after a defined recovery period. ([contentstack.com](https://www.contentstack.com/docs/developers/set-up-webhooks/webhook-retry-policy?utm_source=openai))",
+          "status": "pending"
+        }
+      ]
     },
     {
       "id": 11,
@@ -510,7 +778,71 @@
         8
       ],
       "status": "pending",
-      "subtasks": []
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design Email Templates for Payment Events",
+          "description": "Create email templates for various payment events such as payment confirmation, payment failure, refund processing, and subscription renewal.",
+          "dependencies": [],
+          "details": "Develop templates that are clear, concise, and aligned with the company's branding guidelines. Ensure each template addresses the specific context of the payment event it corresponds to.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement Multi-Language Support in Email Templates",
+          "description": "Enable support for multiple languages, specifically Spanish and English, in the email templates.",
+          "dependencies": [
+            1
+          ],
+          "details": "Utilize localization tools or services to translate the content of the email templates. Ensure that the templates can dynamically adjust to the recipient's preferred language setting.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Integrate Email Templates with SendGrid or AWS SES",
+          "description": "Set up the email templates to work seamlessly with SendGrid or AWS Simple Email Service (SES) for email delivery.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Configure the chosen email service provider to send emails using the designed templates. Ensure proper authentication and authorization mechanisms are in place for secure email delivery.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Implement Email Queuing and Delivery Tracking",
+          "description": "Set up a system to queue emails and track their delivery status.",
+          "dependencies": [
+            3
+          ],
+          "details": "Utilize the features provided by SendGrid or AWS SES to manage email queues and monitor delivery statuses. Implement logging mechanisms to record email dispatch and receipt events for auditing and troubleshooting purposes.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Develop Unsubscribe and Preference Management Features",
+          "description": "Create functionalities that allow recipients to unsubscribe from emails or manage their email preferences.",
+          "dependencies": [
+            3
+          ],
+          "details": "Include unsubscribe links in all email templates as per best practices. Develop a user interface where recipients can manage their email preferences, such as opting in or out of specific types of notifications.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Review and Apply Transactional Email Best Practices",
+          "description": "Ensure that all email communications adhere to industry best practices for transactional emails.",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "details": "Review guidelines and standards for transactional emails, including content relevance, personalization, compliance with regulations (such as CAN-SPAM Act), and optimal sending times. Apply these best practices to enhance email effectiveness and deliverability.",
+          "status": "pending"
+        }
+      ]
     },
     {
       "id": 12,
@@ -631,7 +963,91 @@
         8
       ],
       "status": "pending",
-      "subtasks": []
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design Data Models for Payment Analytics",
+          "description": "Develop comprehensive data models to support various analytics requirements, including real-time payment metrics, transaction success/failure rates, fee analysis, geographic distribution, time-series trends, provider performance, and organization-level filtering.",
+          "dependencies": [],
+          "details": "Ensure the data models are flexible and scalable to accommodate future analytics needs. Incorporate fields for transaction timestamps, provider identifiers, fee structures, geographic information, and organizational identifiers.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement Real-Time Data Processing Pipeline",
+          "description": "Set up a real-time data processing pipeline to ingest and process payment transactions, enabling real-time analytics on payment volumes and other metrics.",
+          "dependencies": [
+            1
+          ],
+          "details": "Utilize stream processing technologies to handle high-throughput data ingestion and processing. Ensure low-latency data flow to support real-time dashboard updates.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Develop Transaction Success/Failure Rate Analysis",
+          "description": "Create analytics components to calculate and visualize transaction success and failure rates, segmented by payment provider.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Implement logic to categorize transactions by provider and outcome. Design visualizations that highlight performance disparities among providers.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Build Fee Analysis and Revenue Tracking Module",
+          "description": "Develop analytics features to analyze fee structures and track revenue generated from payment transactions.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Incorporate calculations for various fee types and aggregate revenue metrics. Provide insights into fee optimization and revenue trends.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Implement Geographic Distribution Analytics",
+          "description": "Create visualizations and reports to analyze the geographic distribution of payments.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Utilize geographic data to map transaction volumes and identify regional trends. Support drill-down capabilities for detailed analysis.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Develop Time-Series Analytics for Trend Analysis",
+          "description": "Implement time-series analytics to identify trends and patterns in payment data over time.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Design dashboards that display historical data, moving averages, and trend lines. Support customizable time intervals for analysis.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Enable Provider Performance Comparison",
+          "description": "Develop features to compare performance metrics across different payment providers.",
+          "dependencies": [
+            3,
+            4
+          ],
+          "details": "Create comparative visualizations that highlight key performance indicators for each provider. Support benchmarking and performance ranking.",
+          "status": "pending"
+        },
+        {
+          "id": 8,
+          "title": "Implement Organization-Level Filtering and Multi-Tenancy",
+          "description": "Design and implement multi-tenant architecture to support organization-level data filtering and access control.",
+          "dependencies": [
+            1
+          ],
+          "details": "Ensure data isolation and security for each tenant. Implement row-level security and user attribute-based access controls to restrict data access appropriately.",
+          "status": "pending"
+        }
+      ]
     },
     {
       "id": 15,
@@ -718,7 +1134,84 @@
         13
       ],
       "status": "pending",
-      "subtasks": []
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement Dynamic Provider Health Monitoring",
+          "description": "Develop a system to continuously monitor the health and availability of payment providers.",
+          "dependencies": [],
+          "details": "Create a monitoring service that tracks provider uptime, response times, and error rates in real-time. This service should integrate with existing infrastructure to collect and analyze performance metrics, enabling proactive identification of issues and automatic rerouting of transactions to healthy providers.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Develop Cost-Based Route Optimization",
+          "description": "Create algorithms to select payment routes based on transaction costs.",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement a routing engine that evaluates transaction fees, currency conversion rates, and other cost factors to determine the most economical payment path. This engine should dynamically adjust routes to minimize processing expenses while maintaining service quality.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Establish Success Rate Tracking and Analysis",
+          "description": "Set up mechanisms to monitor and analyze transaction success rates across different routes.",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop a reporting system that collects data on transaction outcomes, categorizing them by provider, route, and other relevant parameters. Use this data to identify patterns, optimize routing decisions, and improve overall transaction success rates.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Implement Time-of-Day Routing Rules",
+          "description": "Configure routing rules that consider the time of day to optimize transaction processing.",
+          "dependencies": [
+            1,
+            3
+          ],
+          "details": "Analyze historical transaction data to identify time-based performance variations among providers. Develop and implement routing rules that direct transactions to providers with optimal performance during specific time periods, enhancing efficiency and success rates.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Incorporate Amount-Based Routing Decisions",
+          "description": "Design routing logic that considers transaction amounts to select appropriate payment routes.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Create a decision-making framework that evaluates transaction amounts and routes them through providers best suited for specific value ranges. This approach aims to balance cost efficiency and provider capabilities, ensuring optimal processing for transactions of varying sizes.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Develop Fallback Provider Mechanisms",
+          "description": "Establish protocols for rerouting transactions to alternative providers in case of failures.",
+          "dependencies": [
+            1,
+            3
+          ],
+          "details": "Implement a failover system that detects transaction failures and automatically redirects them to backup providers. This mechanism should include criteria for triggering failovers, selecting appropriate fallback providers, and logging incidents for further analysis.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Set Up A/B Testing for Route Optimization",
+          "description": "Implement A/B testing frameworks to evaluate and refine routing strategies.",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "details": "Develop a testing environment that allows for controlled experiments comparing different routing configurations. Collect and analyze performance data from these tests to identify the most effective routing strategies, leading to continuous improvement in transaction processing.",
+          "status": "pending"
+        }
+      ]
     },
     {
       "id": 18,
@@ -744,7 +1237,97 @@
         17
       ],
       "status": "pending",
-      "subtasks": []
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Set Up LangGraph Payment Orchestration Agent",
+          "description": "Develop and configure a LangGraph-based agent to manage and orchestrate payment processes.",
+          "dependencies": [],
+          "details": "This involves creating an agent using LangGraph to handle payment workflows, including transaction initiation, processing, and completion. The agent should be capable of interacting with various payment gateways and systems.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement Agent Decision Tracking and Reasoning Logs",
+          "description": "Establish mechanisms to log and track decisions made by the payment orchestration agent.",
+          "dependencies": [
+            1
+          ],
+          "details": "Integrate logging functionalities within the agent to record decision points, reasoning processes, and outcomes. This will aid in auditing, debugging, and improving the agent's decision-making capabilities.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Integrate CopilotKit for UI Co-Agents",
+          "description": "Embed CopilotKit's CoAgents into the user interface to facilitate human-agent collaboration.",
+          "dependencies": [
+            1
+          ],
+          "details": "Utilize CopilotKit to create CoAgents that interact with users through the UI, providing real-time updates and receiving user inputs. This integration will enhance user experience and allow for human-in-the-loop interactions.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Enable Natural Language Payment Link Creation",
+          "description": "Develop functionality for users to generate payment links using natural language commands.",
+          "dependencies": [
+            3
+          ],
+          "details": "Implement a feature where users can input natural language requests to create payment links, leveraging the CoAgents' capabilities to interpret and execute these commands.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Develop Intelligent Route Optimization Agent",
+          "description": "Create an agent to optimize routing of payment transactions for efficiency and cost-effectiveness.",
+          "dependencies": [
+            1
+          ],
+          "details": "Design an agent that analyzes various routing options for payment transactions, selecting the most efficient and cost-effective paths based on predefined criteria and real-time data.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Implement Risk Assessment and Fraud Detection Agent",
+          "description": "Develop an agent to assess risks and detect potential fraudulent activities in payment processes.",
+          "dependencies": [
+            1
+          ],
+          "details": "Create an agent that evaluates transaction data to identify and flag suspicious activities, utilizing machine learning models and predefined rules to enhance security.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Establish Human-in-the-Loop Approval Workflows",
+          "description": "Set up workflows that require human approval for certain agent decisions.",
+          "dependencies": [
+            3,
+            6
+          ],
+          "details": "Integrate human-in-the-loop mechanisms where the agent seeks human approval for high-risk or exceptional transactions, ensuring oversight and compliance.",
+          "status": "pending"
+        },
+        {
+          "id": 8,
+          "title": "Implement Agent Performance Monitoring",
+          "description": "Develop systems to monitor and evaluate the performance of the payment orchestration agent.",
+          "dependencies": [
+            1
+          ],
+          "details": "Set up monitoring tools to track the agent's performance metrics, such as transaction success rates, processing times, and error rates, to facilitate continuous improvement.",
+          "status": "pending"
+        },
+        {
+          "id": 9,
+          "title": "Develop Automated Reconciliation Agent",
+          "description": "Create an agent to automate the reconciliation of payment transactions.",
+          "dependencies": [
+            1
+          ],
+          "details": "Design an agent that compares transaction records across different systems to identify discrepancies, ensuring accuracy and consistency in financial records.",
+          "status": "pending"
+        }
+      ]
     },
     {
       "id": 20,
@@ -853,7 +1436,96 @@
         21
       ],
       "priority": "high",
-      "subtasks": []
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Set Up Thirdweb SDK",
+          "description": "Initialize the Thirdweb SDK to facilitate Web3 development.",
+          "dependencies": [],
+          "details": "Install the Thirdweb SDK and configure it for your project environment.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Implement Smart Contract Wallet Creation and Management",
+          "description": "Develop functionality for creating and managing smart contract wallets.",
+          "dependencies": [
+            1
+          ],
+          "details": "Utilize Thirdweb's smart wallet features to create and manage user wallets programmatically.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Enable Gas Sponsorship for Gasless Transactions",
+          "description": "Implement gas sponsorship to allow users to perform transactions without gas fees.",
+          "dependencies": [
+            2
+          ],
+          "details": "Configure gasless transactions using Thirdweb's gas sponsorship capabilities to enhance user experience.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Deploy Payment Smart Contract",
+          "description": "Deploy a smart contract to handle payment processing.",
+          "dependencies": [
+            1
+          ],
+          "details": "Use Thirdweb's deployment tools to deploy a payment smart contract tailored to your application's needs.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Generate NFT Receipts for Payments",
+          "description": "Create NFTs as receipts for completed payments.",
+          "dependencies": [
+            4
+          ],
+          "details": "Implement functionality to mint NFTs upon successful payment transactions, serving as digital receipts.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Set Up Multi-Chain Support",
+          "description": "Configure the application to support multiple blockchain networks.",
+          "dependencies": [
+            1
+          ],
+          "details": "Leverage Thirdweb's multi-chain capabilities to enable seamless operation across various blockchains.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Develop Wallet Connection UI Components",
+          "description": "Create user interface components for wallet connection.",
+          "dependencies": [
+            2
+          ],
+          "details": "Design and implement intuitive UI elements that allow users to connect their wallets to the application.",
+          "status": "pending"
+        },
+        {
+          "id": 8,
+          "title": "Implement On-Chain Payment Status Tracking",
+          "description": "Develop mechanisms to track the status of payments on the blockchain.",
+          "dependencies": [
+            4
+          ],
+          "details": "Set up real-time monitoring of payment transactions to provide users with up-to-date status information.",
+          "status": "pending"
+        },
+        {
+          "id": 9,
+          "title": "Integrate Security Features",
+          "description": "Enhance application security with features like allowlists and multi-signature wallets.",
+          "dependencies": [
+            2
+          ],
+          "details": "Implement security measures such as allowlists to control access and multi-signature wallets for transaction approvals.",
+          "status": "pending"
+        }
+      ]
     }
   ]
 }

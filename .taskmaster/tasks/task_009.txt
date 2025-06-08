@@ -9,3 +9,53 @@ Develop frontend components using Next.js and Tailwind CSS for creating, viewing
 
 # Test Strategy:
 Conduct usability testing on various devices and browsers to ensure a seamless user experience.
+
+# Subtasks:
+## 1. Design B2B Merchant Dashboard for Payment Links [pending]
+### Dependencies: None
+### Description: Create a user interface for merchants to create and manage payment links.
+### Details:
+Develop a dashboard that allows merchants to generate, edit, and monitor payment links. Include features such as link customization, expiration settings, and status tracking. Ensure the interface is intuitive and aligns with the overall design language.
+
+## 2. Design Public Payment Page for End Customers [pending]
+### Dependencies: None
+### Description: Create a user-friendly payment page for customers to complete transactions.
+### Details:
+Develop a responsive payment page where customers can securely enter payment details and complete transactions. Ensure the design is consistent with the merchant's branding and provides clear instructions to the user.
+
+## 3. Design Transaction History and Analytics Views [pending]
+### Dependencies: None
+### Description: Create interfaces for merchants to view transaction histories and analytics.
+### Details:
+Develop pages that display transaction histories with filtering and search capabilities. Include analytics dashboards that provide insights into sales performance, customer behavior, and other relevant metrics.
+
+## 4. Design Organization Settings and Team Management Interface [pending]
+### Dependencies: None
+### Description: Create interfaces for managing organization settings and team roles.
+### Details:
+Develop settings pages where merchants can configure organization details, manage team members, assign roles, and set permissions. Ensure the interface is secure and user-friendly.
+
+## 5. Design API Key Management Interface [pending]
+### Dependencies: None
+### Description: Create an interface for merchants to manage API keys.
+### Details:
+Develop a secure page where merchants can generate, view, and revoke API keys. Include features such as key usage statistics and access controls.
+
+## 6. Implement Real-Time Transaction Status Updates [pending]
+### Dependencies: 9.1, 9.3
+### Description: Integrate real-time updates for transaction statuses in the UI.
+### Details:
+Utilize WebSocket or similar technologies to provide merchants with live updates on transaction statuses. Ensure the UI reflects changes promptly and accurately.
+
+## 7. Ensure Mobile-Responsive Design Using Shadcn UI and Tailwind [pending]
+### Dependencies: 9.1, 9.2, 9.3, 9.4, 9.5
+### Description: Implement responsive design principles using Shadcn UI and Tailwind CSS.
+### Details:
+Ensure all interfaces are mobile-friendly by leveraging Shadcn UI components and Tailwind CSS. Test designs across various devices to guarantee a consistent user experience.
+
+## 8. Integrate Thirdweb Wallet Connection [pending]
+### Dependencies: 9.2
+### Description: Implement wallet connection functionality using Thirdweb.
+### Details:
+Integrate Thirdweb's wallet connection features to allow customers to connect their wallets for payments. Ensure the integration is seamless and supports various wallet providers.
+
