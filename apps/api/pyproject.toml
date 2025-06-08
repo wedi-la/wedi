@@ -4,7 +4,6 @@ version = "0.0.1"
 description = "Wedi Pay API - AI-native payment orchestration platform"
 authors = ["Wedi Team"]
 readme = "README.md"
-python = "^3.11"
 
 [tool.poetry.dependencies]
 python = "^3.11"

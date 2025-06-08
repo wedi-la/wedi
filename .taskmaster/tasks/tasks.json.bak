@@ -14,22 +14,22 @@
     {
       "id": 2,
       "title": "Design Core Database Schema",
-      "description": "Define the core database schema for multi-tenancy, payment processing, and Thirdweb authentication using SQLAlchemy.",
-      "status": "in-progress",
+      "description": "Define the core database schema for multi-tenancy, payment processing, and Thirdweb authentication using Prisma ORM.",
+      "status": "done",
       "dependencies": [
         1
       ],
       "priority": "high",
-      "details": "Use SQLAlchemy ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, and Wallet. Implement multi-tenant data model with Row-Level Security (RLS). Use Alembic for database migrations. Support Thirdweb authentication by storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types.",
-      "testStrategy": "Run Alembic migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Thirdweb authentication support by testing wallet address storage and linkage with web2 identities.",
+      "details": "Use Prisma ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, Wallet, Agent, Customer, Product, and Price. Implement multi-tenant data model with Organization-based data isolation. Configure Prisma to work with Neon DB (serverless PostgreSQL). Support Thirdweb authentication by storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types. Set up the Prisma client and migrations. Ensure the packages structure includes packages/prisma for schema and client configuration, packages/ui for shared React components with Shadcn UI, and packages/types for shared TypeScript types. Integrate Agents as the primary execution layer, linking PaymentLink to Agent (executingAgentId) and Agent to Wallet (agentWalletId).",
+      "testStrategy": "Run Prisma migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Thirdweb authentication support by testing wallet address storage and linkage with web2 identities. Ensure the workspace configuration supports the proper structure. Test the integration of Agents with PaymentLink and Wallet, and validate the new Customer, Product, and Price entities.",
       "subtasks": [
         {
           "id": 1,
           "title": "Review Prisma Schema and Data Model Specifications",
           "description": "Analyze the existing Prisma schema and the comprehensive data model specifications to understand the structure and relationships of the data.",
           "dependencies": [],
-          "details": "Examine the 'docs/data-models-specification.md' document and the Prisma schema to identify all models, fields, and relationships.",
-          "status": "pending"
+          "details": "Examine the 'docs/data-models-specification.md' document and the Prisma schema to identify all models, fields, and relationships.\n<info added on 2025-06-08T01:05:52.363Z>\nInclude multi-tenancy implementation details, provider abstraction layer, and Web3/blockchain models in the conversion process.\n</info added on 2025-06-08T01:05:52.363Z>",
+          "status": "done"
         },
         {
           "id": 2,
@@ -38,88 +38,78 @@
           "dependencies": [
             1
           ],
-          "details": "For each model in the Prisma schema, create a corresponding SQLAlchemy model class with appropriate fields and data types.",
-          "status": "pending"
+          "details": "For each model in the Prisma schema, create a corresponding SQLAlchemy model class with appropriate fields and data types.\n<info added on 2025-06-08T01:24:07.263Z>\nThe project architecture specifies the use of Prisma ORM instead of SQLAlchemy. Ensure the Prisma schema is correctly set up in the packages/prisma directory and integrate the Prisma client with the existing api app. Verify that the turborepo structure includes the necessary packages: prisma, ui, and types. Use Bun as the package manager for consistency with the architectural guidelines.\n</info added on 2025-06-08T01:24:07.263Z>\n<info added on 2025-06-08T01:32:02.699Z>\nCreate SQLAlchemy models in apps/api/app/models/ that match the Prisma schema structure to ensure the FastAPI backend can interact with the same database schema.\n</info added on 2025-06-08T01:32:02.699Z>\n<info added on 2025-06-08T06:16:44.134Z>\nUpdate status: We created initial SQLAlchemy models (base.py, organization.py, user.py) but quickly pivoted to using Prisma as the primary ORM. \n\nCurrent state:\n- Prisma schema is complete with 30+ models\n- Only 3 SQLAlchemy models were created before pivot\n- Task 25 will handle the full synchronization strategy\n- The existing SQLAlchemy models may be replaced depending on the approach chosen in Task 25 (manual sync, code generation, or Prisma Client Python)\n</info added on 2025-06-08T06:16:44.134Z>",
+          "status": "done"
         },
         {
-          "id": 3,
-          "title": "Implement Multi-Tenancy with Organization-Based Filtering",
-          "description": "Set up multi-tenancy by implementing organization-based filtering to ensure data isolation between different organizations.",
+          "id": 11,
+          "title": "Set Up Prisma Schema and Client",
+          "description": "Configure the Prisma schema and set up the Prisma client for database interactions.",
+          "dependencies": [
+            1
+          ],
+          "details": "Define the Prisma schema in packages/prisma/schema.prisma. Set up the Prisma client to interact with Neon DB and integrate it with the FastAPI backend.",
+          "status": "done"
+        },
+        {
+          "id": 12,
+          "title": "Implement Multi-Tenancy with Organization-Based Data Isolation",
+          "description": "Set up multi-tenancy by implementing organization-based data isolation using Prisma.",
+          "dependencies": [
+            11
+          ],
+          "details": "Add an 'organization_id' field to relevant models and configure Prisma to filter queries based on the current user's organization context. Ensure the FastAPI backend supports multi-tenancy by implementing necessary middleware or context management.\n<info added on 2025-06-08T05:39:25.978Z>\nSuccessfully implemented multi-tenancy with organization-based data isolation for FastAPI backend:\n\n**Implementation Details:**\n\n1. **Context Management (app/core/context.py)**\n   - Created TenantContext using Python's contextvars for thread-safe request context\n   - Stores organization_id and user_id throughout request lifecycle\n   - Provides methods: set_organization_id(), get_organization_id(), clear(), has_context()\n\n2. **Middleware (app/middleware/tenant.py)**\n   - Created TenantMiddleware that extracts organization context from requests\n   - Supports multiple extraction methods: headers, JWT (placeholder), API keys (placeholder), path params\n   - Always clears context after request to prevent data leakage\n   - Added @require_organization decorator to enforce organization context\n\n3. **Base Repository Pattern (app/db/base_repository.py)**\n   - Created BaseRepository[T] generic class with automatic organization filtering\n   - Automatically applies organization_id filter to all queries for models with that field\n   - Auto-assigns organization_id on create operations\n   - Validates organization ownership on update/delete operations\n   - Provides standard CRUD operations: get(), get_multi(), create(), update(), delete(), count()\n\n4. **Database Session Management (app/db/session.py)**\n   - Configured async SQLAlchemy with connection pooling\n   - Created get_db() dependency for FastAPI dependency injection\n\n5. **Configuration (app/core/config.py)**\n   - Created Pydantic settings with environment variable support\n   - Includes database URL validation to ensure asyncpg driver\n   - Configured CORS, JWT settings, and provider API keys\n\n6. **Example Implementations:**\n   - OrganizationRepository: Shows root entity without org filtering\n   - PaymentLinkService: Demonstrates service layer with automatic filtering\n   - payment_links API router: Shows multi-tenant endpoints with @require_organization\n\n7. **Main App Integration (app/main.py)**\n   - Added TenantMiddleware to FastAPI middleware stack\n   - Configured CORS and other middleware in correct order\n\n**Key Features:**\n- Row-level security through automatic query filtering\n- Prevents cross-organization data access\n- Thread-safe context management\n- Clean separation of concerns\n- Easy to extend for new models\n\n**Next Steps:**\n- Implement JWT authentication to extract org/user from tokens\n- Add API key authentication for service-to-service calls\n- Create more model repositories following the pattern\n- Add comprehensive tests for multi-tenancy isolation\n</info added on 2025-06-08T05:39:25.978Z>",
+          "status": "done"
+        },
+        {
+          "id": 13,
+          "title": "Configure Prisma with Neon DB",
+          "description": "Set up Prisma to work with Neon DB (serverless PostgreSQL) for database operations.",
+          "dependencies": [
+            11
+          ],
+          "details": "Ensure the Prisma configuration is compatible with Neon DB, including connection settings and any necessary environment variables. Verify the connection by running test queries.",
+          "status": "done"
+        },
+        {
+          "id": 14,
+          "title": "Create Prisma Migrations",
+          "description": "Develop migration scripts using Prisma to manage database schema changes.",
+          "dependencies": [
+            11
+          ],
+          "details": "Use Prisma's migration capabilities to create and apply migration scripts that reflect the current schema. Ensure migrations are tested and applied in the development environment.",
+          "status": "done"
+        },
+        {
+          "id": 15,
+          "title": "Complete Remaining SQLAlchemy Models",
+          "description": "Develop the remaining SQLAlchemy models to match the Prisma schema.",
           "dependencies": [
             2
           ],
-          "details": "Add an 'organization_id' field to relevant models and configure SQLAlchemy to filter queries based on the current user's organization context.",
-          "status": "pending"
+          "details": "Create SQLAlchemy models for PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, and Wallet in apps/api/app/models/ to ensure full compatibility with the Prisma schema.\n<info added on 2025-06-08T05:44:32.637Z>\nSuccessfully created comprehensive SQLAlchemy models matching the Prisma schema:\n\n**Models Created:**\n\n1. **PaymentLink** (app/models/payment_link.py)\n   - Complete model with all fields from Prisma schema\n   - Relationships to Organization, User, Agent, PaymentOrder\n   - Proper indexes and unique constraints\n\n2. **PaymentOrder** (app/models/payment_order.py)\n   - Full payment transaction representation\n   - Links to PaymentLink, Customer, Subscription, Agent\n   - Provider transaction tracking\n\n3. **Wallet** (app/models/wallet.py)\n   - Blockchain wallet model for agents\n   - Thirdweb smart wallet support\n   - Balance tracking and gas policy configuration\n\n4. **Agent** (app/models/agent.py)\n   - AI agent model for payment orchestration\n   - Capabilities, supported providers/chains configuration\n   - Model config and prompt templates\n   - Transaction limits and approval policies\n\n5. **Customer** (app/models/customer.py)\n   - Tenant's end-customer model\n   - Stripe-like customer management\n   - Address, payment methods, subscription support\n\n6. **Provider** (app/models/provider.py)\n   - Payment service provider configuration\n   - Supported countries, currencies, methods\n   - Fee structure and limits\n\n7. **ProviderTransaction** (app/models/provider_transaction.py)\n   - Individual transactions with providers\n   - Request/response data storage\n   - Error handling and retry tracking\n\n8. **Membership** (app/models/membership.py)\n   - User-Organization linking with roles\n   - Invitation tracking\n   - Permissions management\n\n9. **Updated Models:**\n   - Organization: Added all relationships to new models\n   - User: Added memberships and payment link relationships\n\n**Key Features:**\n- All models inherit from Base with UUID and timestamps\n- Proper type hints with TYPE_CHECKING imports\n- SQLAlchemy 2.0 style with Mapped types\n- Comprehensive indexes for performance\n- JSONB fields for flexible metadata storage\n- Foreign key relationships with proper cascading\n\n**Models Still Needed (lower priority):**\n- AgentLog, AuditLog\n- Product, Price, Subscription\n- CustomerPaymentMethod\n- ProviderCredential\n- Webhook\n\nThe core payment processing models are complete and ready for use with the multi-tenant architecture.\n</info added on 2025-06-08T05:44:32.637Z>",
+          "status": "done"
         },
         {
-          "id": 4,
-          "title": "Set Up Relationships and Foreign Keys",
-          "description": "Define relationships and foreign keys between models to accurately represent associations.",
+          "id": 16,
+          "title": "Integrate Agent Model with PaymentLink and Wallet",
+          "description": "Enhance the Agent model to reflect its execution role and integrate it with PaymentLink and Wallet.",
           "dependencies": [
-            2
+            11
           ],
-          "details": "Use SQLAlchemy's relationship and foreign key constructs to establish one-to-one, one-to-many, and many-to-many relationships as defined in the data model specifications.",
-          "status": "pending"
+          "details": "Add executingAgentId to PaymentLink and agentWalletId to Agent. Ensure the Agent model reflects its role in executing orders and managing smart wallets.",
+          "status": "done"
         },
         {
-          "id": 5,
-          "title": "Create Database Utilities and Session Management",
-          "description": "Develop utility functions and session management to handle database connections and transactions efficiently.",
+          "id": 17,
+          "title": "Add Customer, Product, and Price Entities",
+          "description": "Introduce new entities for Customer, Product, and Price to support end-customer management and flexible pricing.",
           "dependencies": [
-            2
+            11
           ],
-          "details": "Implement functions for creating database sessions, handling transactions, and managing connection pooling using SQLAlchemy's sessionmaker.",
-          "status": "pending"
-        },
-        {
-          "id": 6,
-          "title": "Implement Audit Logging Mixins",
-          "description": "Create mixin classes to add audit logging capabilities to models, tracking changes and user actions.",
-          "dependencies": [
-            2
-          ],
-          "details": "Develop mixins that can be inherited by models to automatically log creation, modification, and deletion events, including timestamps and user information.",
-          "status": "pending"
-        },
-        {
-          "id": 7,
-          "title": "Set Up Alembic for Database Migrations",
-          "description": "Configure Alembic to manage database schema migrations for the SQLAlchemy models.",
-          "dependencies": [
-            2
-          ],
-          "details": "Initialize Alembic, configure it to work with the SQLAlchemy models, and create initial migration scripts to reflect the current schema.",
-          "status": "pending"
-        },
-        {
-          "id": 8,
-          "title": "Create Indexes and Constraints",
-          "description": "Define indexes and constraints to optimize database performance and ensure data integrity.",
-          "dependencies": [
-            2
-          ],
-          "details": "Add indexes to frequently queried fields and define constraints such as unique, not null, and foreign key constraints as per the data model specifications.",
-          "status": "pending"
-        },
-        {
-          "id": 9,
-          "title": "Implement the Provider Abstraction Layer",
-          "description": "Develop an abstraction layer to handle interactions with different data providers or external services.",
-          "dependencies": [
-            2
-          ],
-          "details": "Create a provider interface and implement concrete classes for each data provider, ensuring a consistent API for data access.",
-          "status": "pending"
-        },
-        {
-          "id": 10,
-          "title": "Add Web3/Blockchain and Event Sourcing Models",
-          "description": "Create models for Web3/blockchain entities and event sourcing to support blockchain transactions and payment events.",
-          "dependencies": [
-            2
-          ],
-          "details": "Define models such as 'Wallet', 'BlockchainTransaction', and 'PaymentEvent' to represent blockchain-related data and event-driven architecture components.",
-          "status": "pending"
+          "details": "Define Customer, Product, and Price models in the Prisma schema. Ensure these entities are linked to the Organization for multi-tenancy support.",
+          "status": "done"
         }
       ]
     },
@@ -129,7 +119,10 @@
       "description": "Set up user authentication using Thirdweb for secure access control.",
       "status": "pending",
       "dependencies": [
-        1
+        1,
+        "25",
+        "26",
+        "27"
       ],
       "priority": "high",
       "details": "Integrate Thirdweb authentication into the Next.js frontend for seamless web2/web3 login options, including email, social, and wallet connections. Implement Sign in with Ethereum (SIWE) standard with JWT tokens stored in cookies. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate JWTs and handle automatic blockchain wallet creation for web2 logins. Obtain Client ID and Secret Key from the Thirdweb dashboard and use a private key for JWT signing.",
@@ -202,6 +195,17 @@
           ],
           "details": "Integrate with Thirdweb to create wallets seamlessly during the authentication process.",
           "status": "pending"
+        },
+        {
+          "id": 8,
+          "title": "Implement UserRepository with authentication methods",
+          "description": "Create UserRepository using the repository pattern to handle user data persistence and authentication-related queries.",
+          "details": "Implement the following methods in UserRepository:\n- create_user() - Create new user with Thirdweb auth data\n- get_user_by_email() - Find user by email for auth\n- get_user_by_auth_provider_id() - Find user by Thirdweb provider ID\n- get_or_create_user() - Upsert pattern for social/wallet logins\n- update_last_login() - Track user activity\n- link_wallet_to_user() - Associate blockchain wallet with user\n- get_user_with_organizations() - Fetch user with their org memberships\n\nEnsure all methods use async/await and handle the multi-tenancy context properly.",
+          "status": "pending",
+          "dependencies": [
+            6
+          ],
+          "parentTaskId": 3
         }
       ]
     },
@@ -212,11 +216,14 @@
       "status": "pending",
       "dependencies": [
         2,
-        3
+        3,
+        "25",
+        "26",
+        "27"
       ],
       "priority": "high",
-      "details": "Create APIs for organization creation, user roles management, and team invitations. Implement role-based access control (Owner, Admin, Member). Integrate Thirdweb authentication to support blockchain wallets, treasury wallets, and gas sponsor wallets. Support user identification by wallet addresses and email invitations that create wallets. Implement organization settings for gas sponsorship policies and wallet allowlists/blocklists.",
-      "testStrategy": "Test organization creation, user role assignments, and access control by simulating different user roles and permissions. Verify blockchain wallet integration, including treasury and gas sponsor wallets. Test user invitations by wallet address and email, and ensure API keys are tied to organization wallets. Validate audit logs for both traditional actions and blockchain transactions.",
+      "details": "Create APIs for organization creation, user roles management, and team invitations. Implement role-based access control (Owner, Admin, Member). Integrate Thirdweb authentication to support blockchain wallets, treasury wallets, and gas sponsor wallets. Support user identification by wallet addresses and email invitations that create wallets. Implement organization settings for gas sponsorship policies and wallet allowlists/blocklists. Ensure database model synchronization between Prisma and SQLAlchemy, respecting organizationId-based Row Level Security and matching field names and relationships.",
+      "testStrategy": "Test organization creation, user role assignments, and access control by simulating different user roles and permissions. Verify blockchain wallet integration, including treasury and gas sponsor wallets. Test user invitations by wallet address and email, and ensure API keys are tied to organization wallets. Validate audit logs for both traditional actions and blockchain transactions. Ensure API responses match TypeScript types generated by Prisma and verify that both ORMs handle multi-tenant data isolation correctly.",
       "subtasks": [
         {
           "id": 1,
@@ -233,7 +240,7 @@
           "dependencies": [
             1
           ],
-          "details": "Include endpoints for organization creation, retrieval, update, and deletion with appropriate access control checks. Ensure integration with blockchain wallets and settings for gas sponsorship policies.",
+          "details": "Include endpoints for organization creation, retrieval, update, and deletion with appropriate access control checks. Ensure integration with blockchain wallets and settings for gas sponsorship policies. Respect organizationId-based Row Level Security and ensure API responses match TypeScript types generated by Prisma.",
           "status": "pending"
         },
         {
@@ -244,7 +251,7 @@
             1,
             2
           ],
-          "details": "Support role assignments such as OWNER, ADMIN, and MEMBER, and ensure users can be invited and assigned roles correctly. Allow invitations by wallet address or email, with email invitations creating wallets.",
+          "details": "Support role assignments such as OWNER, ADMIN, and MEMBER, and ensure users can be invited and assigned roles correctly. Allow invitations by wallet address or email, with email invitations creating wallets. Ensure Python models match Prisma schema exactly.",
           "status": "pending"
         },
         {
@@ -255,7 +262,7 @@
             1,
             2
           ],
-          "details": "Ensure API keys can be created, revoked, and associated with specific organization wallets for secure Engine access.",
+          "details": "Ensure API keys can be created, revoked, and associated with specific organization wallets for secure Engine access. Ensure both ORMs handle multi-tenant data isolation correctly.",
           "status": "pending"
         },
         {
@@ -281,21 +288,45 @@
           ],
           "details": "Ensure organizations can manage allowlists and blocklists for wallets to control access and enhance security.",
           "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Ensure Database Model Synchronization",
+          "description": "Coordinate with Task 25 to ensure database model synchronization between Prisma and SQLAlchemy.",
+          "dependencies": [
+            1
+          ],
+          "details": "Ensure that the implementation approach (manual sync, code generation, or Prisma Client Python) is in place before implementing Python API endpoints. Python models must match Prisma schema exactly, using the same field names and relationships.",
+          "status": "pending"
+        },
+        {
+          "id": 8,
+          "title": "Implement OrganizationRepository with multi-tenancy",
+          "description": "Create OrganizationRepository to handle organization data persistence with proper multi-tenancy isolation.",
+          "details": "Implement the following repository methods:\n- create_organization() - Create new organization with owner\n- get_organization_by_slug() - Find org by unique slug\n- get_user_organizations() - List all orgs a user belongs to\n- add_user_to_organization() - Add member with role\n- remove_user_from_organization() - Remove member\n- update_user_role() - Change member's role\n- get_organization_members() - List all members with roles\n- check_user_permission() - Verify user has permission in org\n- get_organization_with_stats() - Fetch org with payment/user counts\n\nAll methods must respect multi-tenancy boundaries and use the Unit of Work pattern for transactions.",
+          "status": "pending",
+          "dependencies": [
+            2
+          ],
+          "parentTaskId": 4
         }
       ]
     },
     {
       "id": 5,
       "title": "Create Payment Link Model and API",
-      "description": "Develop the model and API for creating and managing payment links with blockchain integration.",
+      "description": "Develop the model and API for creating and managing payment links with blockchain integration, executed by autonomous AI agents.",
       "status": "pending",
       "dependencies": [
         2,
-        4
+        4,
+        "23",
+        "26",
+        "27"
       ],
       "priority": "high",
-      "details": "Define the PaymentLink model and implement the POST /payment-links API endpoint. Integrate blockchain features such as smart contract addresses, on-chain payment metadata, and NFT-based payment receipts. Support link customization options including amount, currency, metadata, and time-locked expiration. Enable QR codes with wallet connection deep links and support gasless transactions through sponsored payments. Ensure multi-currency support with on-chain conversion rates.",
-      "testStrategy": "Test payment link creation with various parameters, including blockchain-specific features. Verify correct data storage, retrieval, and blockchain interactions. Ensure QR codes function correctly and test gasless transaction capabilities.",
+      "details": "Define the PaymentLink model and implement the POST /payment-links API endpoint. Integrate blockchain features such as smart contract addresses, on-chain payment metadata, and NFT-based payment receipts. Support link customization options including amount, currency, metadata, and time-locked expiration. Enable QR codes with wallet connection deep links and support gasless transactions through sponsored payments. Ensure multi-currency support with on-chain conversion rates. Associate each payment link with an executing agent that handles the entire payment flow. Agents have their own Thirdweb smart wallets, support specific providers (Yoint, Trubit), and blockchain chains. Implement new entities: Customer, Product & Price, Subscription, and CustomerPaymentMethod.",
+      "testStrategy": "Test payment link creation with various parameters, including blockchain-specific features and agent execution. Verify correct data storage, retrieval, and blockchain interactions. Ensure QR codes function correctly and test gasless transaction capabilities. Validate agent assignment and execution, product and price management, and customer operations.",
       "subtasks": [
         {
           "id": 6,
@@ -338,6 +369,39 @@
           "title": "Implement Time-Locked Payment Links",
           "description": "Add functionality for time-locked payment links with expiration managed on the blockchain.",
           "status": "pending"
+        },
+        {
+          "id": 13,
+          "title": "Associate Payment Link with Executing Agent",
+          "description": "Update the PaymentLink model to include an executingAgentId field linking to an Agent.",
+          "status": "pending"
+        },
+        {
+          "id": 14,
+          "title": "Implement Agent Capabilities and Decision-Making",
+          "description": "Develop agent capabilities to support specific providers and blockchain chains, and implement decision-making authority.",
+          "status": "pending"
+        },
+        {
+          "id": 15,
+          "title": "Create and Manage Products and Prices",
+          "description": "Develop API endpoints for creating and managing products and flexible pricing models.",
+          "status": "pending"
+        },
+        {
+          "id": 16,
+          "title": "Implement Customer Management",
+          "description": "Develop API endpoints for creating and managing customers, including storing payment methods.",
+          "status": "pending"
+        },
+        {
+          "id": 17,
+          "title": "Implement PaymentLinkRepository with agent integration",
+          "description": "Create PaymentLinkRepository to manage payment links with their executing agents and emit events.",
+          "details": "Implement repository methods:\n- create_payment_link() - Create with agent assignment and emit PaymentLink.Created event\n- get_payment_link_by_short_code() - Find by unique short code\n- get_organization_payment_links() - List with pagination and filters\n- update_payment_link_status() - Change status and emit status change events\n- assign_agent_to_payment_link() - Update executing agent\n- get_payment_links_by_agent() - Find all links assigned to an agent\n- get_active_payment_links() - Filter by active status\n- expire_old_payment_links() - Batch update expired links\n- get_payment_link_with_orders() - Include payment order history\n\nAfter each write operation, emit appropriate domain events to Redpanda:\n- PaymentLink.Created\n- PaymentLink.StatusChanged\n- PaymentLink.AgentAssigned\n- PaymentLink.Expired",
+          "status": "pending",
+          "dependencies": [],
+          "parentTaskId": 5
         }
       ]
     },
@@ -399,14 +463,14 @@
     {
       "id": 7,
       "title": "Implement Payment Execution Logic",
-      "description": "Develop the logic for executing payments through integrated providers.",
-      "details": "Create a service to handle payment execution, including provider selection, transaction initiation, and status tracking. Implement retry logic for failed transactions.",
-      "testStrategy": "Test payment execution with various scenarios, including successful and failed transactions, and verify retry mechanisms.",
-      "priority": "high",
+      "description": "Develop the logic for executing payments through autonomous AI agents using LangGraph.",
+      "status": "pending",
       "dependencies": [
         6
       ],
-      "status": "pending",
+      "priority": "high",
+      "details": "Create an agent-centric architecture where autonomous AI agents handle payment execution. Each agent listens for Payment.Initiated events from Redpanda, uses its own Thirdweb smart wallet for blockchain operations, and orchestrates the entire payment flow. Agents select providers based on capabilities, handle callbacks/webhooks, emit terminal events, and log all reasoning and decisions for auditability. The system is event-driven with agents as primary consumers, making decisions based on provider availability, transaction parameters, success rates, and cost optimization.",
+      "testStrategy": "Test payment execution with various scenarios using autonomous agents, including successful and failed transactions. Verify agent decision-making, provider selection, and event emission. Ensure audit logs are comprehensive.",
       "subtasks": [
         {
           "id": 1,
@@ -504,6 +568,44 @@
             1
           ],
           "details": "Develop mechanisms to update and propagate payment statuses to maintain consistency.",
+          "status": "pending"
+        },
+        {
+          "id": 11,
+          "title": "Develop Autonomous Agent Architecture",
+          "description": "Create the architecture for autonomous AI agents to handle payment execution.",
+          "dependencies": [],
+          "details": "Design agents to listen for Payment.Initiated events, use Thirdweb smart wallets, and orchestrate payment flows autonomously.",
+          "status": "pending"
+        },
+        {
+          "id": 12,
+          "title": "Implement Agent Decision-Making Logic",
+          "description": "Develop logic for agents to make decisions based on provider availability, transaction parameters, and performance metrics.",
+          "dependencies": [
+            11
+          ],
+          "details": "Ensure agents can select providers and optimize costs while maintaining high success rates.",
+          "status": "pending"
+        },
+        {
+          "id": 13,
+          "title": "Set Up Event-Driven System with Redpanda",
+          "description": "Configure the system to use Redpanda for event-driven architecture with agents as primary consumers.",
+          "dependencies": [
+            11
+          ],
+          "details": "Ensure agents can consume Payment.Initiated events and emit terminal events like Payment.Succeeded and Payment.Failed.",
+          "status": "pending"
+        },
+        {
+          "id": 14,
+          "title": "Implement Logging and Auditability for Agents",
+          "description": "Ensure all agent decisions and actions are logged for auditability.",
+          "dependencies": [
+            11
+          ],
+          "details": "Develop comprehensive logging mechanisms to capture agent reasoning and decision-making processes.",
           "status": "pending"
         }
       ]
@@ -1134,7 +1236,84 @@
         13
       ],
       "status": "pending",
-      "subtasks": []
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement Dynamic Provider Health Monitoring",
+          "description": "Develop a system to continuously monitor the health and availability of payment providers.",
+          "dependencies": [],
+          "details": "Create a monitoring service that tracks provider uptime, response times, and error rates in real-time. This service should integrate with existing infrastructure to collect and analyze performance metrics, enabling proactive identification of issues and automatic rerouting of transactions to healthy providers.",
+          "status": "pending"
+        },
+        {
+          "id": 2,
+          "title": "Develop Cost-Based Route Optimization",
+          "description": "Create algorithms to select payment routes based on transaction costs.",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement a routing engine that evaluates transaction fees, currency conversion rates, and other cost factors to determine the most economical payment path. This engine should dynamically adjust routes to minimize processing expenses while maintaining service quality.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
+          "title": "Establish Success Rate Tracking and Analysis",
+          "description": "Set up mechanisms to monitor and analyze transaction success rates across different routes.",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop a reporting system that collects data on transaction outcomes, categorizing them by provider, route, and other relevant parameters. Use this data to identify patterns, optimize routing decisions, and improve overall transaction success rates.",
+          "status": "pending"
+        },
+        {
+          "id": 4,
+          "title": "Implement Time-of-Day Routing Rules",
+          "description": "Configure routing rules that consider the time of day to optimize transaction processing.",
+          "dependencies": [
+            1,
+            3
+          ],
+          "details": "Analyze historical transaction data to identify time-based performance variations among providers. Develop and implement routing rules that direct transactions to providers with optimal performance during specific time periods, enhancing efficiency and success rates.",
+          "status": "pending"
+        },
+        {
+          "id": 5,
+          "title": "Incorporate Amount-Based Routing Decisions",
+          "description": "Design routing logic that considers transaction amounts to select appropriate payment routes.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Create a decision-making framework that evaluates transaction amounts and routes them through providers best suited for specific value ranges. This approach aims to balance cost efficiency and provider capabilities, ensuring optimal processing for transactions of varying sizes.",
+          "status": "pending"
+        },
+        {
+          "id": 6,
+          "title": "Develop Fallback Provider Mechanisms",
+          "description": "Establish protocols for rerouting transactions to alternative providers in case of failures.",
+          "dependencies": [
+            1,
+            3
+          ],
+          "details": "Implement a failover system that detects transaction failures and automatically redirects them to backup providers. This mechanism should include criteria for triggering failovers, selecting appropriate fallback providers, and logging incidents for further analysis.",
+          "status": "pending"
+        },
+        {
+          "id": 7,
+          "title": "Set Up A/B Testing for Route Optimization",
+          "description": "Implement A/B testing frameworks to evaluate and refine routing strategies.",
+          "dependencies": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "details": "Develop a testing environment that allows for controlled experiments comparing different routing configurations. Collect and analyze performance data from these tests to identify the most effective routing strategies, leading to continuous improvement in transaction processing.",
+          "status": "pending"
+        }
+      ]
     },
     {
       "id": 18,
@@ -1152,14 +1331,14 @@
     {
       "id": 19,
       "title": "Implement AI-Native Features",
-      "description": "Develop AI-native features for payment orchestration and optimization.",
-      "details": "Integrate LangGraph and CopilotKit for AI-driven fee optimization, predictive success scoring, and automated reconciliation.",
-      "testStrategy": "Test AI features with real transaction data and verify improvements in efficiency and accuracy.",
-      "priority": "low",
+      "description": "Enhance and extend AI-native features for an agent-centric payment orchestration and optimization platform.",
+      "status": "pending",
       "dependencies": [
         17
       ],
-      "status": "pending",
+      "priority": "low",
+      "details": "Focus on enhancing core agent capabilities, advanced reasoning, multi-agent coordination, and agent learning. Integrate advanced natural language capabilities for merchant interactions and develop an agent marketplace for third-party specialized agents.",
+      "testStrategy": "Test AI features with real transaction data to verify improvements in efficiency, accuracy, and agent coordination. Evaluate agent learning and performance over time.",
       "subtasks": [
         {
           "id": 1,
@@ -1249,6 +1428,36 @@
           ],
           "details": "Design an agent that compares transaction records across different systems to identify discrepancies, ensuring accuracy and consistency in financial records.",
           "status": "pending"
+        },
+        {
+          "id": 10,
+          "title": "Enhance Agent Learning and Adaptation",
+          "description": "Implement mechanisms for agents to learn from past transactions and improve their decision-making over time.",
+          "dependencies": [
+            1
+          ],
+          "details": "Develop learning algorithms that allow agents to adapt based on historical data, optimizing their performance and decision-making capabilities.",
+          "status": "pending"
+        },
+        {
+          "id": 11,
+          "title": "Develop Multi-Agent Coordination Framework",
+          "description": "Create a framework for coordinating multiple agents to handle complex payment scenarios.",
+          "dependencies": [
+            1
+          ],
+          "details": "Design a system that enables agents to communicate and collaborate effectively, ensuring seamless execution of complex payment processes.",
+          "status": "pending"
+        },
+        {
+          "id": 12,
+          "title": "Establish Agent Marketplace",
+          "description": "Develop a marketplace for third-party developers to deploy specialized agents.",
+          "dependencies": [
+            1
+          ],
+          "details": "Create an ecosystem where developers can contribute and deploy specialized agents, enhancing the platform's capabilities and flexibility.",
+          "status": "pending"
         }
       ]
     },
@@ -1268,9 +1477,7 @@
     {
       "id": 21,
       "title": "Integrate Thirdweb Engine with FastAPI Backend",
-      "description": "Integrate Thirdweb Engine with the FastAPI backend following the v2 documentation, including setup, token management, API client implementation, wallet management, transaction monitoring, webhook creation, and concurrent transaction handling.",
-      "details": "1. Set up Thirdweb Engine Cloud or self-hosted instance according to https://portal.thirdweb.com/engine/v2 documentation.\n2. Create Engine access tokens and configure appropriate permissions for backend operations.\n3. Implement a Python client to interact with Engine API endpoints, ensuring all necessary functionality is accessible from the FastAPI backend.\n4. Set up backend wallet management through the Engine, including secure storage and usage of wallets for transactions.\n5. Implement transaction queue monitoring to track the status of outgoing transactions.\n6. Create webhook endpoints in the FastAPI backend to handle Engine callbacks for transaction events.\n7. Handle concurrent transactions with automatic nonce management to prevent conflicts.\n\nEnsure all components are properly integrated and tested within the existing FastAPI architecture, following best practices for security and performance.",
-      "testStrategy": "1. Verify that Thirdweb Engine is correctly set up and accessible from the backend.\n2. Test token creation and permission configuration by attempting API calls with different tokens.\n3. Validate Python client implementation by successfully calling all Engine API endpoints.\n4. Confirm wallet management functionality by creating, retrieving, and using wallets for test transactions.\n5. Check transaction queue monitoring by submitting transactions and verifying their status updates.\n6. Test webhook endpoints by triggering Engine callbacks and verifying proper handling of events.\n7. Verify concurrent transaction handling by simulating multiple simultaneous transactions and checking for correct nonce management.\n\nPerform integration testing to ensure all components work together seamlessly within the FastAPI backend.",
+      "description": "Integrate Thirdweb Engine with the FastAPI backend to focus on agent wallet infrastructure, including setup, agent wallet creation, gas sponsorship, multi-signature support, wallet monitoring, transaction queuing, nonce management, and webhook integration.",
       "status": "pending",
       "dependencies": [
         1,
@@ -1278,6 +1485,8 @@
         3
       ],
       "priority": "high",
+      "details": "1. Set up Thirdweb Engine Cloud or self-hosted instance according to https://portal.thirdweb.com/engine/v2 documentation.\n2. Create smart contract wallets for each autonomous payment agent via the Engine.\n3. Implement gas sponsorship capabilities to allow agents to execute transactions without direct gas costs.\n4. Enable multi-signature support for high-value operations to enhance security.\n5. Monitor wallet balances and manage wallets effectively, including allowlists and blocklists.\n6. Implement transaction queue monitoring and nonce management to handle concurrent operations.\n7. Create webhook endpoints in the FastAPI backend to handle Engine callbacks for transaction status updates.\n\nEnsure all components are properly integrated and tested within the existing FastAPI architecture, following best practices for security and performance.",
+      "testStrategy": "1. Verify that Thirdweb Engine is correctly set up and accessible from the backend.\n2. Test the creation and management of agent wallets, ensuring each wallet is correctly configured.\n3. Validate gas sponsorship by executing transactions and confirming that gas costs are covered.\n4. Confirm multi-signature functionality by requiring multiple approvals for high-value transactions.\n5. Check wallet monitoring by tracking balance changes and managing allowlists/blocklists.\n6. Verify transaction queuing and nonce management by simulating multiple concurrent transactions.\n7. Test webhook endpoints by triggering Engine callbacks and verifying proper handling of transaction status updates.\n\nPerform integration testing to ensure all components work together seamlessly within the FastAPI backend.",
       "subtasks": [
         {
           "id": 1,
@@ -1342,6 +1551,39 @@
           "details": "Utilize the Engine's built-in nonce management features to handle multiple transactions simultaneously without conflicts. Ensure the FastAPI backend is configured to support concurrent transaction processing.",
           "status": "pending",
           "testStrategy": "Simulate concurrent transaction scenarios and verify that nonce conflicts are effectively managed and transactions are processed correctly."
+        },
+        {
+          "id": 7,
+          "title": "Create Agent Wallets with Smart Contracts",
+          "description": "Develop functionality to create smart contract wallets for each autonomous payment agent.",
+          "dependencies": [
+            3
+          ],
+          "details": "Use the Thirdweb Engine to create smart contract wallets tailored for each agent, ensuring they have the necessary capabilities for autonomous operation.",
+          "status": "pending",
+          "testStrategy": "Verify the creation of smart contract wallets by checking their deployment and configuration within the Engine."
+        },
+        {
+          "id": 8,
+          "title": "Implement Gas Sponsorship for Transactions",
+          "description": "Enable gas sponsorship capabilities for agent transactions.",
+          "dependencies": [
+            7
+          ],
+          "details": "Configure the Engine to sponsor gas for transactions initiated by agent wallets, ensuring seamless transaction execution without direct gas costs to the agents.",
+          "status": "pending",
+          "testStrategy": "Test transactions to confirm that gas sponsorship is functioning correctly and transactions are executed without gas charges to the agents."
+        },
+        {
+          "id": 9,
+          "title": "Enable Multi-Signature Support for High-Value Operations",
+          "description": "Implement multi-signature functionality for secure handling of high-value transactions.",
+          "dependencies": [
+            8
+          ],
+          "details": "Set up multi-signature requirements for transactions exceeding a certain value threshold, ensuring enhanced security through multiple approvals.",
+          "status": "pending",
+          "testStrategy": "Simulate high-value transactions and verify that multi-signature requirements are enforced and function correctly."
         }
       ]
     },
@@ -1449,6 +1691,326 @@
           "status": "pending"
         }
       ]
+    },
+    {
+      "id": 23,
+      "title": "Develop Agent Management System",
+      "description": "Implement a comprehensive agent management system to handle agent lifecycle, capabilities, and operations.",
+      "status": "pending",
+      "dependencies": [
+        4,
+        "25",
+        "26"
+      ],
+      "priority": "high",
+      "details": "This task involves developing a robust agent management system that serves as the core execution layer for payment processing. The system should include the following components:\n\n1. **Agent CRUD APIs**: Develop RESTful APIs to create, read, update, and delete agent records. Ensure these APIs are secure and scalable. The APIs must use synchronized Python models and maintain relationships as defined in Prisma, respecting organizationId-based multi-tenancy.\n\n2. **Agent Wallet Creation**: Integrate with Thirdweb Engine to automatically create and manage wallets for each agent. Ensure wallets are securely stored and accessible. Wallet metadata must be stored consistently across both Prisma and SQLAlchemy.\n\n3. **Agent Capability Configuration**: Implement functionality to configure agent capabilities, including supported providers, blockchain chains, and decision authority levels.\n\n4. **Agent Assignment Logic**: Develop logic to assign tasks to agents based on their capabilities and current load. Implement load balancing to optimize performance.\n\n5. **Agent Health Monitoring**: Create a system to monitor agent health and status, including uptime, response times, and error rates.\n\n6. **Agent Decision Logging**: Implement logging for all agent decisions and actions to create an audit trail. Ensure logs are immutable and securely stored.\n\n7. **Agent Performance Metrics**: Develop analytics to track agent performance, including transaction success rates, processing times, and throughput.\n\n8. **Agent Version Control**: Implement version control for agent software, allowing for updates and rollbacks.\n\n9. **Agent Communication Protocols**: Establish protocols for agent-to-agent communication, ensuring secure and efficient data exchange.\n\n10. **Agent Marketplace Infrastructure**: Build infrastructure to support an agent marketplace, enabling dynamic agent deployment and scaling.\n\n11. **Database Synchronization**: Ensure synchronization between Prisma and SQLAlchemy for key models: Agent, AgentDecision, AgentCheckpoint, AgentInteraction, and Wallet. FastAPI endpoints must return responses matching Prisma-generated TypeScript types.\n\nAgents should operate autonomously, executing payments and making decisions based on their configuration and the data they process. Ensure all components are integrated with the existing system architecture and adhere to security best practices.",
+      "testStrategy": "1. **API Testing**: Use tools like Postman to test all CRUD operations for agents, ensuring they work as expected and handle edge cases. Verify that the APIs use synchronized models and maintain relationships as defined in Prisma.\n\n2. **Wallet Verification**: Verify that wallets are correctly created and managed by Thirdweb Engine, checking for proper security and accessibility. Ensure wallet metadata is consistently stored across both ORMs.\n\n3. **Capability Configuration Testing**: Test the configuration of agent capabilities to ensure they are correctly set and can be updated as needed.\n\n4. **Assignment Logic Validation**: Simulate various load scenarios to test the agent assignment logic, ensuring tasks are distributed efficiently.\n\n5. **Health Monitoring Checks**: Implement monitoring tools to verify that agent health metrics are accurately tracked and reported.\n\n6. **Audit Trail Review**: Check that all agent decisions are logged correctly and that logs are immutable.\n\n7. **Performance Metrics Analysis**: Analyze performance data to ensure metrics are accurate and provide meaningful insights.\n\n8. **Version Control Testing**: Test agent updates and rollbacks to ensure version control works without disrupting operations.\n\n9. **Communication Protocol Testing**: Simulate agent-to-agent communication to verify protocols are secure and efficient.\n\n10. **Marketplace Functionality**: Test the agent marketplace infrastructure to ensure it supports dynamic deployment and scaling.\n\n11. **Database Synchronization Testing**: Verify that the synchronization between Prisma and SQLAlchemy is accurate for all key models, and that FastAPI endpoints return responses matching Prisma-generated TypeScript types.",
+      "subtasks": []
+    },
+    {
+      "id": 24,
+      "title": "Implement Customer and Product Management",
+      "description": "Develop a comprehensive system for managing customers, products, and pricing, supporting both one-time payments and subscriptions. Ensure synchronization between Prisma and SQLAlchemy for key data models.",
+      "status": "pending",
+      "dependencies": [
+        4,
+        23,
+        "25",
+        "26"
+      ],
+      "priority": "high",
+      "details": "This task involves creating a robust system for customer and product management, similar to Stripe's model. Key components include:\n\n1. **Customer CRUD APIs**: Develop RESTful APIs to create, read, update, and delete customer records. Ensure these APIs are secure and scalable.\n\n2. **Payment Method Management**: Implement secure storage and management of customer payment methods, integrating with existing payment gateways.\n\n3. **Product Catalog Management**: Design a flexible product catalog system that allows for dynamic attribute management.\n\n4. **Price Management**: Support both one-time and recurring pricing models, including price tiers and volume discounts.\n\n5. **Subscription Management**: Implement APIs for creating and managing subscriptions, including recurring payment scheduling.\n\n6. **Customer Portal**: Develop a self-service portal for customers to manage their accounts, view invoices, and update payment methods.\n\n7. **Product Analytics**: Integrate analytics to track product usage and customer interactions.\n\n8. **Multi-Currency Support**: Implement multi-currency price lists to support global transactions.\n\n9. **Database Synchronization**: Ensure perfect synchronization between Prisma and SQLAlchemy for key models:\n   - Customer (with relationships to organizations)\n   - Product (with flexible metadata)\n   - Price (supporting one-time and recurring models)\n   - Subscription (with billing cycles and status)\n   - CustomerPaymentMethod (secure storage)\n   - SubscriptionSchedule (for plan changes)\n\n   FastAPI endpoints must use synchronized Python models from Task 25. Handle Prisma's Json fields appropriately in SQLAlchemy, maintain exact relationships (Customer → PaymentMethods, Product → Prices), ensure decimal precision matches for currency amounts, handle Prisma enums (PriceType, SubscriptionStatus) in Python, and ensure multi-tenant isolation via organizationId works in both ORMs.\n\nEnsure the system is integrated with the existing multi-tenancy and authentication frameworks, leveraging the core database schema and organization management features. The Stripe-like API design should return responses that match Prisma-generated TypeScript types for frontend consistency.",
+      "testStrategy": "1. **API Testing**: Use Postman or similar tools to test all customer and product management APIs for CRUD operations, ensuring correct data handling and security.\n\n2. **Payment Method Validation**: Verify that payment methods are securely stored and can be updated by customers through the portal.\n\n3. **Subscription Lifecycle**: Test subscription creation, renewal, and cancellation processes, ensuring correct billing and notifications.\n\n4. **Portal Functionality**: Conduct user testing on the customer portal to ensure intuitive navigation and functionality.\n\n5. **Analytics Verification**: Check that product usage data is accurately captured and reported.\n\n6. **Multi-Currency Transactions**: Simulate transactions in different currencies to ensure correct pricing and conversion.\n\n7. **Integration Testing**: Ensure seamless integration with existing systems for authentication and organization management.\n\n8. **Database Synchronization Testing**: Verify that data models are perfectly synchronized between Prisma and SQLAlchemy, including handling of Json fields, enums, and decimal precision. Test multi-tenant isolation and ensure API responses match Prisma-generated TypeScript types.",
+      "subtasks": []
+    },
+    {
+      "id": 25,
+      "title": "Implement Database Model Synchronization System",
+      "description": "Develop a system to synchronize database models between Prisma (TypeScript) and SQLAlchemy (Python) to address dual-ORM challenges.",
+      "details": "1. **Evaluate Synchronization Options**: \n   - Assess the feasibility of manual synchronization, code generation, and using Prisma Client Python.\n   - Consider the complexity, maintainability, and performance of each approach.\n\n2. **Manual Synchronization**:\n   - If chosen, manually create SQLAlchemy models that mirror the 30+ Prisma models.\n   - Ensure all fields, relationships, and constraints are accurately represented.\n\n3. **Automated Code Generation**:\n   - Develop a tool to automatically generate SQLAlchemy models from Prisma schema.\n   - Ensure the tool handles complex relationships and Prisma-specific features like `@map` and `@@map`.\n\n4. **Prisma Client Python Integration**:\n   - Integrate Prisma's Python client into FastAPI if this approach is selected.\n   - Ensure seamless interaction between FastAPI and the database through Prisma.\n\n5. **Validation and Synchronization**:\n   - Implement validation mechanisms to ensure models remain in sync.\n   - Create a migration workflow that supports both Prisma and SQLAlchemy.\n\n6. **Documentation and CI/CD**:\n   - Document the synchronization process thoroughly.\n   - Set up CI/CD checks to detect and prevent model drift.\n\n7. **Multi-Tenancy and Prisma Features**:\n   - Ensure both ORMs handle organizationId-based multi-tenancy effectively.\n   - Address Prisma-specific features in SQLAlchemy models.",
+      "testStrategy": "1. **Option Evaluation**: Verify that a comprehensive analysis of synchronization options is documented.\n2. **Manual Synchronization**: If manual, check that SQLAlchemy models match Prisma models in structure and constraints.\n3. **Automated Code Generation**: Test the code generator with various Prisma schemas to ensure accurate SQLAlchemy model generation.\n4. **Prisma Client Python Integration**: Validate that FastAPI can interact with the database using Prisma Client Python without issues.\n5. **Validation and Migration**: Ensure validation scripts detect discrepancies between ORMs and that migrations apply correctly in both systems.\n6. **Documentation**: Review documentation for clarity and completeness.\n7. **CI/CD Checks**: Confirm that CI/CD pipelines include checks for model synchronization.\n8. **Multi-Tenancy and Features**: Test multi-tenancy functionality and Prisma-specific features in both ORMs.",
+      "status": "done",
+      "dependencies": [
+        2
+      ],
+      "priority": "high",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Evaluate Synchronization Options",
+          "description": "Assess the feasibility of manual synchronization, code generation, and using Prisma Client Python.",
+          "dependencies": [],
+          "details": "Research and document the pros and cons of each synchronization approach, considering complexity, maintainability, and performance. Conduct a small-scale prototype if necessary to evaluate practical implications.\n<info added on 2025-06-08T06:22:19.286Z>\nCompleted evaluation of synchronization options with the following findings:\n\n## Option 1: Manual Synchronization\n**Pros:**\n- Full control over model implementation\n- Can optimize for FastAPI patterns\n- No external dependencies\n- Familiar SQLAlchemy patterns\n\n**Cons:**\n- Error-prone with 30+ models\n- Maintenance nightmare - every schema change requires manual sync\n- High risk of drift between Prisma and SQLAlchemy\n- Time-consuming implementation\n\n## Option 2: Code Generation\n**Pros:**\n- Automated sync reduces errors\n- Can be integrated into CI/CD\n- Maintains consistency automatically\n- One-time development effort\n\n**Cons:**\n- Complex to build generator that handles all Prisma features\n- Must handle: @map, @@map, Json fields, enums, relations\n- Edge cases may require manual intervention\n- Debugging generated code can be difficult\n\n## Option 3: Prisma Client Python\n**Pros:**\n- Official community solution exists (prisma-client-py)\n- Automatic type safety from Prisma schema\n- No manual sync needed - generates Python client from schema\n- Supports async/await natively\n- Active development and community support\n\n**Cons:**\n- Different API than SQLAlchemy (learning curve)\n- Less mature than SQLAlchemy\n- May have deployment complexities (seen Vercel issues)\n- Requires Rust bindings (additional dependency)\n\n## Recommendation: Prisma Client Python\nAfter evaluation, Prisma Client Python is the best option because:\n1. Eliminates sync issues entirely - single source of truth\n2. Provides type safety matching TypeScript frontend\n3. FastAPI integration is well-documented\n4. Active community with production usage\n5. Saves significant development time vs other options\n</info added on 2025-06-08T06:22:19.286Z>\n<info added on 2025-06-08T06:34:37.623Z>\nImplementation complete: Created a code generation approach using scripts/prisma-to-sqlalchemy/generator.py\n\nThe generator:\n- Parses the Prisma schema using regex patterns\n- Generates complete SQLAlchemy models with proper type mappings\n- Handles enums, relationships, indexes, and constraints\n- Fixes reserved field names (metadata -> metadata_)\n- Properly formats __table_args__ tuples\n- Imports func from sqlalchemy.sql for default values\n\nGenerated 28 models and 22 enums successfully. Models validated and can be imported without errors.\n</info added on 2025-06-08T06:34:37.623Z>",
+          "status": "done",
+          "testStrategy": "Review findings with team stakeholders to ensure all aspects are considered."
+        },
+        {
+          "id": 2,
+          "title": "Select Synchronization Approach",
+          "description": "Choose the most suitable synchronization approach based on evaluation results.",
+          "dependencies": [
+            1
+          ],
+          "details": "Based on the evaluation, select either manual synchronization, automated code generation, or Prisma Client Python integration. Document the rationale for the chosen approach.\n<info added on 2025-06-08T06:22:49.499Z>\nDecision made: **Prisma Client Python** selected as the synchronization approach.\n\n## Rationale for Selection:\n\n### 1. Eliminates Synchronization Problem\n- No manual sync needed between Prisma and Python\n- Single source of truth (Prisma schema)\n- Zero risk of model drift\n\n### 2. Type Safety & Developer Experience\n- Automatic Python type hints from Prisma schema\n- Matches TypeScript types in frontend\n- Better IDE support with autocompletion\n\n### 3. FastAPI Compatibility\n- Native async/await support\n- Well-documented FastAPI integration patterns\n- Active community using it with FastAPI\n\n### 4. Time & Cost Efficiency\n- Immediate implementation vs weeks for manual/generator\n- Lower maintenance burden\n- Proven solution vs custom development\n\n### 5. Production Ready\n- Used by companies in production\n- Active maintenance and updates\n- Growing ecosystem\n\n## Implementation Plan:\n1. Install prisma-client-py package\n2. Update Prisma schema generator\n3. Integrate with FastAPI\n4. Remove existing SQLAlchemy models\n5. Update all database operations\n\n## Rejected Alternatives:\n- Manual sync: Too error-prone for 30+ models\n- Code generator: High development cost, edge case complexity\n</info added on 2025-06-08T06:22:49.499Z>",
+          "status": "done",
+          "testStrategy": "Conduct a team review to validate the decision aligns with project goals."
+        },
+        {
+          "id": 3,
+          "title": "Implement Manual Synchronization",
+          "description": "Manually create SQLAlchemy models that mirror the Prisma models, if manual synchronization is chosen.",
+          "dependencies": [
+            2
+          ],
+          "details": "Translate each of the 30+ Prisma models into SQLAlchemy models, ensuring all fields, relationships, and constraints are accurately represented.",
+          "status": "done",
+          "testStrategy": "Cross-verify each SQLAlchemy model with its Prisma counterpart for accuracy."
+        },
+        {
+          "id": 4,
+          "title": "Develop Automated Code Generation Tool",
+          "description": "Create a tool to automatically generate SQLAlchemy models from Prisma schema, if code generation is chosen.",
+          "dependencies": [
+            2
+          ],
+          "details": "Design and implement a script or tool that parses Prisma schema files and outputs equivalent SQLAlchemy models, handling complex relationships and Prisma-specific features.",
+          "status": "done",
+          "testStrategy": "Generate models for a subset of Prisma schemas and verify correctness against expected SQLAlchemy models."
+        },
+        {
+          "id": 5,
+          "title": "Integrate Prisma Client Python",
+          "description": "Integrate Prisma's Python client into FastAPI, if this approach is selected.",
+          "dependencies": [
+            2
+          ],
+          "details": "Set up Prisma Client Python within the FastAPI project, ensuring it can interact seamlessly with the database. Adjust FastAPI endpoints to utilize Prisma for database operations.",
+          "status": "done",
+          "testStrategy": "Test API endpoints to ensure they function correctly with Prisma Client Python."
+        },
+        {
+          "id": 6,
+          "title": "Implement Validation and Synchronization Mechanisms",
+          "description": "Develop validation mechanisms to ensure models remain in sync and create a migration workflow.",
+          "dependencies": [
+            3,
+            4,
+            5
+          ],
+          "details": "Implement checks that validate the consistency between Prisma and SQLAlchemy models. Develop a migration strategy that supports both ORMs.",
+          "status": "done",
+          "testStrategy": "Run synchronization tests to ensure models remain consistent across both ORMs."
+        },
+        {
+          "id": 7,
+          "title": "Document Synchronization Process and Set Up CI/CD",
+          "description": "Document the synchronization process and establish CI/CD checks to prevent model drift.",
+          "dependencies": [
+            6
+          ],
+          "details": "Create comprehensive documentation covering the synchronization process. Implement CI/CD pipelines that include checks for model consistency.",
+          "status": "done",
+          "testStrategy": "Verify CI/CD pipelines trigger on model changes and correctly identify inconsistencies."
+        },
+        {
+          "id": 8,
+          "title": "Ensure Multi-Tenancy and Prisma Features Support",
+          "description": "Ensure both ORMs handle multi-tenancy and Prisma-specific features effectively.",
+          "dependencies": [
+            6
+          ],
+          "details": "Review and adjust models to support organizationId-based multi-tenancy. Ensure Prisma-specific features are correctly represented in SQLAlchemy models.",
+          "status": "done",
+          "testStrategy": "Test multi-tenancy scenarios and Prisma-specific features to ensure proper functionality."
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "title": "Implement Repository Pattern and Database Layer",
+      "description": "Design and implement a repository pattern with a database layer using SQLAlchemy 2.0, supporting multi-tenancy, transaction management, and event emission.",
+      "details": "1. **Design Base Repository Pattern**: Implement a base repository class with generic CRUD operations using SQLAlchemy 2.0 with async support. Ensure it handles both read and write operations with proper transaction management.\n\n2. **Domain-Specific Repositories**: Create repositories for each aggregate root such as User, Organization, Agent, PaymentLink, and PaymentOrder. These should extend the base repository and include domain-specific logic.\n\n3. **Unit of Work Pattern**: Implement a Unit of Work pattern to manage transactions across multiple repositories. Ensure that it supports rollback and commit operations.\n\n4. **Multi-Tenancy Middleware**: Develop middleware to automatically filter queries by organizationId, ensuring data isolation per tenant.\n\n5. **Query Specification Pattern**: Implement a pattern to handle complex queries, allowing for flexible and reusable query logic.\n\n6. **Database Session Management**: Set up session management and connection pooling to optimize database interactions.\n\n7. **Repository Interfaces**: Define interfaces for repositories with async/await support to ensure non-blocking operations.\n\n8. **Event Emission**: Integrate event emission after database operations to support Redpanda integration. Emit domain events after successful operations.\n\n9. **Error Handling and Logging**: Implement comprehensive error handling and logging to capture and manage exceptions effectively.\n\n10. **Row Level Security (RLS)**: Apply RLS patterns at the application level to ensure security and data integrity.\n\n11. **Integration with SQLAlchemy Models**: Ensure integration with the SQLAlchemy models generated in Task 25, maintaining consistency with the database schema.",
+      "testStrategy": "1. **Unit Tests**: Write unit tests for each repository method using pytest to ensure CRUD operations work as expected.\n\n2. **Integration Tests**: Develop integration tests to verify multi-tenancy middleware, transaction management, and event emission.\n\n3. **Load Testing**: Conduct load testing to ensure connection pooling and session management handle concurrent requests efficiently.\n\n4. **Security Testing**: Test RLS implementation to ensure data isolation and security.\n\n5. **Logging Verification**: Check logs to ensure errors and events are captured correctly.\n\n6. **Async Operations**: Verify that all repository operations support async/await and do not block the event loop.",
+      "status": "pending",
+      "dependencies": [
+        25
+      ],
+      "priority": "high",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Design Base Repository Abstract Class",
+          "description": "Create a base repository class with generic CRUD operations using SQLAlchemy 2.0 with async support.",
+          "dependencies": [],
+          "details": "Define an abstract class with methods for create, read, update, delete, and list operations. Ensure methods are async and handle transaction management.",
+          "status": "pending",
+          "testStrategy": "Write unit tests to verify CRUD operations work as expected with mock data."
+        },
+        {
+          "id": 2,
+          "title": "Implement Database Session Factory",
+          "description": "Set up a session factory for managing database sessions and connection pooling.",
+          "dependencies": [],
+          "details": "Configure SQLAlchemy to use a session factory with async support. Ensure connection pooling is optimized for performance.",
+          "status": "pending",
+          "testStrategy": "Test session creation and closure to ensure connections are managed correctly."
+        },
+        {
+          "id": 3,
+          "title": "Develop Multi-Tenancy Middleware",
+          "description": "Create middleware to filter queries by organizationId for multi-tenancy support.",
+          "dependencies": [
+            2
+          ],
+          "details": "Implement middleware that intercepts database queries and applies a filter based on the current tenant's organizationId.",
+          "status": "pending",
+          "testStrategy": "Test with multiple tenants to ensure data isolation is maintained."
+        },
+        {
+          "id": 4,
+          "title": "Implement Unit of Work Pattern",
+          "description": "Develop a Unit of Work pattern to manage transactions across multiple repositories.",
+          "dependencies": [
+            1,
+            2
+          ],
+          "details": "Create a Unit of Work class that manages the lifecycle of a database session and coordinates transaction commits and rollbacks.",
+          "status": "pending",
+          "testStrategy": "Test transaction commit and rollback scenarios to ensure data consistency."
+        },
+        {
+          "id": 5,
+          "title": "Create UserRepository with Auth-Specific Queries",
+          "description": "Implement a UserRepository extending the base repository with authentication-specific queries.",
+          "dependencies": [
+            1
+          ],
+          "details": "Add methods for user-specific operations such as finding users by email or username.",
+          "status": "pending",
+          "testStrategy": "Test user-specific queries to ensure they return expected results."
+        },
+        {
+          "id": 6,
+          "title": "Create OrganizationRepository with Membership Management",
+          "description": "Implement an OrganizationRepository with methods for managing organization memberships.",
+          "dependencies": [
+            1
+          ],
+          "details": "Add methods to handle operations like adding or removing members from an organization.",
+          "status": "pending",
+          "testStrategy": "Test membership management operations for correctness."
+        },
+        {
+          "id": 7,
+          "title": "Create AgentRepository with Capability Queries",
+          "description": "Implement an AgentRepository with methods for querying agent capabilities.",
+          "dependencies": [
+            1
+          ],
+          "details": "Add methods to retrieve agents based on their capabilities or roles.",
+          "status": "pending",
+          "testStrategy": "Test capability queries to ensure they filter agents correctly."
+        },
+        {
+          "id": 8,
+          "title": "Create PaymentLinkRepository with Status Filters",
+          "description": "Implement a PaymentLinkRepository with methods for filtering by payment status.",
+          "dependencies": [
+            1
+          ],
+          "details": "Add methods to retrieve payment links based on their current status.",
+          "status": "pending",
+          "testStrategy": "Test status filters to ensure they return the correct payment links."
+        },
+        {
+          "id": 9,
+          "title": "Create PaymentOrderRepository with Complex Queries",
+          "description": "Implement a PaymentOrderRepository with support for complex queries.",
+          "dependencies": [
+            1
+          ],
+          "details": "Add methods to handle complex queries involving multiple criteria and joins.",
+          "status": "pending",
+          "testStrategy": "Test complex queries to ensure they execute correctly and efficiently."
+        },
+        {
+          "id": 10,
+          "title": "Create CustomerRepository with Payment Method Management",
+          "description": "Implement a CustomerRepository with methods for managing customer payment methods.",
+          "dependencies": [
+            1
+          ],
+          "details": "Add methods to add, update, or remove payment methods for customers.",
+          "status": "pending",
+          "testStrategy": "Test payment method management operations for accuracy."
+        },
+        {
+          "id": 11,
+          "title": "Create ProductRepository and PriceRepository",
+          "description": "Implement repositories for managing products and their pricing.",
+          "dependencies": [
+            1
+          ],
+          "details": "Add methods to handle CRUD operations and price adjustments for products.",
+          "status": "pending",
+          "testStrategy": "Test product and price operations to ensure data integrity."
+        },
+        {
+          "id": 12,
+          "title": "Create WalletRepository with Blockchain Integration",
+          "description": "Implement a WalletRepository with methods for blockchain-related operations.",
+          "dependencies": [
+            1
+          ],
+          "details": "Add methods to interact with blockchain APIs for wallet transactions.",
+          "status": "pending",
+          "testStrategy": "Test blockchain integration to ensure transactions are processed correctly."
+        },
+        {
+          "id": 13,
+          "title": "Implement Query Specification Pattern",
+          "description": "Develop a pattern to handle complex and dynamic query specifications.",
+          "dependencies": [
+            1
+          ],
+          "details": "Create a specification interface and implement classes for different query types.",
+          "status": "pending",
+          "testStrategy": "Test dynamic query specifications to ensure flexibility and correctness."
+        },
+        {
+          "id": 14,
+          "title": "Integrate Event Publisher for Domain Events",
+          "description": "Set up event emission after database operations to support Redpanda integration.",
+          "dependencies": [
+            1
+          ],
+          "details": "Configure event publishers to emit domain events after successful CRUD operations.",
+          "status": "pending",
+          "testStrategy": "Test event emission to ensure events are published correctly."
+        },
+        {
+          "id": 15,
+          "title": "Implement Error Handling and Logging",
+          "description": "Develop comprehensive error handling and logging mechanisms.",
+          "dependencies": [],
+          "details": "Set up logging to capture exceptions and implement custom exceptions for error scenarios.",
+          "status": "pending",
+          "testStrategy": "Test error handling by simulating failures and checking log outputs."
+        }
+      ]
+    },
+    {
+      "id": 27,
+      "title": "Implement FastAPI Endpoint Structure with Dependency Injection",
+      "description": "Set up a FastAPI application structure with routers, dependency injection, and middleware for a RESTful API.",
+      "details": "1. **Set Up FastAPI Application Structure**: Initialize a FastAPI application with a modular structure using routers for different API sections (auth, organizations, users, etc.).\n\n2. **Implement Dependency Injection**: Use FastAPI's dependency injection system to inject repositories into endpoints. Ensure each endpoint uses the repository pattern for data access and manipulation.\n\n3. **Create DTOs with Pydantic**: Define request and response DTOs using Pydantic models for data validation and serialization.\n\n4. **Implement Authentication Middleware**: Use JWT tokens for authentication. Implement middleware to validate JWTs and attach user information to requests.\n\n5. **Organization Context Middleware**: Develop middleware to handle multi-tenancy by determining the organization context from request headers or tokens.\n\n6. **API Versioning**: Set up API versioning by organizing endpoints under the `/api/v1` path.\n\n7. **Error Handling and Exception Middleware**: Implement global error handling and exception middleware to standardize error responses.\n\n8. **OpenAPI Documentation**: Automatically generate OpenAPI documentation with examples for each endpoint using FastAPI's built-in support.\n\n9. **CORS Configuration**: Configure CORS to allow cross-origin requests from trusted domains.\n\n10. **Request Validation and Sanitization**: Ensure all incoming requests are validated and sanitized to prevent injection attacks.\n\n11. **RESTful Endpoint Design**: Implement endpoints following RESTful principles for authentication, organization management, user management, agent management, payment link CRUD, payment order tracking, customer management, product catalog, and webhook management. Ensure each endpoint emits events after state changes.",
+      "testStrategy": "1. **Unit Tests**: Write unit tests for each endpoint to verify correct routing, request handling, and response generation.\n\n2. **Integration Tests**: Develop integration tests to ensure that dependency injection works correctly and that repositories are properly utilized.\n\n3. **Middleware Tests**: Test authentication and organization context middleware to ensure they correctly process requests and attach necessary information.\n\n4. **API Documentation Verification**: Check that the OpenAPI documentation is generated correctly and includes all endpoints with examples.\n\n5. **Security Tests**: Conduct security testing to verify JWT validation, CORS configuration, and request sanitization.\n\n6. **Functional Tests**: Perform end-to-end tests to ensure that the API endpoints function as expected and emit events correctly after state changes.",
+      "status": "pending",
+      "dependencies": [
+        26
+      ],
+      "priority": "high",
+      "subtasks": []
     }
   ]
 }

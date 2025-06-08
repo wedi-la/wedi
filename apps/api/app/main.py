@@ -7,6 +7,9 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
+from .models import Base
 
 from app.config import settings
 
@@ -18,6 +21,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     """
     # Startup
     print("Starting Wedi Pay API...")
+    engine = create_engine(settings.DATABASE_URL)
+    async_session = async_sessionmaker(engine, class_=AsyncSession)
+    Base.metadata.create_all(bind=engine)
     # Initialize database connections, Redis, Kafka, etc.
     
     yield

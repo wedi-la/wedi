@@ -1,7 +1,7 @@
 # Task ID: 3
 # Title: Implement User Authentication
 # Status: pending
-# Dependencies: 1
+# Dependencies: 1, 25, 26, 27
 # Priority: high
 # Description: Set up user authentication using Thirdweb for secure access control.
 # Details:
@@ -52,4 +52,19 @@ Ensure endpoints are secure and correctly validate the JWTs for user authenticat
 ### Description: Develop functionality to automatically create wallets for users logging in via web2 methods such as email or social logins.
 ### Details:
 Integrate with Thirdweb to create wallets seamlessly during the authentication process.
+
+## 8. Implement UserRepository with authentication methods [pending]
+### Dependencies: 3.6
+### Description: Create UserRepository using the repository pattern to handle user data persistence and authentication-related queries.
+### Details:
+Implement the following methods in UserRepository:
+- create_user() - Create new user with Thirdweb auth data
+- get_user_by_email() - Find user by email for auth
+- get_user_by_auth_provider_id() - Find user by Thirdweb provider ID
+- get_or_create_user() - Upsert pattern for social/wallet logins
+- update_last_login() - Track user activity
+- link_wallet_to_user() - Associate blockchain wallet with user
+- get_user_with_organizations() - Fetch user with their org memberships
+
+Ensure all methods use async/await and handle the multi-tenancy context properly.
 

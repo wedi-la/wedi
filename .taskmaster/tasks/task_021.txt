@@ -3,26 +3,26 @@
 # Status: pending
 # Dependencies: 1, 2, 3
 # Priority: high
-# Description: Integrate Thirdweb Engine with the FastAPI backend following the v2 documentation, including setup, token management, API client implementation, wallet management, transaction monitoring, webhook creation, and concurrent transaction handling.
+# Description: Integrate Thirdweb Engine with the FastAPI backend to focus on agent wallet infrastructure, including setup, agent wallet creation, gas sponsorship, multi-signature support, wallet monitoring, transaction queuing, nonce management, and webhook integration.
 # Details:
 1. Set up Thirdweb Engine Cloud or self-hosted instance according to https://portal.thirdweb.com/engine/v2 documentation.
-2. Create Engine access tokens and configure appropriate permissions for backend operations.
-3. Implement a Python client to interact with Engine API endpoints, ensuring all necessary functionality is accessible from the FastAPI backend.
-4. Set up backend wallet management through the Engine, including secure storage and usage of wallets for transactions.
-5. Implement transaction queue monitoring to track the status of outgoing transactions.
-6. Create webhook endpoints in the FastAPI backend to handle Engine callbacks for transaction events.
-7. Handle concurrent transactions with automatic nonce management to prevent conflicts.
+2. Create smart contract wallets for each autonomous payment agent via the Engine.
+3. Implement gas sponsorship capabilities to allow agents to execute transactions without direct gas costs.
+4. Enable multi-signature support for high-value operations to enhance security.
+5. Monitor wallet balances and manage wallets effectively, including allowlists and blocklists.
+6. Implement transaction queue monitoring and nonce management to handle concurrent operations.
+7. Create webhook endpoints in the FastAPI backend to handle Engine callbacks for transaction status updates.
 
 Ensure all components are properly integrated and tested within the existing FastAPI architecture, following best practices for security and performance.
 
 # Test Strategy:
 1. Verify that Thirdweb Engine is correctly set up and accessible from the backend.
-2. Test token creation and permission configuration by attempting API calls with different tokens.
-3. Validate Python client implementation by successfully calling all Engine API endpoints.
-4. Confirm wallet management functionality by creating, retrieving, and using wallets for test transactions.
-5. Check transaction queue monitoring by submitting transactions and verifying their status updates.
-6. Test webhook endpoints by triggering Engine callbacks and verifying proper handling of events.
-7. Verify concurrent transaction handling by simulating multiple simultaneous transactions and checking for correct nonce management.
+2. Test the creation and management of agent wallets, ensuring each wallet is correctly configured.
+3. Validate gas sponsorship by executing transactions and confirming that gas costs are covered.
+4. Confirm multi-signature functionality by requiring multiple approvals for high-value transactions.
+5. Check wallet monitoring by tracking balance changes and managing allowlists/blocklists.
+6. Verify transaction queuing and nonce management by simulating multiple concurrent transactions.
+7. Test webhook endpoints by triggering Engine callbacks and verifying proper handling of transaction status updates.
 
 Perform integration testing to ensure all components work together seamlessly within the FastAPI backend.
 
@@ -62,4 +62,22 @@ Configure the FastAPI backend to monitor transaction queues and statuses. Implem
 ### Description: Implement mechanisms to manage concurrent transactions and prevent nonce conflicts.
 ### Details:
 Utilize the Engine's built-in nonce management features to handle multiple transactions simultaneously without conflicts. Ensure the FastAPI backend is configured to support concurrent transaction processing.
+
+## 7. Create Agent Wallets with Smart Contracts [pending]
+### Dependencies: 21.3
+### Description: Develop functionality to create smart contract wallets for each autonomous payment agent.
+### Details:
+Use the Thirdweb Engine to create smart contract wallets tailored for each agent, ensuring they have the necessary capabilities for autonomous operation.
+
+## 8. Implement Gas Sponsorship for Transactions [pending]
+### Dependencies: 21.7
+### Description: Enable gas sponsorship capabilities for agent transactions.
+### Details:
+Configure the Engine to sponsor gas for transactions initiated by agent wallets, ensuring seamless transaction execution without direct gas costs to the agents.
+
+## 9. Enable Multi-Signature Support for High-Value Operations [pending]
+### Dependencies: 21.8
+### Description: Implement multi-signature functionality for secure handling of high-value transactions.
+### Details:
+Set up multi-signature requirements for transactions exceeding a certain value threshold, ensuring enhanced security through multiple approvals.
 

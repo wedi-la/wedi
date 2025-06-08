@@ -20,11 +20,6 @@ cp .env.example .env
 # Edit .env with your configuration
 ```
 
-4. Run database migrations:
-```bash
-poetry run alembic upgrade head
-```
-
 ## Development
 
 Run the development server:

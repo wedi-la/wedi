@@ -1,0 +1,53 @@
+# Task ID: 24
+# Title: Implement Customer and Product Management
+# Status: pending
+# Dependencies: 4, 23, 25, 26
+# Priority: high
+# Description: Develop a comprehensive system for managing customers, products, and pricing, supporting both one-time payments and subscriptions. Ensure synchronization between Prisma and SQLAlchemy for key data models.
+# Details:
+This task involves creating a robust system for customer and product management, similar to Stripe's model. Key components include:
+
+1. **Customer CRUD APIs**: Develop RESTful APIs to create, read, update, and delete customer records. Ensure these APIs are secure and scalable.
+
+2. **Payment Method Management**: Implement secure storage and management of customer payment methods, integrating with existing payment gateways.
+
+3. **Product Catalog Management**: Design a flexible product catalog system that allows for dynamic attribute management.
+
+4. **Price Management**: Support both one-time and recurring pricing models, including price tiers and volume discounts.
+
+5. **Subscription Management**: Implement APIs for creating and managing subscriptions, including recurring payment scheduling.
+
+6. **Customer Portal**: Develop a self-service portal for customers to manage their accounts, view invoices, and update payment methods.
+
+7. **Product Analytics**: Integrate analytics to track product usage and customer interactions.
+
+8. **Multi-Currency Support**: Implement multi-currency price lists to support global transactions.
+
+9. **Database Synchronization**: Ensure perfect synchronization between Prisma and SQLAlchemy for key models:
+   - Customer (with relationships to organizations)
+   - Product (with flexible metadata)
+   - Price (supporting one-time and recurring models)
+   - Subscription (with billing cycles and status)
+   - CustomerPaymentMethod (secure storage)
+   - SubscriptionSchedule (for plan changes)
+
+   FastAPI endpoints must use synchronized Python models from Task 25. Handle Prisma's Json fields appropriately in SQLAlchemy, maintain exact relationships (Customer → PaymentMethods, Product → Prices), ensure decimal precision matches for currency amounts, handle Prisma enums (PriceType, SubscriptionStatus) in Python, and ensure multi-tenant isolation via organizationId works in both ORMs.
+
+Ensure the system is integrated with the existing multi-tenancy and authentication frameworks, leveraging the core database schema and organization management features. The Stripe-like API design should return responses that match Prisma-generated TypeScript types for frontend consistency.
+
+# Test Strategy:
+1. **API Testing**: Use Postman or similar tools to test all customer and product management APIs for CRUD operations, ensuring correct data handling and security.
+
+2. **Payment Method Validation**: Verify that payment methods are securely stored and can be updated by customers through the portal.
+
+3. **Subscription Lifecycle**: Test subscription creation, renewal, and cancellation processes, ensuring correct billing and notifications.
+
+4. **Portal Functionality**: Conduct user testing on the customer portal to ensure intuitive navigation and functionality.
+
+5. **Analytics Verification**: Check that product usage data is accurately captured and reported.
+
+6. **Multi-Currency Transactions**: Simulate transactions in different currencies to ensure correct pricing and conversion.
+
+7. **Integration Testing**: Ensure seamless integration with existing systems for authentication and organization management.
+
+8. **Database Synchronization Testing**: Verify that data models are perfectly synchronized between Prisma and SQLAlchemy, including handling of Json fields, enums, and decimal precision. Test multi-tenant isolation and ensure API responses match Prisma-generated TypeScript types.

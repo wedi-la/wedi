@@ -1,14 +1,14 @@
 # Task ID: 5
 # Title: Create Payment Link Model and API
 # Status: pending
-# Dependencies: 2, 4
+# Dependencies: 2, 4, 23, 26, 27
 # Priority: high
-# Description: Develop the model and API for creating and managing payment links with blockchain integration.
+# Description: Develop the model and API for creating and managing payment links with blockchain integration, executed by autonomous AI agents.
 # Details:
-Define the PaymentLink model and implement the POST /payment-links API endpoint. Integrate blockchain features such as smart contract addresses, on-chain payment metadata, and NFT-based payment receipts. Support link customization options including amount, currency, metadata, and time-locked expiration. Enable QR codes with wallet connection deep links and support gasless transactions through sponsored payments. Ensure multi-currency support with on-chain conversion rates.
+Define the PaymentLink model and implement the POST /payment-links API endpoint. Integrate blockchain features such as smart contract addresses, on-chain payment metadata, and NFT-based payment receipts. Support link customization options including amount, currency, metadata, and time-locked expiration. Enable QR codes with wallet connection deep links and support gasless transactions through sponsored payments. Ensure multi-currency support with on-chain conversion rates. Associate each payment link with an executing agent that handles the entire payment flow. Agents have their own Thirdweb smart wallets, support specific providers (Yoint, Trubit), and blockchain chains. Implement new entities: Customer, Product & Price, Subscription, and CustomerPaymentMethod.
 
 # Test Strategy:
-Test payment link creation with various parameters, including blockchain-specific features. Verify correct data storage, retrieval, and blockchain interactions. Ensure QR codes function correctly and test gasless transaction capabilities.
+Test payment link creation with various parameters, including blockchain-specific features and agent execution. Verify correct data storage, retrieval, and blockchain interactions. Ensure QR codes function correctly and test gasless transaction capabilities. Validate agent assignment and execution, product and price management, and customer operations.
 
 # Subtasks:
 ## 6. Integrate Smart Contract Address [pending]
@@ -52,4 +52,49 @@ Test payment link creation with various parameters, including blockchain-specifi
 ### Description: Add functionality for time-locked payment links with expiration managed on the blockchain.
 ### Details:
 
+
+## 13. Associate Payment Link with Executing Agent [pending]
+### Dependencies: None
+### Description: Update the PaymentLink model to include an executingAgentId field linking to an Agent.
+### Details:
+
+
+## 14. Implement Agent Capabilities and Decision-Making [pending]
+### Dependencies: None
+### Description: Develop agent capabilities to support specific providers and blockchain chains, and implement decision-making authority.
+### Details:
+
+
+## 15. Create and Manage Products and Prices [pending]
+### Dependencies: None
+### Description: Develop API endpoints for creating and managing products and flexible pricing models.
+### Details:
+
+
+## 16. Implement Customer Management [pending]
+### Dependencies: None
+### Description: Develop API endpoints for creating and managing customers, including storing payment methods.
+### Details:
+
+
+## 17. Implement PaymentLinkRepository with agent integration [pending]
+### Dependencies: None
+### Description: Create PaymentLinkRepository to manage payment links with their executing agents and emit events.
+### Details:
+Implement repository methods:
+- create_payment_link() - Create with agent assignment and emit PaymentLink.Created event
+- get_payment_link_by_short_code() - Find by unique short code
+- get_organization_payment_links() - List with pagination and filters
+- update_payment_link_status() - Change status and emit status change events
+- assign_agent_to_payment_link() - Update executing agent
+- get_payment_links_by_agent() - Find all links assigned to an agent
+- get_active_payment_links() - Filter by active status
+- expire_old_payment_links() - Batch update expired links
+- get_payment_link_with_orders() - Include payment order history
+
+After each write operation, emit appropriate domain events to Redpanda:
+- PaymentLink.Created
+- PaymentLink.StatusChanged
+- PaymentLink.AgentAssigned
+- PaymentLink.Expired
 
