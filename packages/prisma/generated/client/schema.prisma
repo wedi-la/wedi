@@ -9,13 +9,6 @@ generator client {
   output   = "./generated/client"
 }
 
-generator client_python {
-  provider                    = "prisma-client-py"
-  output                      = "../../apps/api/app/generated/prisma"
-  recursive_type_depth        = 5
-  enable_experimental_decimal = true
-}
-
 // ==========================================
 // CORE DOMAIN MODELS
 // ==========================================

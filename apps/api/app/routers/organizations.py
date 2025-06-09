@@ -20,11 +20,11 @@ from app.api.dependencies import (
 )
 from app.core.logging import get_logger
 from app.db.session import get_db
-from app.events.bus import get_event_publisher
-from app.events.domain_events import (
+from app.events import (
+    get_event_publisher,
     OrganizationCreatedEvent,
-    OrganizationMemberAddedEvent,
-    OrganizationMemberRemovedEvent,
+    MemberAddedEvent,
+    MemberRemovedEvent,
 )
 from app.models import User, UserRole
 from app.repositories.organization import OrganizationRepository
@@ -320,7 +320,7 @@ async def add_organization_member(
             
             # Emit event
             event_publisher = await get_event_publisher()
-            event = OrganizationMemberAddedEvent(
+            event = MemberAddedEvent(
                 organization_id=organization_id,
                 user_id=member_data.user_id,
                 role=member_data.role.value,
@@ -448,7 +448,7 @@ async def remove_organization_member(
             
             # Emit event
             event_publisher = await get_event_publisher()
-            event = OrganizationMemberRemovedEvent(
+            event = MemberRemovedEvent(
                 organization_id=organization_id,
                 user_id=user_id,
                 removed_by=str(current_user.id),

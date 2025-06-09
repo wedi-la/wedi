@@ -257,3 +257,36 @@ class KYCProviderError(ExternalServiceError):
             provider=provider,
             operation=operation
         ) 
+
+
+class UnauthorizedException(WediException):
+    """Raised when a user is not authorized to access a resource."""
+    
+    def __init__(self, message: str, code: str = "UNAUTHORIZED", **kwargs):
+        super().__init__(message, code, status_code=401, **kwargs)
+
+
+class ForbiddenException(WediException):
+    """Raised when a user is not allowed to access a resource."""
+    
+    def __init__(self, message: str, code: str = "FORBIDDEN", **kwargs):
+        super().__init__(message, code, status_code=403, **kwargs)
+
+
+class BadRequestException(WediException):
+    """Raised when a request is invalid."""
+
+    def __init__(self, message: str, code: str = "BAD_REQUEST", **kwargs):
+        super().__init__(message, code, status_code=400, **kwargs)
+
+
+class NotFoundException(WediException):
+    """Raised when a requested resource is not found."""
+    
+    def __init__(self, resource: str, identifier: Any, **kwargs):
+        super().__init__(
+            message=f"{resource} with identifier '{identifier}' not found",
+            code="NOT_FOUND",
+            status_code=404,
+            details={"resource": resource, "identifier": str(identifier)}
+        )

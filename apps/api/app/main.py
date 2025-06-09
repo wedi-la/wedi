@@ -43,8 +43,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     
     try:
         # Initialize database
-        await init_db()
-        logger.info("Database initialized")
+        # await init_db()
+        # logger.info("Database initialized")
         
         # Initialize event publisher
         await startup_event_publisher()
@@ -91,9 +91,9 @@ def create_application() -> FastAPI:
         description="AI-native payment orchestration platform API",
         version=settings.APP_VERSION,
         lifespan=lifespan,
-        docs_url="/api/docs" if settings.ENVIRONMENT != "production" else None,
-        redoc_url="/api/redoc" if settings.ENVIRONMENT != "production" else None,
-        openapi_url="/api/openapi.json" if settings.ENVIRONMENT != "production" else None,
+        # docs_url="/api/docs" if settings.ENVIRONMENT != "production" else None,
+        # redoc_url="/api/redoc" if settings.ENVIRONMENT != "production" else None,
+        # openapi_url="/api/openapi.json" if settings.ENVIRONMENT != "production" else None,
     )
     
     # Add middleware stack (order matters - applied in reverse)

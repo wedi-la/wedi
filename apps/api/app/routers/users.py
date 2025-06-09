@@ -25,13 +25,13 @@ from app.db.session import get_db
 from app.models import User, UserRole, WalletType
 from app.repositories.user import UserRepository
 from app.repositories.wallet import WalletRepository
-from app.schemas.organization import OrganizationMembership
-from app.schemas.user import (
+from app.schemas import (
+    OrganizationMembership,
     User as UserSchema,
     UserUpdate,
     UserWithOrganizations,
 )
-from app.schemas.wallet import Wallet, WalletCreate
+from app.schemas.wallet import WalletInDB as Wallet, WalletCreate
 
 logger = get_logger(__name__)
 

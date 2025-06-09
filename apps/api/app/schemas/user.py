@@ -1,12 +1,17 @@
 """
 User schemas for API validation and serialization.
 """
+from __future__ import annotations
+
 from datetime import datetime
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
 
 from pydantic import BaseModel, EmailStr, Field, validator
 
 from app.models import AuthProvider
+
+if TYPE_CHECKING:
+    from app.schemas.organization import OrganizationMembership
 
 
 class UserBase(BaseModel):
@@ -66,7 +71,7 @@ class User(UserInDBBase):
 class UserWithOrganizations(User):
     """Schema for user with their organizations."""
     
-    organizations: list["OrganizationMembership"] = []
+    organizations: list[OrganizationMembership] = []
 
 
 class UserAuthInfo(BaseModel):
@@ -82,13 +87,4 @@ class UserAuthInfo(BaseModel):
     
     class Config:
         """Pydantic config."""
-        from_attributes = True
-
-
-# Circular import handling
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from app.schemas.organization import OrganizationMembership
-else:
-    OrganizationMembership = "OrganizationMembership" 
+        from_attributes = True 

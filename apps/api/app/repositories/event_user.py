@@ -1,11 +1,21 @@
 """
-Event-aware user repository example.
+Event-aware user repository with automatic event emission.
 
-This demonstrates how to integrate domain events with repositories.
+This repository extends the base UserRepository to automatically emit
+events for create, update, and delete operations.
 """
-from typing import Optional
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+from uuid import uuid4
 
-from app.events.domain_events import (
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.events.publisher import EventPublisher
+from app.models import EventType, User
+from app.schemas import UserCreate, UserUpdate
+from app.repositories.user import UserRepository
+
+from app.events import (
     UserCreatedEvent,
     UserVerifiedEvent,
     UserWalletLinkedEvent,
@@ -13,7 +23,6 @@ from app.events.domain_events import (
 from app.events.publisher import DomainEvent
 from app.models.generated import User
 from app.repositories.event_repository import EventRepository
-from app.schemas.user import UserCreate, UserUpdate
 
 
 class EventUserRepository(EventRepository[User, UserCreate, UserUpdate]):
@@ -98,8 +107,6 @@ class EventUserRepository(EventRepository[User, UserCreate, UserUpdate]):
         Returns:
             Updated user
         """
-        from app.schemas.user import UserUpdate
-        
         # Update user
         update_data = UserUpdate(email_verified=True)
         updated_user = await self.update(

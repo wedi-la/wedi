@@ -1,6 +1,6 @@
 """
 SQLAlchemy models generated from Prisma schema
-Generated at: 2025-06-08T01:33:50.895316
+Generated at: 2025-06-08T20:30:46.989257
 """
 
 from datetime import datetime

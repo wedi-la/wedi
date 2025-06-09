@@ -8,8 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.models import AuthProvider, Organization, OrganizationUser, User
+from app.schemas import UserCreate, UserUpdate
 from app.repositories.base import BaseRepository
-from app.schemas.user import UserCreate, UserUpdate
 
 
 class UserRepository(BaseRepository[User, UserCreate, UserUpdate]):

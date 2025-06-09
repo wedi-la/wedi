@@ -15,7 +15,7 @@ from app.core.security import (
 )
 from app.repositories.user import UserRepository
 from app.repositories.organization import OrganizationRepository
-from app.models import User, Organization, Membership, Wallet
+from app.models import User, Organization, Wallet
 from app.schemas.auth import (
     SIWEPayloadRequest,
     SIWEPayload,
