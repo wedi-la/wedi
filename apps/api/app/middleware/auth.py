@@ -14,7 +14,7 @@ from starlette.responses import Response
 
 from app.core.logging import get_logger
 from app.core.security import decode_token, verify_token_type
-from app.db.session import get_session
+from app.db.session import get_db
 from app.repositories.user import UserRepository
 
 logger = get_logger(__name__)
@@ -112,7 +112,7 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
             # Optional: Load full user object (expensive, do only if needed)
             # This could be moved to a dependency instead
             if request.url.path.startswith("/api/v1/") and not request.url.path.startswith("/api/v1/auth/"):
-                async with get_session() as db:
+                async with get_db() as db:
                     user_repo = UserRepository()
                     user = await user_repo.get(db, id=user_id)
                     if not user:

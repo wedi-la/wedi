@@ -11,7 +11,7 @@ from app.api.dependencies import (
     get_current_user,
 )
 from app.core.logging import get_logger
-from app.db.session import get_session
+from app.db.session import get_db
 from app.models import User
 from app.repositories.user import UserRepository
 from app.repositories.organization import OrganizationRepository
@@ -65,7 +65,7 @@ async def generate_payload(
 @router.post("/login", response_model=LoginResponse)
 async def login(
     login_request: LoginRequest,
-    db: AsyncSession = Depends(get_session),
+    db: AsyncSession = Depends(get_db),
     user_repository: UserRepository = Depends(get_user_repository),
     organization_repository: OrganizationRepository = Depends(get_organization_repository),
 ) -> LoginResponse:
@@ -105,7 +105,7 @@ async def login(
 @router.post("/refresh", response_model=TokenRefreshResponse)
 async def refresh_token(
     refresh_request: TokenRefreshRequest,
-    db: AsyncSession = Depends(get_session),
+    db: AsyncSession = Depends(get_db),
     user_repository: UserRepository = Depends(get_user_repository),
 ) -> TokenRefreshResponse:
     """
@@ -151,7 +151,7 @@ async def logout(
 @router.get("/me", response_model=CurrentUserResponse)
 async def get_me(
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_session),
+        db: AsyncSession = Depends(get_db),
     user_repository: UserRepository = Depends(get_user_repository),
     organization_repository: OrganizationRepository = Depends(get_organization_repository),
 ) -> CurrentUserResponse:

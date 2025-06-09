@@ -64,6 +64,20 @@ def configure_logging() -> None:
     )
 
 
+def get_logger(name: Optional[str] = None) -> structlog.BoundLogger:
+    """Get a logger instance with the given name.
+    
+    Args:
+        name: Logger name (usually __name__ of the calling module)
+        
+    Returns:
+        A bound logger instance
+    """
+    if name:
+        return structlog.get_logger(name)
+    return structlog.get_logger()
+
+
 # Create logger instance
 logger = structlog.get_logger()
 
@@ -418,4 +432,8 @@ def bind_request_context(
     if organization_id:
         context["organization_id"] = organization_id
     
-    return logger.bind(**context) 
+    return logger.bind(**context)
+
+
+# Configure logging on module import
+configure_logging() 

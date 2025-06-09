@@ -4,7 +4,7 @@ This module contains all the routers for API v1 endpoints.
 """
 from fastapi import APIRouter
 
-from app.routers import auth
+from app.routers import auth, organizations, users
 
 # Create the main v1 router
 router = APIRouter(
@@ -18,10 +18,10 @@ router = APIRouter(
 
 # Include all routers
 router.include_router(auth.router)
+router.include_router(organizations.router)
+router.include_router(users.router)
 
 # Future routers to be added:
-# router.include_router(organizations.router)
-# router.include_router(users.router)
 # router.include_router(agents.router)
 # router.include_router(payment_links.router)
 # router.include_router(payment_orders.router)

@@ -15,7 +15,7 @@ class AgentBase(BaseModel):
     
     name: str = Field(..., min_length=1, max_length=255)
     type: AgentType
-    version: str = Field(..., regex=r"^\d+\.\d+\.\d+$")  # Semantic versioning
+    version: str = Field(..., pattern=r"^\d+\.\d+\.\d+$")  # Semantic versioning
     model: str = Field(..., description="LLM model used by the agent")
     system_prompt: Optional[str] = None
     tools: List[str] = Field(default_factory=list)
@@ -41,7 +41,7 @@ class AgentUpdate(BaseModel):
     """Schema for updating an agent."""
     
     name: Optional[str] = Field(None, min_length=1, max_length=255)
-    version: Optional[str] = Field(None, regex=r"^\d+\.\d+\.\d+$")
+    version: Optional[str] = Field(None, pattern=r"^\d+\.\d+\.\d+$")
     model: Optional[str] = None
     system_prompt: Optional[str] = None
     tools: Optional[List[str]] = None

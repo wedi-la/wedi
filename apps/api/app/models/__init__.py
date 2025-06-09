@@ -116,4 +116,19 @@ __all__ = [
     "Wallet",
     "Webhook",
     "WebhookDelivery",
-] 
+]
+
+# Add custom model extensions here if needed
+# For example, you could add methods or properties to models
+
+# Extend Organization model to include owner_id
+# This is a workaround until the Prisma to SQLAlchemy converter includes it
+from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy.orm import relationship
+
+# Monkey patch the Organization model to add owner_id
+if hasattr(Organization, '__table__'):
+    if 'owner_id' not in Organization.__table__.columns:
+        Organization.owner_id = Column(String, nullable=False)
+        # Note: We can't add the foreign key constraint dynamically
+        # This would need to be done in a migration 

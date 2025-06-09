@@ -13,7 +13,7 @@ class OrganizationBase(BaseModel):
     """Base organization schema with common attributes."""
     
     name: str = Field(..., min_length=1, max_length=255)
-    slug: str = Field(..., min_length=1, max_length=255, regex="^[a-z0-9-]+$")
+    slug: str = Field(..., min_length=1, max_length=255, pattern="^[a-z0-9-]+$")
     description: Optional[str] = None
     billing_email: str
     tax_id: Optional[str] = None
@@ -28,7 +28,8 @@ class OrganizationBase(BaseModel):
 class OrganizationCreate(OrganizationBase):
     """Schema for creating a new organization."""
     
-    owner_id: str
+    # owner_id is set automatically from the current user
+    pass
 
 
 class OrganizationUpdate(BaseModel):
@@ -51,8 +52,8 @@ class OrganizationInDBBase(OrganizationBase):
     owner_id: str
     compliance_status: ComplianceStatus
     kyc_verified_at: Optional[datetime]
-    settings: dict
-    features: List[str]
+    settings: dict = {}
+    features: List[str] = []
     created_at: datetime
     updated_at: datetime
     

@@ -13,7 +13,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
 from app.core.logging import get_logger
-from app.db.session import get_session
+from app.db.session import get_db
 from app.db.unit_of_work import UnitOfWork
 from app.middleware.multi_tenancy import get_current_organization_id, current_organization_id
 from app.models import User
@@ -24,7 +24,7 @@ logger = get_logger(__name__)
 
 # Repository dependencies
 async def get_unit_of_work(
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_db)
 ) -> AsyncGenerator[UnitOfWork, None]:
     """
     Get Unit of Work instance for managing transactions.
@@ -38,14 +38,14 @@ async def get_unit_of_work(
 
 # Individual repository dependencies
 async def get_user_repository(
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_db)
 ) -> UserRepository:
     """Get UserRepository instance."""
     return UserRepository()
 
 
 async def get_organization_repository(
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_db)
 ):
     """Get OrganizationRepository instance."""
     from app.repositories.organization import OrganizationRepository
@@ -53,7 +53,7 @@ async def get_organization_repository(
 
 
 async def get_agent_repository(
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_db)
 ):
     """Get AgentRepository instance."""
     from app.repositories.agent import AgentRepository
@@ -61,7 +61,7 @@ async def get_agent_repository(
 
 
 async def get_payment_link_repository(
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_db)
 ):
     """Get PaymentLinkRepository instance."""
     from app.repositories.payment_link import PaymentLinkRepository
@@ -69,7 +69,7 @@ async def get_payment_link_repository(
 
 
 async def get_payment_order_repository(
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_db)
 ):
     """Get PaymentOrderRepository instance."""
     from app.repositories.payment_order import PaymentOrderRepository
@@ -77,7 +77,7 @@ async def get_payment_order_repository(
 
 
 async def get_customer_repository(
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_db)
 ):
     """Get CustomerRepository instance."""
     from app.repositories.customer import CustomerRepository
@@ -85,7 +85,7 @@ async def get_customer_repository(
 
 
 async def get_product_repository(
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_db)
 ):
     """Get ProductRepository instance."""
     from app.repositories.product import ProductRepository
@@ -93,7 +93,7 @@ async def get_product_repository(
 
 
 async def get_wallet_repository(
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_db)
 ):
     """Get WalletRepository instance."""
     from app.repositories.wallet import WalletRepository
@@ -103,7 +103,7 @@ async def get_wallet_repository(
 # Authentication dependencies
 async def get_current_user_optional(
     authorization: Optional[str] = Header(None),
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_db)
 ) -> Optional[User]:
     """
     Get current user from JWT token (optional).
@@ -333,7 +333,7 @@ class RateLimitDep:
 async def check_organization_access(
     organization_id: str,
     current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_session)
+    db: AsyncSession = Depends(get_db)
 ) -> bool:
     """
     Check if user has access to organization.

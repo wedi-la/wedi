@@ -100,4 +100,21 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
             # Use db session
     """
     async with db_manager.session() as session:
-        yield session 
+        yield session
+
+
+async def init_db() -> None:
+    """Initialize the database.
+    
+    Creates all tables if they don't exist.
+    This is called during application startup.
+    """
+    await db_manager.create_tables()
+
+
+async def close_db() -> None:
+    """Close database connections.
+    
+    This is called during application shutdown.
+    """
+    await db_manager.close() 

@@ -13,12 +13,11 @@ from app.events.publisher import DomainEvent
 from app.models.generated import (
     AgentType,
     AuthProvider,
-    BlockchainNetwork,
+    BlockchainTxStatus,
     KycStatus,
-    MembershipRole,
     PaymentLinkStatus,
     PaymentOrderStatus,
-    TransactionStatus,
+    UserRole,
     WalletType,
 )
 
@@ -117,7 +116,7 @@ class MemberAddedEvent(DomainEvent):
         self,
         organization_id: str,
         user_id: str,
-        role: MembershipRole,
+        role: UserRole,
         invited_by: str,
         **kwargs
     ):
@@ -415,7 +414,7 @@ class WalletCreatedEvent(DomainEvent):
         wallet_id: str,
         wallet_type: WalletType,
         address: str,
-        network: BlockchainNetwork,
+        chain_id: int,
         owner_id: Optional[str] = None,
         **kwargs
     ):
@@ -427,7 +426,7 @@ class WalletCreatedEvent(DomainEvent):
             data={
                 "wallet_type": wallet_type.value,
                 "address": address,
-                "network": network.value,
+                "chain_id": chain_id,
                 "owner_id": owner_id,
             },
             **kwargs
@@ -444,7 +443,7 @@ class WalletTransactionEvent(DomainEvent):
         amount: Decimal,
         currency: str,
         direction: str,  # "incoming" or "outgoing"
-        status: TransactionStatus,
+        status: BlockchainTxStatus,
         **kwargs
     ):
         """Initialize wallet transaction event."""
