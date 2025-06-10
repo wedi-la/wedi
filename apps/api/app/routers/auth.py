@@ -26,7 +26,12 @@ from app.schemas.auth import (
     TokenRefreshResponse,
     CurrentUserResponse,
 )
+from app.schemas.integration_key import (
+    IntegrationKeyValidateRequest,
+    IntegrationKeyValidateResponse,
+)
 from app.services.auth_service import AuthService
+from app.services.integration_key_service import integration_key_service
 from app.core.exceptions import UnauthorizedException
 
 logger = get_logger(__name__)
@@ -198,4 +203,41 @@ async def get_me(
         str(current_user.id)
     )
     
-    return CurrentUserResponse(**user_data) 
+    return CurrentUserResponse(**user_data)
+
+
+@router.post("/validate-key", response_model=IntegrationKeyValidateResponse)
+async def validate_integration_key(
+    request: IntegrationKeyValidateRequest,
+    db: AsyncSession = Depends(get_db),
+) -> IntegrationKeyValidateResponse:
+    """
+    Validate an integration key for API access.
+    
+    This endpoint is used by agents or external systems to validate their
+    integration key and get information about allowed operations.
+    
+    This is a public endpoint that doesn't require user authentication.
+    """
+    logger.info(f"Validating integration key: {request.key_prefix}...")
+    
+    try:
+        response = await integration_key_service.validate_key(db, request)
+        
+        if response.valid:
+            logger.info(f"Valid integration key for organization: {response.organization_id}")
+        else:
+            logger.warning(f"Invalid integration key attempt: {request.key_prefix}...")
+        
+        return response
+        
+    except Exception as e:
+        logger.error(f"Error validating integration key: {e}")
+        # Return invalid response instead of raising exception
+        # This prevents information leakage about our system
+        return IntegrationKeyValidateResponse(
+            valid=False,
+            organization_id=None,
+            payment_corridors=[],
+            webhook_url=None,
+        ) 

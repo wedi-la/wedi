@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     # Import repositories to avoid circular imports
     from app.repositories.agent import AgentRepository
     from app.repositories.customer import CustomerRepository
+    from app.repositories.integration_key import IntegrationKeyRepository
     from app.repositories.organization import OrganizationRepository
     from app.repositories.payment_link import PaymentLinkRepository
     from app.repositories.payment_order import PaymentOrderRepository
@@ -158,6 +159,14 @@ class UnitOfWork:
             from app.repositories.wallet import WalletRepository
             self._repositories_cache["wallets"] = WalletRepository()
         return self._repositories_cache["wallets"]
+    
+    @property
+    def integration_keys(self) -> IntegrationKeyRepository:
+        """Get IntegrationKeyRepository instance."""
+        if "integration_keys" not in self._repositories_cache:
+            from app.repositories.integration_key import IntegrationKeyRepository
+            self._repositories_cache["integration_keys"] = IntegrationKeyRepository()
+        return self._repositories_cache["integration_keys"]
 
 
 # FastAPI dependency

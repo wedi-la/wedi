@@ -38,6 +38,14 @@ from app.schemas.organization import (
     OrganizationUpdate,
     OrganizationWithStats,
 )
+from app.schemas.integration_key import (
+    IntegrationKeyCreate,
+    IntegrationKeyUpdate,
+    IntegrationKeyResponse,
+    IntegrationKeyWithSecret,
+    IntegrationKeyListResponse,
+)
+from app.services.integration_key_service import integration_key_service
 
 logger = get_logger(__name__)
 
@@ -510,4 +518,297 @@ async def get_organization_stats(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Organization not found",
-        ) 
+        )
+
+
+# Integration Key Endpoints
+
+@router.post("/{organization_id}/integration-keys", response_model=IntegrationKeyWithSecret, status_code=status.HTTP_201_CREATED)
+async def create_integration_key(
+    organization_id: str,
+    key_data: IntegrationKeyCreate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+    uow = Depends(get_unit_of_work),
+) -> IntegrationKeyWithSecret:
+    """
+    Create a new integration key for the organization.
+    
+    Requires ADMIN or OWNER role in the organization.
+    
+    Returns the integration key with the secret. The secret is only shown once
+    and cannot be retrieved later.
+    """
+    async with uow:
+        # Check user role
+        user_role = await uow.organizations.get_user_role(
+            db, organization_id=organization_id, user_id=current_user.id
+        )
+        
+        if user_role not in [UserRole.OWNER, UserRole.ADMIN]:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only admins and owners can create integration keys",
+            )
+        
+        try:
+            # Create integration key
+            integration_key, plain_key = await integration_key_service.create(
+                db, organization_id, key_data
+            )
+            
+            await uow.commit()
+            
+            logger.info(f"Integration key {integration_key.id} created for organization {organization_id}")
+            
+            # Return with the plain key
+            return IntegrationKeyWithSecret(
+                id=integration_key.id,
+                name=integration_key.name,
+                description=integration_key.description,
+                organization_id=integration_key.organization_id,
+                payment_corridors=integration_key.payment_corridors,
+                webhook_url=integration_key.webhook_url,
+                expires_at=integration_key.expires_at,
+                is_active=integration_key.is_active,
+                last_used_at=integration_key.last_used_at,
+                created_at=integration_key.created_at,
+                updated_at=integration_key.updated_at,
+                key=plain_key,
+            )
+            
+        except Exception as e:
+            logger.error(f"Error creating integration key: {e}")
+            await uow.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to create integration key",
+            )
+
+
+@router.get("/{organization_id}/integration-keys", response_model=IntegrationKeyListResponse)
+async def list_integration_keys(
+    organization_id: str,
+    current_user: User = Depends(get_current_user),
+    pagination: PaginationParams = Depends(get_pagination),
+    is_active: Optional[bool] = Query(None, description="Filter by active status"),
+    db: AsyncSession = Depends(get_db),
+) -> IntegrationKeyListResponse:
+    """
+    List integration keys for the organization.
+    
+    Requires the user to be a member of the organization.
+    """
+    # Check if user has access
+    from app.repositories.organization import OrganizationRepository
+    org_repo = OrganizationRepository()
+    user_role = await org_repo.get_user_role(
+        db, organization_id=organization_id, user_id=current_user.id
+    )
+    
+    if not user_role:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You don't have access to this organization",
+        )
+    
+    try:
+        # Get integration keys
+        keys, total = await integration_key_service.list_by_organization(
+            db,
+            organization_id=organization_id,
+            skip=pagination.skip,
+            limit=pagination.limit,
+            is_active=is_active,
+        )
+        
+        return IntegrationKeyListResponse(
+            items=[IntegrationKeyResponse.model_validate(key) for key in keys],
+            total=total,
+            page=pagination.skip // pagination.limit + 1,
+            size=pagination.limit,
+        )
+        
+    except Exception as e:
+        logger.error(f"Error listing integration keys: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to list integration keys",
+        )
+
+
+@router.get("/{organization_id}/integration-keys/{key_id}", response_model=IntegrationKeyResponse)
+async def get_integration_key(
+    organization_id: str,
+    key_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> IntegrationKeyResponse:
+    """
+    Get details of a specific integration key.
+    
+    Requires the user to be a member of the organization.
+    """
+    # Check if user has access
+    from app.repositories.organization import OrganizationRepository
+    org_repo = OrganizationRepository()
+    user_role = await org_repo.get_user_role(
+        db, organization_id=organization_id, user_id=current_user.id
+    )
+    
+    if not user_role:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You don't have access to this organization",
+        )
+    
+    try:
+        # Get integration key
+        integration_key = await integration_key_service.get(db, key_id)
+        
+        if not integration_key:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Integration key not found",
+            )
+        
+        # Verify it belongs to the organization
+        if integration_key.organization_id != organization_id:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Integration key not found",
+            )
+        
+        return IntegrationKeyResponse.model_validate(integration_key)
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting integration key: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to get integration key",
+        )
+
+
+@router.put("/{organization_id}/integration-keys/{key_id}", response_model=IntegrationKeyResponse)
+async def update_integration_key(
+    organization_id: str,
+    key_id: str,
+    update_data: IntegrationKeyUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+    uow = Depends(get_unit_of_work),
+) -> IntegrationKeyResponse:
+    """
+    Update an integration key.
+    
+    Requires ADMIN or OWNER role in the organization.
+    """
+    async with uow:
+        # Check user role
+        user_role = await uow.organizations.get_user_role(
+            db, organization_id=organization_id, user_id=current_user.id
+        )
+        
+        if user_role not in [UserRole.OWNER, UserRole.ADMIN]:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only admins and owners can update integration keys",
+            )
+        
+        try:
+            # Get integration key to verify ownership
+            integration_key = await integration_key_service.get(db, key_id)
+            
+            if not integration_key:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Integration key not found",
+                )
+            
+            # Verify it belongs to the organization
+            if integration_key.organization_id != organization_id:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Integration key not found",
+                )
+            
+            # Update integration key
+            updated_key = await integration_key_service.update(db, key_id, update_data)
+            
+            await uow.commit()
+            
+            logger.info(f"Integration key {key_id} updated")
+            
+            return IntegrationKeyResponse.model_validate(updated_key)
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error updating integration key: {e}")
+            await uow.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to update integration key",
+            )
+
+
+@router.delete("/{organization_id}/integration-keys/{key_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def revoke_integration_key(
+    organization_id: str,
+    key_id: str,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+    uow = Depends(get_unit_of_work),
+) -> None:
+    """
+    Revoke (soft delete) an integration key.
+    
+    Requires ADMIN or OWNER role in the organization.
+    """
+    async with uow:
+        # Check user role
+        user_role = await uow.organizations.get_user_role(
+            db, organization_id=organization_id, user_id=current_user.id
+        )
+        
+        if user_role not in [UserRole.OWNER, UserRole.ADMIN]:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Only admins and owners can revoke integration keys",
+            )
+        
+        try:
+            # Get integration key to verify ownership
+            integration_key = await integration_key_service.get(db, key_id)
+            
+            if not integration_key:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Integration key not found",
+                )
+            
+            # Verify it belongs to the organization
+            if integration_key.organization_id != organization_id:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail="Integration key not found",
+                )
+            
+            # Revoke integration key
+            await integration_key_service.revoke(db, key_id)
+            
+            await uow.commit()
+            
+            logger.info(f"Integration key {key_id} revoked by user {current_user.id}")
+            
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error revoking integration key: {e}")
+            await uow.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to revoke integration key",
+            ) 

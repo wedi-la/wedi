@@ -621,10 +621,14 @@ model Provider {
   type                  ProviderType
   
   // Capabilities
-  supportedCountries    String[]
-  supportedCurrencies   String[]
-  paymentMethods        String[]
+  supportedCountries    String[]               // ISO 3166-1 alpha-2 codes (e.g., ["CO", "MX", "US"])
+  supportedCurrencies   String[]               // ISO 4217 codes (e.g., ["COP", "MXN", "USD"])
+  paymentMethods        String[]               // ["bank_transfer", "card", "crypto", etc]
   features              Json                   // {instantPayouts: true, webhooks: true, etc}
+  
+  // Provider-specific capabilities
+  canCollect            Boolean                @default(false) // Can receive money in supported countries
+  canPayout             Boolean                @default(false) // Can send money to supported countries
   
   // Status
   isActive              Boolean                @default(true)
@@ -719,6 +723,38 @@ model ProviderRoute {
   
   @@index([providerId])
   @@index([fromCountry, toCountry, isActive])
+}
+
+model PaymentCorridor {
+  id                    String                 @id @default(cuid())
+  code                  String                 @unique // e.g., "CO-MX"
+  name                  String                 // e.g., "Colombia to Mexico"
+  
+  // Corridor Definition
+  fromCountry           String                 // ISO 3166-1 alpha-2 code
+  toCountry             String                 // ISO 3166-1 alpha-2 code
+  fromCurrency          String                 // ISO 4217 code
+  toCurrency            String                 // ISO 4217 code
+  
+  // Available Providers for this corridor
+  collectProviders      String[]               // Provider codes that can collect in fromCountry
+  payoutProviders       String[]               // Provider codes that can payout in toCountry
+  
+  // Corridor Metrics
+  avgTransferTime       Int?                   // Average time in minutes
+  minAmount             Decimal?               @db.Decimal(20, 8)
+  maxAmount             Decimal?               @db.Decimal(20, 8)
+  
+  // Status
+  isActive              Boolean                @default(true)
+  isPopular             Boolean                @default(false) // Mark popular corridors
+  
+  // Timestamps
+  createdAt             DateTime               @default(now())
+  updatedAt             DateTime               @updatedAt
+  
+  @@unique([fromCountry, toCountry])
+  @@index([isActive, isPopular])
 }
 
 model ProviderTransaction {
@@ -1111,8 +1147,8 @@ model IntegrationKey {
   description           String?
   
   // Capabilities & Restrictions
-  allowedCorridors      String[]               // ["CO-MX", "MX-CO", etc]
-  allowedProviders      String[]               // ["YOINT", "TRUBIT", etc]
+  allowedCorridors      String[]               // Allowed payment corridors (e.g., ["CO-MX", "MX-CO"])
+  allowedProviders      String[]               // Allowed provider codes (e.g., ["YOINT", "TRUBIT"])
   
   // Rate Limiting
   rateLimit             Int?                   // Requests per minute
@@ -1172,4 +1208,6 @@ enum UserRole {
   FINANCE
   SUPPORT
   VIEWER
-} 
+}
+
+ 

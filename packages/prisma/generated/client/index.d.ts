@@ -94,6 +94,11 @@ export type ProviderConfig = $Result.DefaultSelection<Prisma.$ProviderConfigPayl
  */
 export type ProviderRoute = $Result.DefaultSelection<Prisma.$ProviderRoutePayload>
 /**
+ * Model PaymentCorridor
+ * 
+ */
+export type PaymentCorridor = $Result.DefaultSelection<Prisma.$PaymentCorridorPayload>
+/**
  * Model ProviderTransaction
  * 
  */
@@ -148,6 +153,11 @@ export type AuditLog = $Result.DefaultSelection<Prisma.$AuditLogPayload>
  * 
  */
 export type ApiKey = $Result.DefaultSelection<Prisma.$ApiKeyPayload>
+/**
+ * Model IntegrationKey
+ * 
+ */
+export type IntegrationKey = $Result.DefaultSelection<Prisma.$IntegrationKeyPayload>
 /**
  * Model OrganizationUser
  * 
@@ -765,6 +775,16 @@ export class PrismaClient<
   get providerRoute(): Prisma.ProviderRouteDelegate<ExtArgs>;
 
   /**
+   * `prisma.paymentCorridor`: Exposes CRUD operations for the **PaymentCorridor** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PaymentCorridors
+    * const paymentCorridors = await prisma.paymentCorridor.findMany()
+    * ```
+    */
+  get paymentCorridor(): Prisma.PaymentCorridorDelegate<ExtArgs>;
+
+  /**
    * `prisma.providerTransaction`: Exposes CRUD operations for the **ProviderTransaction** model.
     * Example usage:
     * ```ts
@@ -873,6 +893,16 @@ export class PrismaClient<
     * ```
     */
   get apiKey(): Prisma.ApiKeyDelegate<ExtArgs>;
+
+  /**
+   * `prisma.integrationKey`: Exposes CRUD operations for the **IntegrationKey** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IntegrationKeys
+    * const integrationKeys = await prisma.integrationKey.findMany()
+    * ```
+    */
+  get integrationKey(): Prisma.IntegrationKeyDelegate<ExtArgs>;
 
   /**
    * `prisma.organizationUser`: Exposes CRUD operations for the **OrganizationUser** model.
@@ -1340,6 +1370,7 @@ export namespace Prisma {
     Provider: 'Provider',
     ProviderConfig: 'ProviderConfig',
     ProviderRoute: 'ProviderRoute',
+    PaymentCorridor: 'PaymentCorridor',
     ProviderTransaction: 'ProviderTransaction',
     Agent: 'Agent',
     AgentDecision: 'AgentDecision',
@@ -1351,6 +1382,7 @@ export namespace Prisma {
     PaymentEvent: 'PaymentEvent',
     AuditLog: 'AuditLog',
     ApiKey: 'ApiKey',
+    IntegrationKey: 'IntegrationKey',
     OrganizationUser: 'OrganizationUser'
   };
 
@@ -1367,7 +1399,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "organization" | "user" | "customer" | "customerPaymentMethod" | "subscription" | "subscriptionItem" | "wallet" | "blockchainTransaction" | "gasSponsorship" | "product" | "price" | "paymentLink" | "paymentOrder" | "provider" | "providerConfig" | "providerRoute" | "providerTransaction" | "agent" | "agentDecision" | "agentCheckpoint" | "agentInteraction" | "webhook" | "webhookDelivery" | "manualProcessStep" | "paymentEvent" | "auditLog" | "apiKey" | "organizationUser"
+      modelProps: "organization" | "user" | "customer" | "customerPaymentMethod" | "subscription" | "subscriptionItem" | "wallet" | "blockchainTransaction" | "gasSponsorship" | "product" | "price" | "paymentLink" | "paymentOrder" | "provider" | "providerConfig" | "providerRoute" | "paymentCorridor" | "providerTransaction" | "agent" | "agentDecision" | "agentCheckpoint" | "agentInteraction" | "webhook" | "webhookDelivery" | "manualProcessStep" | "paymentEvent" | "auditLog" | "apiKey" | "integrationKey" | "organizationUser"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2491,6 +2523,76 @@ export namespace Prisma {
           }
         }
       }
+      PaymentCorridor: {
+        payload: Prisma.$PaymentCorridorPayload<ExtArgs>
+        fields: Prisma.PaymentCorridorFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PaymentCorridorFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentCorridorPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PaymentCorridorFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentCorridorPayload>
+          }
+          findFirst: {
+            args: Prisma.PaymentCorridorFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentCorridorPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PaymentCorridorFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentCorridorPayload>
+          }
+          findMany: {
+            args: Prisma.PaymentCorridorFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentCorridorPayload>[]
+          }
+          create: {
+            args: Prisma.PaymentCorridorCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentCorridorPayload>
+          }
+          createMany: {
+            args: Prisma.PaymentCorridorCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PaymentCorridorCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentCorridorPayload>[]
+          }
+          delete: {
+            args: Prisma.PaymentCorridorDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentCorridorPayload>
+          }
+          update: {
+            args: Prisma.PaymentCorridorUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentCorridorPayload>
+          }
+          deleteMany: {
+            args: Prisma.PaymentCorridorDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PaymentCorridorUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PaymentCorridorUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PaymentCorridorPayload>
+          }
+          aggregate: {
+            args: Prisma.PaymentCorridorAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePaymentCorridor>
+          }
+          groupBy: {
+            args: Prisma.PaymentCorridorGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PaymentCorridorGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PaymentCorridorCountArgs<ExtArgs>
+            result: $Utils.Optional<PaymentCorridorCountAggregateOutputType> | number
+          }
+        }
+      }
       ProviderTransaction: {
         payload: Prisma.$ProviderTransactionPayload<ExtArgs>
         fields: Prisma.ProviderTransactionFieldRefs
@@ -3261,6 +3363,76 @@ export namespace Prisma {
           }
         }
       }
+      IntegrationKey: {
+        payload: Prisma.$IntegrationKeyPayload<ExtArgs>
+        fields: Prisma.IntegrationKeyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IntegrationKeyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IntegrationKeyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
+          }
+          findFirst: {
+            args: Prisma.IntegrationKeyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IntegrationKeyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
+          }
+          findMany: {
+            args: Prisma.IntegrationKeyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>[]
+          }
+          create: {
+            args: Prisma.IntegrationKeyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
+          }
+          createMany: {
+            args: Prisma.IntegrationKeyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IntegrationKeyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>[]
+          }
+          delete: {
+            args: Prisma.IntegrationKeyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
+          }
+          update: {
+            args: Prisma.IntegrationKeyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
+          }
+          deleteMany: {
+            args: Prisma.IntegrationKeyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IntegrationKeyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.IntegrationKeyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IntegrationKeyPayload>
+          }
+          aggregate: {
+            args: Prisma.IntegrationKeyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIntegrationKey>
+          }
+          groupBy: {
+            args: Prisma.IntegrationKeyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IntegrationKeyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IntegrationKeyCountArgs<ExtArgs>
+            result: $Utils.Optional<IntegrationKeyCountAggregateOutputType> | number
+          }
+        }
+      }
       OrganizationUser: {
         payload: Prisma.$OrganizationUserPayload<ExtArgs>
         fields: Prisma.OrganizationUserFieldRefs
@@ -3500,6 +3672,7 @@ export namespace Prisma {
     paymentOrders: number
     providers: number
     apiKeys: number
+    integrationKeys: number
     webhooks: number
     auditLogs: number
     agents: number
@@ -3514,6 +3687,7 @@ export namespace Prisma {
     paymentOrders?: boolean | OrganizationCountOutputTypeCountPaymentOrdersArgs
     providers?: boolean | OrganizationCountOutputTypeCountProvidersArgs
     apiKeys?: boolean | OrganizationCountOutputTypeCountApiKeysArgs
+    integrationKeys?: boolean | OrganizationCountOutputTypeCountIntegrationKeysArgs
     webhooks?: boolean | OrganizationCountOutputTypeCountWebhooksArgs
     auditLogs?: boolean | OrganizationCountOutputTypeCountAuditLogsArgs
     agents?: boolean | OrganizationCountOutputTypeCountAgentsArgs
@@ -3584,6 +3758,13 @@ export namespace Prisma {
    */
   export type OrganizationCountOutputTypeCountApiKeysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ApiKeyWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountIntegrationKeysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationKeyWhereInput
   }
 
   /**
@@ -4061,12 +4242,14 @@ export namespace Prisma {
     paymentLinks: number
     decisions: number
     checkpoints: number
+    integrationKeys: number
   }
 
   export type AgentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     paymentLinks?: boolean | AgentCountOutputTypeCountPaymentLinksArgs
     decisions?: boolean | AgentCountOutputTypeCountDecisionsArgs
     checkpoints?: boolean | AgentCountOutputTypeCountCheckpointsArgs
+    integrationKeys?: boolean | AgentCountOutputTypeCountIntegrationKeysArgs
   }
 
   // Custom InputTypes
@@ -4099,6 +4282,13 @@ export namespace Prisma {
    */
   export type AgentCountOutputTypeCountCheckpointsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AgentCheckpointWhereInput
+  }
+
+  /**
+   * AgentCountOutputType without action
+   */
+  export type AgentCountOutputTypeCountIntegrationKeysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationKeyWhereInput
   }
 
 
@@ -4161,6 +4351,37 @@ export namespace Prisma {
    */
   export type WebhookCountOutputTypeCountDeliveriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WebhookDeliveryWhereInput
+  }
+
+
+  /**
+   * Count Type IntegrationKeyCountOutputType
+   */
+
+  export type IntegrationKeyCountOutputType = {
+    paymentLinks: number
+  }
+
+  export type IntegrationKeyCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    paymentLinks?: boolean | IntegrationKeyCountOutputTypeCountPaymentLinksArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * IntegrationKeyCountOutputType without action
+   */
+  export type IntegrationKeyCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKeyCountOutputType
+     */
+    select?: IntegrationKeyCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * IntegrationKeyCountOutputType without action
+   */
+  export type IntegrationKeyCountOutputTypeCountPaymentLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentLinkWhereInput
   }
 
 
@@ -4404,6 +4625,7 @@ export namespace Prisma {
     paymentOrders?: boolean | Organization$paymentOrdersArgs<ExtArgs>
     providers?: boolean | Organization$providersArgs<ExtArgs>
     apiKeys?: boolean | Organization$apiKeysArgs<ExtArgs>
+    integrationKeys?: boolean | Organization$integrationKeysArgs<ExtArgs>
     webhooks?: boolean | Organization$webhooksArgs<ExtArgs>
     auditLogs?: boolean | Organization$auditLogsArgs<ExtArgs>
     agents?: boolean | Organization$agentsArgs<ExtArgs>
@@ -4453,6 +4675,7 @@ export namespace Prisma {
     paymentOrders?: boolean | Organization$paymentOrdersArgs<ExtArgs>
     providers?: boolean | Organization$providersArgs<ExtArgs>
     apiKeys?: boolean | Organization$apiKeysArgs<ExtArgs>
+    integrationKeys?: boolean | Organization$integrationKeysArgs<ExtArgs>
     webhooks?: boolean | Organization$webhooksArgs<ExtArgs>
     auditLogs?: boolean | Organization$auditLogsArgs<ExtArgs>
     agents?: boolean | Organization$agentsArgs<ExtArgs>
@@ -4471,6 +4694,7 @@ export namespace Prisma {
       paymentOrders: Prisma.$PaymentOrderPayload<ExtArgs>[]
       providers: Prisma.$ProviderConfigPayload<ExtArgs>[]
       apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
+      integrationKeys: Prisma.$IntegrationKeyPayload<ExtArgs>[]
       webhooks: Prisma.$WebhookPayload<ExtArgs>[]
       auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
       agents: Prisma.$AgentPayload<ExtArgs>[]
@@ -4862,6 +5086,7 @@ export namespace Prisma {
     paymentOrders<T extends Organization$paymentOrdersArgs<ExtArgs> = {}>(args?: Subset<T, Organization$paymentOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findMany"> | Null>
     providers<T extends Organization$providersArgs<ExtArgs> = {}>(args?: Subset<T, Organization$providersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProviderConfigPayload<ExtArgs>, T, "findMany"> | Null>
     apiKeys<T extends Organization$apiKeysArgs<ExtArgs> = {}>(args?: Subset<T, Organization$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany"> | Null>
+    integrationKeys<T extends Organization$integrationKeysArgs<ExtArgs> = {}>(args?: Subset<T, Organization$integrationKeysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findMany"> | Null>
     webhooks<T extends Organization$webhooksArgs<ExtArgs> = {}>(args?: Subset<T, Organization$webhooksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WebhookPayload<ExtArgs>, T, "findMany"> | Null>
     auditLogs<T extends Organization$auditLogsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany"> | Null>
     agents<T extends Organization$agentsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$agentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentPayload<ExtArgs>, T, "findMany"> | Null>
@@ -5379,6 +5604,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: ApiKeyScalarFieldEnum | ApiKeyScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.integrationKeys
+   */
+  export type Organization$integrationKeysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+    where?: IntegrationKeyWhereInput
+    orderBy?: IntegrationKeyOrderByWithRelationInput | IntegrationKeyOrderByWithRelationInput[]
+    cursor?: IntegrationKeyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntegrationKeyScalarFieldEnum | IntegrationKeyScalarFieldEnum[]
   }
 
   /**
@@ -16485,6 +16730,7 @@ export namespace Prisma {
     organizationId: string | null
     createdById: string | null
     executingAgentId: string | null
+    integrationKeyId: string | null
     title: string | null
     description: string | null
     referenceId: string | null
@@ -16511,6 +16757,7 @@ export namespace Prisma {
     organizationId: string | null
     createdById: string | null
     executingAgentId: string | null
+    integrationKeyId: string | null
     title: string | null
     description: string | null
     referenceId: string | null
@@ -16537,6 +16784,7 @@ export namespace Prisma {
     organizationId: number
     createdById: number
     executingAgentId: number
+    integrationKeyId: number
     title: number
     description: number
     referenceId: number
@@ -16580,6 +16828,7 @@ export namespace Prisma {
     organizationId?: true
     createdById?: true
     executingAgentId?: true
+    integrationKeyId?: true
     title?: true
     description?: true
     referenceId?: true
@@ -16606,6 +16855,7 @@ export namespace Prisma {
     organizationId?: true
     createdById?: true
     executingAgentId?: true
+    integrationKeyId?: true
     title?: true
     description?: true
     referenceId?: true
@@ -16632,6 +16882,7 @@ export namespace Prisma {
     organizationId?: true
     createdById?: true
     executingAgentId?: true
+    integrationKeyId?: true
     title?: true
     description?: true
     referenceId?: true
@@ -16748,6 +16999,7 @@ export namespace Prisma {
     organizationId: string
     createdById: string
     executingAgentId: string
+    integrationKeyId: string
     title: string
     description: string | null
     referenceId: string | null
@@ -16796,6 +17048,7 @@ export namespace Prisma {
     organizationId?: boolean
     createdById?: boolean
     executingAgentId?: boolean
+    integrationKeyId?: boolean
     title?: boolean
     description?: boolean
     referenceId?: boolean
@@ -16821,6 +17074,7 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
     executingAgent?: boolean | AgentDefaultArgs<ExtArgs>
+    integrationKey?: boolean | IntegrationKeyDefaultArgs<ExtArgs>
     price?: boolean | PaymentLink$priceArgs<ExtArgs>
     paymentOrders?: boolean | PaymentLink$paymentOrdersArgs<ExtArgs>
     _count?: boolean | PaymentLinkCountOutputTypeDefaultArgs<ExtArgs>
@@ -16831,6 +17085,7 @@ export namespace Prisma {
     organizationId?: boolean
     createdById?: boolean
     executingAgentId?: boolean
+    integrationKeyId?: boolean
     title?: boolean
     description?: boolean
     referenceId?: boolean
@@ -16856,6 +17111,7 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
     executingAgent?: boolean | AgentDefaultArgs<ExtArgs>
+    integrationKey?: boolean | IntegrationKeyDefaultArgs<ExtArgs>
     price?: boolean | PaymentLink$priceArgs<ExtArgs>
   }, ExtArgs["result"]["paymentLink"]>
 
@@ -16864,6 +17120,7 @@ export namespace Prisma {
     organizationId?: boolean
     createdById?: boolean
     executingAgentId?: boolean
+    integrationKeyId?: boolean
     title?: boolean
     description?: boolean
     referenceId?: boolean
@@ -16892,6 +17149,7 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
     executingAgent?: boolean | AgentDefaultArgs<ExtArgs>
+    integrationKey?: boolean | IntegrationKeyDefaultArgs<ExtArgs>
     price?: boolean | PaymentLink$priceArgs<ExtArgs>
     paymentOrders?: boolean | PaymentLink$paymentOrdersArgs<ExtArgs>
     _count?: boolean | PaymentLinkCountOutputTypeDefaultArgs<ExtArgs>
@@ -16900,6 +17158,7 @@ export namespace Prisma {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     createdBy?: boolean | UserDefaultArgs<ExtArgs>
     executingAgent?: boolean | AgentDefaultArgs<ExtArgs>
+    integrationKey?: boolean | IntegrationKeyDefaultArgs<ExtArgs>
     price?: boolean | PaymentLink$priceArgs<ExtArgs>
   }
 
@@ -16909,6 +17168,7 @@ export namespace Prisma {
       organization: Prisma.$OrganizationPayload<ExtArgs>
       createdBy: Prisma.$UserPayload<ExtArgs>
       executingAgent: Prisma.$AgentPayload<ExtArgs>
+      integrationKey: Prisma.$IntegrationKeyPayload<ExtArgs>
       price: Prisma.$PricePayload<ExtArgs> | null
       paymentOrders: Prisma.$PaymentOrderPayload<ExtArgs>[]
     }
@@ -16917,6 +17177,7 @@ export namespace Prisma {
       organizationId: string
       createdById: string
       executingAgentId: string
+      integrationKeyId: string
       title: string
       description: string | null
       referenceId: string | null
@@ -17306,6 +17567,7 @@ export namespace Prisma {
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     createdBy<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     executingAgent<T extends AgentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AgentDefaultArgs<ExtArgs>>): Prisma__AgentClient<$Result.GetResult<Prisma.$AgentPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    integrationKey<T extends IntegrationKeyDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IntegrationKeyDefaultArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     price<T extends PaymentLink$priceArgs<ExtArgs> = {}>(args?: Subset<T, PaymentLink$priceArgs<ExtArgs>>): Prisma__PriceClient<$Result.GetResult<Prisma.$PricePayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     paymentOrders<T extends PaymentLink$paymentOrdersArgs<ExtArgs> = {}>(args?: Subset<T, PaymentLink$paymentOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentOrderPayload<ExtArgs>, T, "findMany"> | Null>
     /**
@@ -17341,6 +17603,7 @@ export namespace Prisma {
     readonly organizationId: FieldRef<"PaymentLink", 'String'>
     readonly createdById: FieldRef<"PaymentLink", 'String'>
     readonly executingAgentId: FieldRef<"PaymentLink", 'String'>
+    readonly integrationKeyId: FieldRef<"PaymentLink", 'String'>
     readonly title: FieldRef<"PaymentLink", 'String'>
     readonly description: FieldRef<"PaymentLink", 'String'>
     readonly referenceId: FieldRef<"PaymentLink", 'String'>
@@ -19245,6 +19508,8 @@ export namespace Prisma {
     code: string | null
     name: string | null
     type: $Enums.ProviderType | null
+    canCollect: boolean | null
+    canPayout: boolean | null
     isActive: boolean | null
     healthStatus: $Enums.ProviderHealth | null
     lastHealthCheck: Date | null
@@ -19257,6 +19522,8 @@ export namespace Prisma {
     code: string | null
     name: string | null
     type: $Enums.ProviderType | null
+    canCollect: boolean | null
+    canPayout: boolean | null
     isActive: boolean | null
     healthStatus: $Enums.ProviderHealth | null
     lastHealthCheck: Date | null
@@ -19273,6 +19540,8 @@ export namespace Prisma {
     supportedCurrencies: number
     paymentMethods: number
     features: number
+    canCollect: number
+    canPayout: number
     isActive: number
     healthStatus: number
     lastHealthCheck: number
@@ -19297,6 +19566,8 @@ export namespace Prisma {
     code?: true
     name?: true
     type?: true
+    canCollect?: true
+    canPayout?: true
     isActive?: true
     healthStatus?: true
     lastHealthCheck?: true
@@ -19309,6 +19580,8 @@ export namespace Prisma {
     code?: true
     name?: true
     type?: true
+    canCollect?: true
+    canPayout?: true
     isActive?: true
     healthStatus?: true
     lastHealthCheck?: true
@@ -19325,6 +19598,8 @@ export namespace Prisma {
     supportedCurrencies?: true
     paymentMethods?: true
     features?: true
+    canCollect?: true
+    canPayout?: true
     isActive?: true
     healthStatus?: true
     lastHealthCheck?: true
@@ -19428,6 +19703,8 @@ export namespace Prisma {
     supportedCurrencies: string[]
     paymentMethods: string[]
     features: JsonValue
+    canCollect: boolean
+    canPayout: boolean
     isActive: boolean
     healthStatus: $Enums.ProviderHealth
     lastHealthCheck: Date
@@ -19463,6 +19740,8 @@ export namespace Prisma {
     supportedCurrencies?: boolean
     paymentMethods?: boolean
     features?: boolean
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: boolean
     lastHealthCheck?: boolean
@@ -19483,6 +19762,8 @@ export namespace Prisma {
     supportedCurrencies?: boolean
     paymentMethods?: boolean
     features?: boolean
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: boolean
     lastHealthCheck?: boolean
@@ -19499,6 +19780,8 @@ export namespace Prisma {
     supportedCurrencies?: boolean
     paymentMethods?: boolean
     features?: boolean
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: boolean
     lastHealthCheck?: boolean
@@ -19530,6 +19813,8 @@ export namespace Prisma {
       supportedCurrencies: string[]
       paymentMethods: string[]
       features: Prisma.JsonValue
+      canCollect: boolean
+      canPayout: boolean
       isActive: boolean
       healthStatus: $Enums.ProviderHealth
       lastHealthCheck: Date
@@ -19939,6 +20224,8 @@ export namespace Prisma {
     readonly supportedCurrencies: FieldRef<"Provider", 'String[]'>
     readonly paymentMethods: FieldRef<"Provider", 'String[]'>
     readonly features: FieldRef<"Provider", 'Json'>
+    readonly canCollect: FieldRef<"Provider", 'Boolean'>
+    readonly canPayout: FieldRef<"Provider", 'Boolean'>
     readonly isActive: FieldRef<"Provider", 'Boolean'>
     readonly healthStatus: FieldRef<"Provider", 'ProviderHealth'>
     readonly lastHealthCheck: FieldRef<"Provider", 'DateTime'>
@@ -22451,6 +22738,1050 @@ export namespace Prisma {
 
 
   /**
+   * Model PaymentCorridor
+   */
+
+  export type AggregatePaymentCorridor = {
+    _count: PaymentCorridorCountAggregateOutputType | null
+    _avg: PaymentCorridorAvgAggregateOutputType | null
+    _sum: PaymentCorridorSumAggregateOutputType | null
+    _min: PaymentCorridorMinAggregateOutputType | null
+    _max: PaymentCorridorMaxAggregateOutputType | null
+  }
+
+  export type PaymentCorridorAvgAggregateOutputType = {
+    avgTransferTime: number | null
+    minAmount: Decimal | null
+    maxAmount: Decimal | null
+  }
+
+  export type PaymentCorridorSumAggregateOutputType = {
+    avgTransferTime: number | null
+    minAmount: Decimal | null
+    maxAmount: Decimal | null
+  }
+
+  export type PaymentCorridorMinAggregateOutputType = {
+    id: string | null
+    code: string | null
+    name: string | null
+    fromCountry: string | null
+    toCountry: string | null
+    fromCurrency: string | null
+    toCurrency: string | null
+    avgTransferTime: number | null
+    minAmount: Decimal | null
+    maxAmount: Decimal | null
+    isActive: boolean | null
+    isPopular: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PaymentCorridorMaxAggregateOutputType = {
+    id: string | null
+    code: string | null
+    name: string | null
+    fromCountry: string | null
+    toCountry: string | null
+    fromCurrency: string | null
+    toCurrency: string | null
+    avgTransferTime: number | null
+    minAmount: Decimal | null
+    maxAmount: Decimal | null
+    isActive: boolean | null
+    isPopular: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PaymentCorridorCountAggregateOutputType = {
+    id: number
+    code: number
+    name: number
+    fromCountry: number
+    toCountry: number
+    fromCurrency: number
+    toCurrency: number
+    collectProviders: number
+    payoutProviders: number
+    avgTransferTime: number
+    minAmount: number
+    maxAmount: number
+    isActive: number
+    isPopular: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PaymentCorridorAvgAggregateInputType = {
+    avgTransferTime?: true
+    minAmount?: true
+    maxAmount?: true
+  }
+
+  export type PaymentCorridorSumAggregateInputType = {
+    avgTransferTime?: true
+    minAmount?: true
+    maxAmount?: true
+  }
+
+  export type PaymentCorridorMinAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    fromCountry?: true
+    toCountry?: true
+    fromCurrency?: true
+    toCurrency?: true
+    avgTransferTime?: true
+    minAmount?: true
+    maxAmount?: true
+    isActive?: true
+    isPopular?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PaymentCorridorMaxAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    fromCountry?: true
+    toCountry?: true
+    fromCurrency?: true
+    toCurrency?: true
+    avgTransferTime?: true
+    minAmount?: true
+    maxAmount?: true
+    isActive?: true
+    isPopular?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PaymentCorridorCountAggregateInputType = {
+    id?: true
+    code?: true
+    name?: true
+    fromCountry?: true
+    toCountry?: true
+    fromCurrency?: true
+    toCurrency?: true
+    collectProviders?: true
+    payoutProviders?: true
+    avgTransferTime?: true
+    minAmount?: true
+    maxAmount?: true
+    isActive?: true
+    isPopular?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PaymentCorridorAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PaymentCorridor to aggregate.
+     */
+    where?: PaymentCorridorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentCorridors to fetch.
+     */
+    orderBy?: PaymentCorridorOrderByWithRelationInput | PaymentCorridorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PaymentCorridorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentCorridors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentCorridors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PaymentCorridors
+    **/
+    _count?: true | PaymentCorridorCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PaymentCorridorAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PaymentCorridorSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PaymentCorridorMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PaymentCorridorMaxAggregateInputType
+  }
+
+  export type GetPaymentCorridorAggregateType<T extends PaymentCorridorAggregateArgs> = {
+        [P in keyof T & keyof AggregatePaymentCorridor]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePaymentCorridor[P]>
+      : GetScalarType<T[P], AggregatePaymentCorridor[P]>
+  }
+
+
+
+
+  export type PaymentCorridorGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PaymentCorridorWhereInput
+    orderBy?: PaymentCorridorOrderByWithAggregationInput | PaymentCorridorOrderByWithAggregationInput[]
+    by: PaymentCorridorScalarFieldEnum[] | PaymentCorridorScalarFieldEnum
+    having?: PaymentCorridorScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PaymentCorridorCountAggregateInputType | true
+    _avg?: PaymentCorridorAvgAggregateInputType
+    _sum?: PaymentCorridorSumAggregateInputType
+    _min?: PaymentCorridorMinAggregateInputType
+    _max?: PaymentCorridorMaxAggregateInputType
+  }
+
+  export type PaymentCorridorGroupByOutputType = {
+    id: string
+    code: string
+    name: string
+    fromCountry: string
+    toCountry: string
+    fromCurrency: string
+    toCurrency: string
+    collectProviders: string[]
+    payoutProviders: string[]
+    avgTransferTime: number | null
+    minAmount: Decimal | null
+    maxAmount: Decimal | null
+    isActive: boolean
+    isPopular: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: PaymentCorridorCountAggregateOutputType | null
+    _avg: PaymentCorridorAvgAggregateOutputType | null
+    _sum: PaymentCorridorSumAggregateOutputType | null
+    _min: PaymentCorridorMinAggregateOutputType | null
+    _max: PaymentCorridorMaxAggregateOutputType | null
+  }
+
+  type GetPaymentCorridorGroupByPayload<T extends PaymentCorridorGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PaymentCorridorGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PaymentCorridorGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PaymentCorridorGroupByOutputType[P]>
+            : GetScalarType<T[P], PaymentCorridorGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PaymentCorridorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    fromCountry?: boolean
+    toCountry?: boolean
+    fromCurrency?: boolean
+    toCurrency?: boolean
+    collectProviders?: boolean
+    payoutProviders?: boolean
+    avgTransferTime?: boolean
+    minAmount?: boolean
+    maxAmount?: boolean
+    isActive?: boolean
+    isPopular?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["paymentCorridor"]>
+
+  export type PaymentCorridorSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    fromCountry?: boolean
+    toCountry?: boolean
+    fromCurrency?: boolean
+    toCurrency?: boolean
+    collectProviders?: boolean
+    payoutProviders?: boolean
+    avgTransferTime?: boolean
+    minAmount?: boolean
+    maxAmount?: boolean
+    isActive?: boolean
+    isPopular?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["paymentCorridor"]>
+
+  export type PaymentCorridorSelectScalar = {
+    id?: boolean
+    code?: boolean
+    name?: boolean
+    fromCountry?: boolean
+    toCountry?: boolean
+    fromCurrency?: boolean
+    toCurrency?: boolean
+    collectProviders?: boolean
+    payoutProviders?: boolean
+    avgTransferTime?: boolean
+    minAmount?: boolean
+    maxAmount?: boolean
+    isActive?: boolean
+    isPopular?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $PaymentCorridorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PaymentCorridor"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      code: string
+      name: string
+      fromCountry: string
+      toCountry: string
+      fromCurrency: string
+      toCurrency: string
+      collectProviders: string[]
+      payoutProviders: string[]
+      avgTransferTime: number | null
+      minAmount: Prisma.Decimal | null
+      maxAmount: Prisma.Decimal | null
+      isActive: boolean
+      isPopular: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["paymentCorridor"]>
+    composites: {}
+  }
+
+  type PaymentCorridorGetPayload<S extends boolean | null | undefined | PaymentCorridorDefaultArgs> = $Result.GetResult<Prisma.$PaymentCorridorPayload, S>
+
+  type PaymentCorridorCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PaymentCorridorFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PaymentCorridorCountAggregateInputType | true
+    }
+
+  export interface PaymentCorridorDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PaymentCorridor'], meta: { name: 'PaymentCorridor' } }
+    /**
+     * Find zero or one PaymentCorridor that matches the filter.
+     * @param {PaymentCorridorFindUniqueArgs} args - Arguments to find a PaymentCorridor
+     * @example
+     * // Get one PaymentCorridor
+     * const paymentCorridor = await prisma.paymentCorridor.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PaymentCorridorFindUniqueArgs>(args: SelectSubset<T, PaymentCorridorFindUniqueArgs<ExtArgs>>): Prisma__PaymentCorridorClient<$Result.GetResult<Prisma.$PaymentCorridorPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one PaymentCorridor that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PaymentCorridorFindUniqueOrThrowArgs} args - Arguments to find a PaymentCorridor
+     * @example
+     * // Get one PaymentCorridor
+     * const paymentCorridor = await prisma.paymentCorridor.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PaymentCorridorFindUniqueOrThrowArgs>(args: SelectSubset<T, PaymentCorridorFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PaymentCorridorClient<$Result.GetResult<Prisma.$PaymentCorridorPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first PaymentCorridor that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentCorridorFindFirstArgs} args - Arguments to find a PaymentCorridor
+     * @example
+     * // Get one PaymentCorridor
+     * const paymentCorridor = await prisma.paymentCorridor.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PaymentCorridorFindFirstArgs>(args?: SelectSubset<T, PaymentCorridorFindFirstArgs<ExtArgs>>): Prisma__PaymentCorridorClient<$Result.GetResult<Prisma.$PaymentCorridorPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first PaymentCorridor that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentCorridorFindFirstOrThrowArgs} args - Arguments to find a PaymentCorridor
+     * @example
+     * // Get one PaymentCorridor
+     * const paymentCorridor = await prisma.paymentCorridor.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PaymentCorridorFindFirstOrThrowArgs>(args?: SelectSubset<T, PaymentCorridorFindFirstOrThrowArgs<ExtArgs>>): Prisma__PaymentCorridorClient<$Result.GetResult<Prisma.$PaymentCorridorPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more PaymentCorridors that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentCorridorFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PaymentCorridors
+     * const paymentCorridors = await prisma.paymentCorridor.findMany()
+     * 
+     * // Get first 10 PaymentCorridors
+     * const paymentCorridors = await prisma.paymentCorridor.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const paymentCorridorWithIdOnly = await prisma.paymentCorridor.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PaymentCorridorFindManyArgs>(args?: SelectSubset<T, PaymentCorridorFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentCorridorPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a PaymentCorridor.
+     * @param {PaymentCorridorCreateArgs} args - Arguments to create a PaymentCorridor.
+     * @example
+     * // Create one PaymentCorridor
+     * const PaymentCorridor = await prisma.paymentCorridor.create({
+     *   data: {
+     *     // ... data to create a PaymentCorridor
+     *   }
+     * })
+     * 
+     */
+    create<T extends PaymentCorridorCreateArgs>(args: SelectSubset<T, PaymentCorridorCreateArgs<ExtArgs>>): Prisma__PaymentCorridorClient<$Result.GetResult<Prisma.$PaymentCorridorPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many PaymentCorridors.
+     * @param {PaymentCorridorCreateManyArgs} args - Arguments to create many PaymentCorridors.
+     * @example
+     * // Create many PaymentCorridors
+     * const paymentCorridor = await prisma.paymentCorridor.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PaymentCorridorCreateManyArgs>(args?: SelectSubset<T, PaymentCorridorCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PaymentCorridors and returns the data saved in the database.
+     * @param {PaymentCorridorCreateManyAndReturnArgs} args - Arguments to create many PaymentCorridors.
+     * @example
+     * // Create many PaymentCorridors
+     * const paymentCorridor = await prisma.paymentCorridor.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PaymentCorridors and only return the `id`
+     * const paymentCorridorWithIdOnly = await prisma.paymentCorridor.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PaymentCorridorCreateManyAndReturnArgs>(args?: SelectSubset<T, PaymentCorridorCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentCorridorPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a PaymentCorridor.
+     * @param {PaymentCorridorDeleteArgs} args - Arguments to delete one PaymentCorridor.
+     * @example
+     * // Delete one PaymentCorridor
+     * const PaymentCorridor = await prisma.paymentCorridor.delete({
+     *   where: {
+     *     // ... filter to delete one PaymentCorridor
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PaymentCorridorDeleteArgs>(args: SelectSubset<T, PaymentCorridorDeleteArgs<ExtArgs>>): Prisma__PaymentCorridorClient<$Result.GetResult<Prisma.$PaymentCorridorPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one PaymentCorridor.
+     * @param {PaymentCorridorUpdateArgs} args - Arguments to update one PaymentCorridor.
+     * @example
+     * // Update one PaymentCorridor
+     * const paymentCorridor = await prisma.paymentCorridor.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PaymentCorridorUpdateArgs>(args: SelectSubset<T, PaymentCorridorUpdateArgs<ExtArgs>>): Prisma__PaymentCorridorClient<$Result.GetResult<Prisma.$PaymentCorridorPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more PaymentCorridors.
+     * @param {PaymentCorridorDeleteManyArgs} args - Arguments to filter PaymentCorridors to delete.
+     * @example
+     * // Delete a few PaymentCorridors
+     * const { count } = await prisma.paymentCorridor.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PaymentCorridorDeleteManyArgs>(args?: SelectSubset<T, PaymentCorridorDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PaymentCorridors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentCorridorUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PaymentCorridors
+     * const paymentCorridor = await prisma.paymentCorridor.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PaymentCorridorUpdateManyArgs>(args: SelectSubset<T, PaymentCorridorUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PaymentCorridor.
+     * @param {PaymentCorridorUpsertArgs} args - Arguments to update or create a PaymentCorridor.
+     * @example
+     * // Update or create a PaymentCorridor
+     * const paymentCorridor = await prisma.paymentCorridor.upsert({
+     *   create: {
+     *     // ... data to create a PaymentCorridor
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PaymentCorridor we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PaymentCorridorUpsertArgs>(args: SelectSubset<T, PaymentCorridorUpsertArgs<ExtArgs>>): Prisma__PaymentCorridorClient<$Result.GetResult<Prisma.$PaymentCorridorPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of PaymentCorridors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentCorridorCountArgs} args - Arguments to filter PaymentCorridors to count.
+     * @example
+     * // Count the number of PaymentCorridors
+     * const count = await prisma.paymentCorridor.count({
+     *   where: {
+     *     // ... the filter for the PaymentCorridors we want to count
+     *   }
+     * })
+    **/
+    count<T extends PaymentCorridorCountArgs>(
+      args?: Subset<T, PaymentCorridorCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PaymentCorridorCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PaymentCorridor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentCorridorAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PaymentCorridorAggregateArgs>(args: Subset<T, PaymentCorridorAggregateArgs>): Prisma.PrismaPromise<GetPaymentCorridorAggregateType<T>>
+
+    /**
+     * Group by PaymentCorridor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PaymentCorridorGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PaymentCorridorGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PaymentCorridorGroupByArgs['orderBy'] }
+        : { orderBy?: PaymentCorridorGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PaymentCorridorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPaymentCorridorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PaymentCorridor model
+   */
+  readonly fields: PaymentCorridorFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PaymentCorridor.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PaymentCorridorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PaymentCorridor model
+   */ 
+  interface PaymentCorridorFieldRefs {
+    readonly id: FieldRef<"PaymentCorridor", 'String'>
+    readonly code: FieldRef<"PaymentCorridor", 'String'>
+    readonly name: FieldRef<"PaymentCorridor", 'String'>
+    readonly fromCountry: FieldRef<"PaymentCorridor", 'String'>
+    readonly toCountry: FieldRef<"PaymentCorridor", 'String'>
+    readonly fromCurrency: FieldRef<"PaymentCorridor", 'String'>
+    readonly toCurrency: FieldRef<"PaymentCorridor", 'String'>
+    readonly collectProviders: FieldRef<"PaymentCorridor", 'String[]'>
+    readonly payoutProviders: FieldRef<"PaymentCorridor", 'String[]'>
+    readonly avgTransferTime: FieldRef<"PaymentCorridor", 'Int'>
+    readonly minAmount: FieldRef<"PaymentCorridor", 'Decimal'>
+    readonly maxAmount: FieldRef<"PaymentCorridor", 'Decimal'>
+    readonly isActive: FieldRef<"PaymentCorridor", 'Boolean'>
+    readonly isPopular: FieldRef<"PaymentCorridor", 'Boolean'>
+    readonly createdAt: FieldRef<"PaymentCorridor", 'DateTime'>
+    readonly updatedAt: FieldRef<"PaymentCorridor", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PaymentCorridor findUnique
+   */
+  export type PaymentCorridorFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentCorridor
+     */
+    select?: PaymentCorridorSelect<ExtArgs> | null
+    /**
+     * Filter, which PaymentCorridor to fetch.
+     */
+    where: PaymentCorridorWhereUniqueInput
+  }
+
+  /**
+   * PaymentCorridor findUniqueOrThrow
+   */
+  export type PaymentCorridorFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentCorridor
+     */
+    select?: PaymentCorridorSelect<ExtArgs> | null
+    /**
+     * Filter, which PaymentCorridor to fetch.
+     */
+    where: PaymentCorridorWhereUniqueInput
+  }
+
+  /**
+   * PaymentCorridor findFirst
+   */
+  export type PaymentCorridorFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentCorridor
+     */
+    select?: PaymentCorridorSelect<ExtArgs> | null
+    /**
+     * Filter, which PaymentCorridor to fetch.
+     */
+    where?: PaymentCorridorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentCorridors to fetch.
+     */
+    orderBy?: PaymentCorridorOrderByWithRelationInput | PaymentCorridorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PaymentCorridors.
+     */
+    cursor?: PaymentCorridorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentCorridors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentCorridors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PaymentCorridors.
+     */
+    distinct?: PaymentCorridorScalarFieldEnum | PaymentCorridorScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentCorridor findFirstOrThrow
+   */
+  export type PaymentCorridorFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentCorridor
+     */
+    select?: PaymentCorridorSelect<ExtArgs> | null
+    /**
+     * Filter, which PaymentCorridor to fetch.
+     */
+    where?: PaymentCorridorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentCorridors to fetch.
+     */
+    orderBy?: PaymentCorridorOrderByWithRelationInput | PaymentCorridorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PaymentCorridors.
+     */
+    cursor?: PaymentCorridorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentCorridors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentCorridors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PaymentCorridors.
+     */
+    distinct?: PaymentCorridorScalarFieldEnum | PaymentCorridorScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentCorridor findMany
+   */
+  export type PaymentCorridorFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentCorridor
+     */
+    select?: PaymentCorridorSelect<ExtArgs> | null
+    /**
+     * Filter, which PaymentCorridors to fetch.
+     */
+    where?: PaymentCorridorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PaymentCorridors to fetch.
+     */
+    orderBy?: PaymentCorridorOrderByWithRelationInput | PaymentCorridorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PaymentCorridors.
+     */
+    cursor?: PaymentCorridorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PaymentCorridors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PaymentCorridors.
+     */
+    skip?: number
+    distinct?: PaymentCorridorScalarFieldEnum | PaymentCorridorScalarFieldEnum[]
+  }
+
+  /**
+   * PaymentCorridor create
+   */
+  export type PaymentCorridorCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentCorridor
+     */
+    select?: PaymentCorridorSelect<ExtArgs> | null
+    /**
+     * The data needed to create a PaymentCorridor.
+     */
+    data: XOR<PaymentCorridorCreateInput, PaymentCorridorUncheckedCreateInput>
+  }
+
+  /**
+   * PaymentCorridor createMany
+   */
+  export type PaymentCorridorCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PaymentCorridors.
+     */
+    data: PaymentCorridorCreateManyInput | PaymentCorridorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PaymentCorridor createManyAndReturn
+   */
+  export type PaymentCorridorCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentCorridor
+     */
+    select?: PaymentCorridorSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many PaymentCorridors.
+     */
+    data: PaymentCorridorCreateManyInput | PaymentCorridorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PaymentCorridor update
+   */
+  export type PaymentCorridorUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentCorridor
+     */
+    select?: PaymentCorridorSelect<ExtArgs> | null
+    /**
+     * The data needed to update a PaymentCorridor.
+     */
+    data: XOR<PaymentCorridorUpdateInput, PaymentCorridorUncheckedUpdateInput>
+    /**
+     * Choose, which PaymentCorridor to update.
+     */
+    where: PaymentCorridorWhereUniqueInput
+  }
+
+  /**
+   * PaymentCorridor updateMany
+   */
+  export type PaymentCorridorUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PaymentCorridors.
+     */
+    data: XOR<PaymentCorridorUpdateManyMutationInput, PaymentCorridorUncheckedUpdateManyInput>
+    /**
+     * Filter which PaymentCorridors to update
+     */
+    where?: PaymentCorridorWhereInput
+  }
+
+  /**
+   * PaymentCorridor upsert
+   */
+  export type PaymentCorridorUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentCorridor
+     */
+    select?: PaymentCorridorSelect<ExtArgs> | null
+    /**
+     * The filter to search for the PaymentCorridor to update in case it exists.
+     */
+    where: PaymentCorridorWhereUniqueInput
+    /**
+     * In case the PaymentCorridor found by the `where` argument doesn't exist, create a new PaymentCorridor with this data.
+     */
+    create: XOR<PaymentCorridorCreateInput, PaymentCorridorUncheckedCreateInput>
+    /**
+     * In case the PaymentCorridor was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PaymentCorridorUpdateInput, PaymentCorridorUncheckedUpdateInput>
+  }
+
+  /**
+   * PaymentCorridor delete
+   */
+  export type PaymentCorridorDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentCorridor
+     */
+    select?: PaymentCorridorSelect<ExtArgs> | null
+    /**
+     * Filter which PaymentCorridor to delete.
+     */
+    where: PaymentCorridorWhereUniqueInput
+  }
+
+  /**
+   * PaymentCorridor deleteMany
+   */
+  export type PaymentCorridorDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PaymentCorridors to delete
+     */
+    where?: PaymentCorridorWhereInput
+  }
+
+  /**
+   * PaymentCorridor without action
+   */
+  export type PaymentCorridorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentCorridor
+     */
+    select?: PaymentCorridorSelect<ExtArgs> | null
+  }
+
+
+  /**
    * Model ProviderTransaction
    */
 
@@ -23784,6 +25115,7 @@ export namespace Prisma {
     paymentLinks?: boolean | Agent$paymentLinksArgs<ExtArgs>
     decisions?: boolean | Agent$decisionsArgs<ExtArgs>
     checkpoints?: boolean | Agent$checkpointsArgs<ExtArgs>
+    integrationKeys?: boolean | Agent$integrationKeysArgs<ExtArgs>
     _count?: boolean | AgentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["agent"]>
 
@@ -23839,6 +25171,7 @@ export namespace Prisma {
     paymentLinks?: boolean | Agent$paymentLinksArgs<ExtArgs>
     decisions?: boolean | Agent$decisionsArgs<ExtArgs>
     checkpoints?: boolean | Agent$checkpointsArgs<ExtArgs>
+    integrationKeys?: boolean | Agent$integrationKeysArgs<ExtArgs>
     _count?: boolean | AgentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AgentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -23854,6 +25187,7 @@ export namespace Prisma {
       paymentLinks: Prisma.$PaymentLinkPayload<ExtArgs>[]
       decisions: Prisma.$AgentDecisionPayload<ExtArgs>[]
       checkpoints: Prisma.$AgentCheckpointPayload<ExtArgs>[]
+      integrationKeys: Prisma.$IntegrationKeyPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -24244,6 +25578,7 @@ export namespace Prisma {
     paymentLinks<T extends Agent$paymentLinksArgs<ExtArgs> = {}>(args?: Subset<T, Agent$paymentLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentLinkPayload<ExtArgs>, T, "findMany"> | Null>
     decisions<T extends Agent$decisionsArgs<ExtArgs> = {}>(args?: Subset<T, Agent$decisionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentDecisionPayload<ExtArgs>, T, "findMany"> | Null>
     checkpoints<T extends Agent$checkpointsArgs<ExtArgs> = {}>(args?: Subset<T, Agent$checkpointsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AgentCheckpointPayload<ExtArgs>, T, "findMany"> | Null>
+    integrationKeys<T extends Agent$integrationKeysArgs<ExtArgs> = {}>(args?: Subset<T, Agent$integrationKeysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24682,6 +26017,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: AgentCheckpointScalarFieldEnum | AgentCheckpointScalarFieldEnum[]
+  }
+
+  /**
+   * Agent.integrationKeys
+   */
+  export type Agent$integrationKeysArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+    where?: IntegrationKeyWhereInput
+    orderBy?: IntegrationKeyOrderByWithRelationInput | IntegrationKeyOrderByWithRelationInput[]
+    cursor?: IntegrationKeyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IntegrationKeyScalarFieldEnum | IntegrationKeyScalarFieldEnum[]
   }
 
   /**
@@ -33995,6 +35350,1149 @@ export namespace Prisma {
 
 
   /**
+   * Model IntegrationKey
+   */
+
+  export type AggregateIntegrationKey = {
+    _count: IntegrationKeyCountAggregateOutputType | null
+    _avg: IntegrationKeyAvgAggregateOutputType | null
+    _sum: IntegrationKeySumAggregateOutputType | null
+    _min: IntegrationKeyMinAggregateOutputType | null
+    _max: IntegrationKeyMaxAggregateOutputType | null
+  }
+
+  export type IntegrationKeyAvgAggregateOutputType = {
+    rateLimit: number | null
+    dailyLimit: number | null
+    usageCount: number | null
+  }
+
+  export type IntegrationKeySumAggregateOutputType = {
+    rateLimit: number | null
+    dailyLimit: number | null
+    usageCount: number | null
+  }
+
+  export type IntegrationKeyMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    agentId: string | null
+    name: string | null
+    keyHash: string | null
+    prefix: string | null
+    description: string | null
+    rateLimit: number | null
+    dailyLimit: number | null
+    lastUsedAt: Date | null
+    usageCount: number | null
+    isActive: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    revokedAt: Date | null
+  }
+
+  export type IntegrationKeyMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    agentId: string | null
+    name: string | null
+    keyHash: string | null
+    prefix: string | null
+    description: string | null
+    rateLimit: number | null
+    dailyLimit: number | null
+    lastUsedAt: Date | null
+    usageCount: number | null
+    isActive: boolean | null
+    expiresAt: Date | null
+    createdAt: Date | null
+    revokedAt: Date | null
+  }
+
+  export type IntegrationKeyCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    agentId: number
+    name: number
+    keyHash: number
+    prefix: number
+    description: number
+    allowedCorridors: number
+    allowedProviders: number
+    rateLimit: number
+    dailyLimit: number
+    lastUsedAt: number
+    usageCount: number
+    isActive: number
+    expiresAt: number
+    createdAt: number
+    revokedAt: number
+    _all: number
+  }
+
+
+  export type IntegrationKeyAvgAggregateInputType = {
+    rateLimit?: true
+    dailyLimit?: true
+    usageCount?: true
+  }
+
+  export type IntegrationKeySumAggregateInputType = {
+    rateLimit?: true
+    dailyLimit?: true
+    usageCount?: true
+  }
+
+  export type IntegrationKeyMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    agentId?: true
+    name?: true
+    keyHash?: true
+    prefix?: true
+    description?: true
+    rateLimit?: true
+    dailyLimit?: true
+    lastUsedAt?: true
+    usageCount?: true
+    isActive?: true
+    expiresAt?: true
+    createdAt?: true
+    revokedAt?: true
+  }
+
+  export type IntegrationKeyMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    agentId?: true
+    name?: true
+    keyHash?: true
+    prefix?: true
+    description?: true
+    rateLimit?: true
+    dailyLimit?: true
+    lastUsedAt?: true
+    usageCount?: true
+    isActive?: true
+    expiresAt?: true
+    createdAt?: true
+    revokedAt?: true
+  }
+
+  export type IntegrationKeyCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    agentId?: true
+    name?: true
+    keyHash?: true
+    prefix?: true
+    description?: true
+    allowedCorridors?: true
+    allowedProviders?: true
+    rateLimit?: true
+    dailyLimit?: true
+    lastUsedAt?: true
+    usageCount?: true
+    isActive?: true
+    expiresAt?: true
+    createdAt?: true
+    revokedAt?: true
+    _all?: true
+  }
+
+  export type IntegrationKeyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegrationKey to aggregate.
+     */
+    where?: IntegrationKeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationKeys to fetch.
+     */
+    orderBy?: IntegrationKeyOrderByWithRelationInput | IntegrationKeyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IntegrationKeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationKeys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationKeys.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IntegrationKeys
+    **/
+    _count?: true | IntegrationKeyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: IntegrationKeyAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: IntegrationKeySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IntegrationKeyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IntegrationKeyMaxAggregateInputType
+  }
+
+  export type GetIntegrationKeyAggregateType<T extends IntegrationKeyAggregateArgs> = {
+        [P in keyof T & keyof AggregateIntegrationKey]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIntegrationKey[P]>
+      : GetScalarType<T[P], AggregateIntegrationKey[P]>
+  }
+
+
+
+
+  export type IntegrationKeyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IntegrationKeyWhereInput
+    orderBy?: IntegrationKeyOrderByWithAggregationInput | IntegrationKeyOrderByWithAggregationInput[]
+    by: IntegrationKeyScalarFieldEnum[] | IntegrationKeyScalarFieldEnum
+    having?: IntegrationKeyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IntegrationKeyCountAggregateInputType | true
+    _avg?: IntegrationKeyAvgAggregateInputType
+    _sum?: IntegrationKeySumAggregateInputType
+    _min?: IntegrationKeyMinAggregateInputType
+    _max?: IntegrationKeyMaxAggregateInputType
+  }
+
+  export type IntegrationKeyGroupByOutputType = {
+    id: string
+    organizationId: string
+    agentId: string
+    name: string
+    keyHash: string
+    prefix: string
+    description: string | null
+    allowedCorridors: string[]
+    allowedProviders: string[]
+    rateLimit: number | null
+    dailyLimit: number | null
+    lastUsedAt: Date | null
+    usageCount: number
+    isActive: boolean
+    expiresAt: Date | null
+    createdAt: Date
+    revokedAt: Date | null
+    _count: IntegrationKeyCountAggregateOutputType | null
+    _avg: IntegrationKeyAvgAggregateOutputType | null
+    _sum: IntegrationKeySumAggregateOutputType | null
+    _min: IntegrationKeyMinAggregateOutputType | null
+    _max: IntegrationKeyMaxAggregateOutputType | null
+  }
+
+  type GetIntegrationKeyGroupByPayload<T extends IntegrationKeyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IntegrationKeyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IntegrationKeyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IntegrationKeyGroupByOutputType[P]>
+            : GetScalarType<T[P], IntegrationKeyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IntegrationKeySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    agentId?: boolean
+    name?: boolean
+    keyHash?: boolean
+    prefix?: boolean
+    description?: boolean
+    allowedCorridors?: boolean
+    allowedProviders?: boolean
+    rateLimit?: boolean
+    dailyLimit?: boolean
+    lastUsedAt?: boolean
+    usageCount?: boolean
+    isActive?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    revokedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    agent?: boolean | AgentDefaultArgs<ExtArgs>
+    paymentLinks?: boolean | IntegrationKey$paymentLinksArgs<ExtArgs>
+    _count?: boolean | IntegrationKeyCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integrationKey"]>
+
+  export type IntegrationKeySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    agentId?: boolean
+    name?: boolean
+    keyHash?: boolean
+    prefix?: boolean
+    description?: boolean
+    allowedCorridors?: boolean
+    allowedProviders?: boolean
+    rateLimit?: boolean
+    dailyLimit?: boolean
+    lastUsedAt?: boolean
+    usageCount?: boolean
+    isActive?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    revokedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    agent?: boolean | AgentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["integrationKey"]>
+
+  export type IntegrationKeySelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    agentId?: boolean
+    name?: boolean
+    keyHash?: boolean
+    prefix?: boolean
+    description?: boolean
+    allowedCorridors?: boolean
+    allowedProviders?: boolean
+    rateLimit?: boolean
+    dailyLimit?: boolean
+    lastUsedAt?: boolean
+    usageCount?: boolean
+    isActive?: boolean
+    expiresAt?: boolean
+    createdAt?: boolean
+    revokedAt?: boolean
+  }
+
+  export type IntegrationKeyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    agent?: boolean | AgentDefaultArgs<ExtArgs>
+    paymentLinks?: boolean | IntegrationKey$paymentLinksArgs<ExtArgs>
+    _count?: boolean | IntegrationKeyCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type IntegrationKeyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    agent?: boolean | AgentDefaultArgs<ExtArgs>
+  }
+
+  export type $IntegrationKeyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IntegrationKey"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      agent: Prisma.$AgentPayload<ExtArgs>
+      paymentLinks: Prisma.$PaymentLinkPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      agentId: string
+      name: string
+      keyHash: string
+      prefix: string
+      description: string | null
+      allowedCorridors: string[]
+      allowedProviders: string[]
+      rateLimit: number | null
+      dailyLimit: number | null
+      lastUsedAt: Date | null
+      usageCount: number
+      isActive: boolean
+      expiresAt: Date | null
+      createdAt: Date
+      revokedAt: Date | null
+    }, ExtArgs["result"]["integrationKey"]>
+    composites: {}
+  }
+
+  type IntegrationKeyGetPayload<S extends boolean | null | undefined | IntegrationKeyDefaultArgs> = $Result.GetResult<Prisma.$IntegrationKeyPayload, S>
+
+  type IntegrationKeyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<IntegrationKeyFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: IntegrationKeyCountAggregateInputType | true
+    }
+
+  export interface IntegrationKeyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IntegrationKey'], meta: { name: 'IntegrationKey' } }
+    /**
+     * Find zero or one IntegrationKey that matches the filter.
+     * @param {IntegrationKeyFindUniqueArgs} args - Arguments to find a IntegrationKey
+     * @example
+     * // Get one IntegrationKey
+     * const integrationKey = await prisma.integrationKey.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IntegrationKeyFindUniqueArgs>(args: SelectSubset<T, IntegrationKeyFindUniqueArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one IntegrationKey that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {IntegrationKeyFindUniqueOrThrowArgs} args - Arguments to find a IntegrationKey
+     * @example
+     * // Get one IntegrationKey
+     * const integrationKey = await prisma.integrationKey.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IntegrationKeyFindUniqueOrThrowArgs>(args: SelectSubset<T, IntegrationKeyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first IntegrationKey that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationKeyFindFirstArgs} args - Arguments to find a IntegrationKey
+     * @example
+     * // Get one IntegrationKey
+     * const integrationKey = await prisma.integrationKey.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IntegrationKeyFindFirstArgs>(args?: SelectSubset<T, IntegrationKeyFindFirstArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first IntegrationKey that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationKeyFindFirstOrThrowArgs} args - Arguments to find a IntegrationKey
+     * @example
+     * // Get one IntegrationKey
+     * const integrationKey = await prisma.integrationKey.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IntegrationKeyFindFirstOrThrowArgs>(args?: SelectSubset<T, IntegrationKeyFindFirstOrThrowArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more IntegrationKeys that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationKeyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IntegrationKeys
+     * const integrationKeys = await prisma.integrationKey.findMany()
+     * 
+     * // Get first 10 IntegrationKeys
+     * const integrationKeys = await prisma.integrationKey.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const integrationKeyWithIdOnly = await prisma.integrationKey.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IntegrationKeyFindManyArgs>(args?: SelectSubset<T, IntegrationKeyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a IntegrationKey.
+     * @param {IntegrationKeyCreateArgs} args - Arguments to create a IntegrationKey.
+     * @example
+     * // Create one IntegrationKey
+     * const IntegrationKey = await prisma.integrationKey.create({
+     *   data: {
+     *     // ... data to create a IntegrationKey
+     *   }
+     * })
+     * 
+     */
+    create<T extends IntegrationKeyCreateArgs>(args: SelectSubset<T, IntegrationKeyCreateArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many IntegrationKeys.
+     * @param {IntegrationKeyCreateManyArgs} args - Arguments to create many IntegrationKeys.
+     * @example
+     * // Create many IntegrationKeys
+     * const integrationKey = await prisma.integrationKey.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IntegrationKeyCreateManyArgs>(args?: SelectSubset<T, IntegrationKeyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IntegrationKeys and returns the data saved in the database.
+     * @param {IntegrationKeyCreateManyAndReturnArgs} args - Arguments to create many IntegrationKeys.
+     * @example
+     * // Create many IntegrationKeys
+     * const integrationKey = await prisma.integrationKey.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IntegrationKeys and only return the `id`
+     * const integrationKeyWithIdOnly = await prisma.integrationKey.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IntegrationKeyCreateManyAndReturnArgs>(args?: SelectSubset<T, IntegrationKeyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a IntegrationKey.
+     * @param {IntegrationKeyDeleteArgs} args - Arguments to delete one IntegrationKey.
+     * @example
+     * // Delete one IntegrationKey
+     * const IntegrationKey = await prisma.integrationKey.delete({
+     *   where: {
+     *     // ... filter to delete one IntegrationKey
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IntegrationKeyDeleteArgs>(args: SelectSubset<T, IntegrationKeyDeleteArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one IntegrationKey.
+     * @param {IntegrationKeyUpdateArgs} args - Arguments to update one IntegrationKey.
+     * @example
+     * // Update one IntegrationKey
+     * const integrationKey = await prisma.integrationKey.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IntegrationKeyUpdateArgs>(args: SelectSubset<T, IntegrationKeyUpdateArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more IntegrationKeys.
+     * @param {IntegrationKeyDeleteManyArgs} args - Arguments to filter IntegrationKeys to delete.
+     * @example
+     * // Delete a few IntegrationKeys
+     * const { count } = await prisma.integrationKey.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IntegrationKeyDeleteManyArgs>(args?: SelectSubset<T, IntegrationKeyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IntegrationKeys.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationKeyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IntegrationKeys
+     * const integrationKey = await prisma.integrationKey.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IntegrationKeyUpdateManyArgs>(args: SelectSubset<T, IntegrationKeyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one IntegrationKey.
+     * @param {IntegrationKeyUpsertArgs} args - Arguments to update or create a IntegrationKey.
+     * @example
+     * // Update or create a IntegrationKey
+     * const integrationKey = await prisma.integrationKey.upsert({
+     *   create: {
+     *     // ... data to create a IntegrationKey
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IntegrationKey we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IntegrationKeyUpsertArgs>(args: SelectSubset<T, IntegrationKeyUpsertArgs<ExtArgs>>): Prisma__IntegrationKeyClient<$Result.GetResult<Prisma.$IntegrationKeyPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of IntegrationKeys.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationKeyCountArgs} args - Arguments to filter IntegrationKeys to count.
+     * @example
+     * // Count the number of IntegrationKeys
+     * const count = await prisma.integrationKey.count({
+     *   where: {
+     *     // ... the filter for the IntegrationKeys we want to count
+     *   }
+     * })
+    **/
+    count<T extends IntegrationKeyCountArgs>(
+      args?: Subset<T, IntegrationKeyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IntegrationKeyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IntegrationKey.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationKeyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IntegrationKeyAggregateArgs>(args: Subset<T, IntegrationKeyAggregateArgs>): Prisma.PrismaPromise<GetIntegrationKeyAggregateType<T>>
+
+    /**
+     * Group by IntegrationKey.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IntegrationKeyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IntegrationKeyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IntegrationKeyGroupByArgs['orderBy'] }
+        : { orderBy?: IntegrationKeyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IntegrationKeyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIntegrationKeyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IntegrationKey model
+   */
+  readonly fields: IntegrationKeyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IntegrationKey.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IntegrationKeyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    agent<T extends AgentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AgentDefaultArgs<ExtArgs>>): Prisma__AgentClient<$Result.GetResult<Prisma.$AgentPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    paymentLinks<T extends IntegrationKey$paymentLinksArgs<ExtArgs> = {}>(args?: Subset<T, IntegrationKey$paymentLinksArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PaymentLinkPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IntegrationKey model
+   */ 
+  interface IntegrationKeyFieldRefs {
+    readonly id: FieldRef<"IntegrationKey", 'String'>
+    readonly organizationId: FieldRef<"IntegrationKey", 'String'>
+    readonly agentId: FieldRef<"IntegrationKey", 'String'>
+    readonly name: FieldRef<"IntegrationKey", 'String'>
+    readonly keyHash: FieldRef<"IntegrationKey", 'String'>
+    readonly prefix: FieldRef<"IntegrationKey", 'String'>
+    readonly description: FieldRef<"IntegrationKey", 'String'>
+    readonly allowedCorridors: FieldRef<"IntegrationKey", 'String[]'>
+    readonly allowedProviders: FieldRef<"IntegrationKey", 'String[]'>
+    readonly rateLimit: FieldRef<"IntegrationKey", 'Int'>
+    readonly dailyLimit: FieldRef<"IntegrationKey", 'Int'>
+    readonly lastUsedAt: FieldRef<"IntegrationKey", 'DateTime'>
+    readonly usageCount: FieldRef<"IntegrationKey", 'Int'>
+    readonly isActive: FieldRef<"IntegrationKey", 'Boolean'>
+    readonly expiresAt: FieldRef<"IntegrationKey", 'DateTime'>
+    readonly createdAt: FieldRef<"IntegrationKey", 'DateTime'>
+    readonly revokedAt: FieldRef<"IntegrationKey", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IntegrationKey findUnique
+   */
+  export type IntegrationKeyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationKey to fetch.
+     */
+    where: IntegrationKeyWhereUniqueInput
+  }
+
+  /**
+   * IntegrationKey findUniqueOrThrow
+   */
+  export type IntegrationKeyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationKey to fetch.
+     */
+    where: IntegrationKeyWhereUniqueInput
+  }
+
+  /**
+   * IntegrationKey findFirst
+   */
+  export type IntegrationKeyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationKey to fetch.
+     */
+    where?: IntegrationKeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationKeys to fetch.
+     */
+    orderBy?: IntegrationKeyOrderByWithRelationInput | IntegrationKeyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegrationKeys.
+     */
+    cursor?: IntegrationKeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationKeys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationKeys.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegrationKeys.
+     */
+    distinct?: IntegrationKeyScalarFieldEnum | IntegrationKeyScalarFieldEnum[]
+  }
+
+  /**
+   * IntegrationKey findFirstOrThrow
+   */
+  export type IntegrationKeyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationKey to fetch.
+     */
+    where?: IntegrationKeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationKeys to fetch.
+     */
+    orderBy?: IntegrationKeyOrderByWithRelationInput | IntegrationKeyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IntegrationKeys.
+     */
+    cursor?: IntegrationKeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationKeys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationKeys.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IntegrationKeys.
+     */
+    distinct?: IntegrationKeyScalarFieldEnum | IntegrationKeyScalarFieldEnum[]
+  }
+
+  /**
+   * IntegrationKey findMany
+   */
+  export type IntegrationKeyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+    /**
+     * Filter, which IntegrationKeys to fetch.
+     */
+    where?: IntegrationKeyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IntegrationKeys to fetch.
+     */
+    orderBy?: IntegrationKeyOrderByWithRelationInput | IntegrationKeyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IntegrationKeys.
+     */
+    cursor?: IntegrationKeyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IntegrationKeys from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IntegrationKeys.
+     */
+    skip?: number
+    distinct?: IntegrationKeyScalarFieldEnum | IntegrationKeyScalarFieldEnum[]
+  }
+
+  /**
+   * IntegrationKey create
+   */
+  export type IntegrationKeyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IntegrationKey.
+     */
+    data: XOR<IntegrationKeyCreateInput, IntegrationKeyUncheckedCreateInput>
+  }
+
+  /**
+   * IntegrationKey createMany
+   */
+  export type IntegrationKeyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IntegrationKeys.
+     */
+    data: IntegrationKeyCreateManyInput | IntegrationKeyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IntegrationKey createManyAndReturn
+   */
+  export type IntegrationKeyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many IntegrationKeys.
+     */
+    data: IntegrationKeyCreateManyInput | IntegrationKeyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IntegrationKey update
+   */
+  export type IntegrationKeyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IntegrationKey.
+     */
+    data: XOR<IntegrationKeyUpdateInput, IntegrationKeyUncheckedUpdateInput>
+    /**
+     * Choose, which IntegrationKey to update.
+     */
+    where: IntegrationKeyWhereUniqueInput
+  }
+
+  /**
+   * IntegrationKey updateMany
+   */
+  export type IntegrationKeyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IntegrationKeys.
+     */
+    data: XOR<IntegrationKeyUpdateManyMutationInput, IntegrationKeyUncheckedUpdateManyInput>
+    /**
+     * Filter which IntegrationKeys to update
+     */
+    where?: IntegrationKeyWhereInput
+  }
+
+  /**
+   * IntegrationKey upsert
+   */
+  export type IntegrationKeyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IntegrationKey to update in case it exists.
+     */
+    where: IntegrationKeyWhereUniqueInput
+    /**
+     * In case the IntegrationKey found by the `where` argument doesn't exist, create a new IntegrationKey with this data.
+     */
+    create: XOR<IntegrationKeyCreateInput, IntegrationKeyUncheckedCreateInput>
+    /**
+     * In case the IntegrationKey was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IntegrationKeyUpdateInput, IntegrationKeyUncheckedUpdateInput>
+  }
+
+  /**
+   * IntegrationKey delete
+   */
+  export type IntegrationKeyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+    /**
+     * Filter which IntegrationKey to delete.
+     */
+    where: IntegrationKeyWhereUniqueInput
+  }
+
+  /**
+   * IntegrationKey deleteMany
+   */
+  export type IntegrationKeyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IntegrationKeys to delete
+     */
+    where?: IntegrationKeyWhereInput
+  }
+
+  /**
+   * IntegrationKey.paymentLinks
+   */
+  export type IntegrationKey$paymentLinksArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PaymentLink
+     */
+    select?: PaymentLinkSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PaymentLinkInclude<ExtArgs> | null
+    where?: PaymentLinkWhereInput
+    orderBy?: PaymentLinkOrderByWithRelationInput | PaymentLinkOrderByWithRelationInput[]
+    cursor?: PaymentLinkWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PaymentLinkScalarFieldEnum | PaymentLinkScalarFieldEnum[]
+  }
+
+  /**
+   * IntegrationKey without action
+   */
+  export type IntegrationKeyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IntegrationKey
+     */
+    select?: IntegrationKeySelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IntegrationKeyInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model OrganizationUser
    */
 
@@ -35203,6 +37701,7 @@ export namespace Prisma {
     organizationId: 'organizationId',
     createdById: 'createdById',
     executingAgentId: 'executingAgentId',
+    integrationKeyId: 'integrationKeyId',
     title: 'title',
     description: 'description',
     referenceId: 'referenceId',
@@ -35279,6 +37778,8 @@ export namespace Prisma {
     supportedCurrencies: 'supportedCurrencies',
     paymentMethods: 'paymentMethods',
     features: 'features',
+    canCollect: 'canCollect',
+    canPayout: 'canPayout',
     isActive: 'isActive',
     healthStatus: 'healthStatus',
     lastHealthCheck: 'lastHealthCheck',
@@ -35326,6 +37827,28 @@ export namespace Prisma {
   };
 
   export type ProviderRouteScalarFieldEnum = (typeof ProviderRouteScalarFieldEnum)[keyof typeof ProviderRouteScalarFieldEnum]
+
+
+  export const PaymentCorridorScalarFieldEnum: {
+    id: 'id',
+    code: 'code',
+    name: 'name',
+    fromCountry: 'fromCountry',
+    toCountry: 'toCountry',
+    fromCurrency: 'fromCurrency',
+    toCurrency: 'toCurrency',
+    collectProviders: 'collectProviders',
+    payoutProviders: 'payoutProviders',
+    avgTransferTime: 'avgTransferTime',
+    minAmount: 'minAmount',
+    maxAmount: 'maxAmount',
+    isActive: 'isActive',
+    isPopular: 'isPopular',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PaymentCorridorScalarFieldEnum = (typeof PaymentCorridorScalarFieldEnum)[keyof typeof PaymentCorridorScalarFieldEnum]
 
 
   export const ProviderTransactionScalarFieldEnum: {
@@ -35524,6 +38047,29 @@ export namespace Prisma {
   };
 
   export type ApiKeyScalarFieldEnum = (typeof ApiKeyScalarFieldEnum)[keyof typeof ApiKeyScalarFieldEnum]
+
+
+  export const IntegrationKeyScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    agentId: 'agentId',
+    name: 'name',
+    keyHash: 'keyHash',
+    prefix: 'prefix',
+    description: 'description',
+    allowedCorridors: 'allowedCorridors',
+    allowedProviders: 'allowedProviders',
+    rateLimit: 'rateLimit',
+    dailyLimit: 'dailyLimit',
+    lastUsedAt: 'lastUsedAt',
+    usageCount: 'usageCount',
+    isActive: 'isActive',
+    expiresAt: 'expiresAt',
+    createdAt: 'createdAt',
+    revokedAt: 'revokedAt'
+  };
+
+  export type IntegrationKeyScalarFieldEnum = (typeof IntegrationKeyScalarFieldEnum)[keyof typeof IntegrationKeyScalarFieldEnum]
 
 
   export const OrganizationUserScalarFieldEnum: {
@@ -36029,6 +38575,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderListRelationFilter
     providers?: ProviderConfigListRelationFilter
     apiKeys?: ApiKeyListRelationFilter
+    integrationKeys?: IntegrationKeyListRelationFilter
     webhooks?: WebhookListRelationFilter
     auditLogs?: AuditLogListRelationFilter
     agents?: AgentListRelationFilter
@@ -36057,6 +38604,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderOrderByRelationAggregateInput
     providers?: ProviderConfigOrderByRelationAggregateInput
     apiKeys?: ApiKeyOrderByRelationAggregateInput
+    integrationKeys?: IntegrationKeyOrderByRelationAggregateInput
     webhooks?: WebhookOrderByRelationAggregateInput
     auditLogs?: AuditLogOrderByRelationAggregateInput
     agents?: AgentOrderByRelationAggregateInput
@@ -36088,6 +38636,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderListRelationFilter
     providers?: ProviderConfigListRelationFilter
     apiKeys?: ApiKeyListRelationFilter
+    integrationKeys?: IntegrationKeyListRelationFilter
     webhooks?: WebhookListRelationFilter
     auditLogs?: AuditLogListRelationFilter
     agents?: AgentListRelationFilter
@@ -37155,6 +39704,7 @@ export namespace Prisma {
     organizationId?: StringFilter<"PaymentLink"> | string
     createdById?: StringFilter<"PaymentLink"> | string
     executingAgentId?: StringFilter<"PaymentLink"> | string
+    integrationKeyId?: StringFilter<"PaymentLink"> | string
     title?: StringFilter<"PaymentLink"> | string
     description?: StringNullableFilter<"PaymentLink"> | string | null
     referenceId?: StringNullableFilter<"PaymentLink"> | string | null
@@ -37180,6 +39730,7 @@ export namespace Prisma {
     organization?: XOR<OrganizationRelationFilter, OrganizationWhereInput>
     createdBy?: XOR<UserRelationFilter, UserWhereInput>
     executingAgent?: XOR<AgentRelationFilter, AgentWhereInput>
+    integrationKey?: XOR<IntegrationKeyRelationFilter, IntegrationKeyWhereInput>
     price?: XOR<PriceNullableRelationFilter, PriceWhereInput> | null
     paymentOrders?: PaymentOrderListRelationFilter
   }
@@ -37189,6 +39740,7 @@ export namespace Prisma {
     organizationId?: SortOrder
     createdById?: SortOrder
     executingAgentId?: SortOrder
+    integrationKeyId?: SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     referenceId?: SortOrderInput | SortOrder
@@ -37214,6 +39766,7 @@ export namespace Prisma {
     organization?: OrganizationOrderByWithRelationInput
     createdBy?: UserOrderByWithRelationInput
     executingAgent?: AgentOrderByWithRelationInput
+    integrationKey?: IntegrationKeyOrderByWithRelationInput
     price?: PriceOrderByWithRelationInput
     paymentOrders?: PaymentOrderOrderByRelationAggregateInput
   }
@@ -37227,6 +39780,7 @@ export namespace Prisma {
     organizationId?: StringFilter<"PaymentLink"> | string
     createdById?: StringFilter<"PaymentLink"> | string
     executingAgentId?: StringFilter<"PaymentLink"> | string
+    integrationKeyId?: StringFilter<"PaymentLink"> | string
     title?: StringFilter<"PaymentLink"> | string
     description?: StringNullableFilter<"PaymentLink"> | string | null
     referenceId?: StringNullableFilter<"PaymentLink"> | string | null
@@ -37251,6 +39805,7 @@ export namespace Prisma {
     organization?: XOR<OrganizationRelationFilter, OrganizationWhereInput>
     createdBy?: XOR<UserRelationFilter, UserWhereInput>
     executingAgent?: XOR<AgentRelationFilter, AgentWhereInput>
+    integrationKey?: XOR<IntegrationKeyRelationFilter, IntegrationKeyWhereInput>
     price?: XOR<PriceNullableRelationFilter, PriceWhereInput> | null
     paymentOrders?: PaymentOrderListRelationFilter
   }, "id" | "shortCode">
@@ -37260,6 +39815,7 @@ export namespace Prisma {
     organizationId?: SortOrder
     createdById?: SortOrder
     executingAgentId?: SortOrder
+    integrationKeyId?: SortOrder
     title?: SortOrder
     description?: SortOrderInput | SortOrder
     referenceId?: SortOrderInput | SortOrder
@@ -37297,6 +39853,7 @@ export namespace Prisma {
     organizationId?: StringWithAggregatesFilter<"PaymentLink"> | string
     createdById?: StringWithAggregatesFilter<"PaymentLink"> | string
     executingAgentId?: StringWithAggregatesFilter<"PaymentLink"> | string
+    integrationKeyId?: StringWithAggregatesFilter<"PaymentLink"> | string
     title?: StringWithAggregatesFilter<"PaymentLink"> | string
     description?: StringNullableWithAggregatesFilter<"PaymentLink"> | string | null
     referenceId?: StringNullableWithAggregatesFilter<"PaymentLink"> | string | null
@@ -37556,6 +40113,8 @@ export namespace Prisma {
     supportedCurrencies?: StringNullableListFilter<"Provider">
     paymentMethods?: StringNullableListFilter<"Provider">
     features?: JsonFilter<"Provider">
+    canCollect?: BoolFilter<"Provider"> | boolean
+    canPayout?: BoolFilter<"Provider"> | boolean
     isActive?: BoolFilter<"Provider"> | boolean
     healthStatus?: EnumProviderHealthFilter<"Provider"> | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFilter<"Provider"> | Date | string
@@ -37575,6 +40134,8 @@ export namespace Prisma {
     supportedCurrencies?: SortOrder
     paymentMethods?: SortOrder
     features?: SortOrder
+    canCollect?: SortOrder
+    canPayout?: SortOrder
     isActive?: SortOrder
     healthStatus?: SortOrder
     lastHealthCheck?: SortOrder
@@ -37597,6 +40158,8 @@ export namespace Prisma {
     supportedCurrencies?: StringNullableListFilter<"Provider">
     paymentMethods?: StringNullableListFilter<"Provider">
     features?: JsonFilter<"Provider">
+    canCollect?: BoolFilter<"Provider"> | boolean
+    canPayout?: BoolFilter<"Provider"> | boolean
     isActive?: BoolFilter<"Provider"> | boolean
     healthStatus?: EnumProviderHealthFilter<"Provider"> | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFilter<"Provider"> | Date | string
@@ -37616,6 +40179,8 @@ export namespace Prisma {
     supportedCurrencies?: SortOrder
     paymentMethods?: SortOrder
     features?: SortOrder
+    canCollect?: SortOrder
+    canPayout?: SortOrder
     isActive?: SortOrder
     healthStatus?: SortOrder
     lastHealthCheck?: SortOrder
@@ -37640,6 +40205,8 @@ export namespace Prisma {
     supportedCurrencies?: StringNullableListFilter<"Provider">
     paymentMethods?: StringNullableListFilter<"Provider">
     features?: JsonWithAggregatesFilter<"Provider">
+    canCollect?: BoolWithAggregatesFilter<"Provider"> | boolean
+    canPayout?: BoolWithAggregatesFilter<"Provider"> | boolean
     isActive?: BoolWithAggregatesFilter<"Provider"> | boolean
     healthStatus?: EnumProviderHealthWithAggregatesFilter<"Provider"> | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeWithAggregatesFilter<"Provider"> | Date | string
@@ -37848,6 +40415,116 @@ export namespace Prisma {
     priority?: IntWithAggregatesFilter<"ProviderRoute"> | number
   }
 
+  export type PaymentCorridorWhereInput = {
+    AND?: PaymentCorridorWhereInput | PaymentCorridorWhereInput[]
+    OR?: PaymentCorridorWhereInput[]
+    NOT?: PaymentCorridorWhereInput | PaymentCorridorWhereInput[]
+    id?: StringFilter<"PaymentCorridor"> | string
+    code?: StringFilter<"PaymentCorridor"> | string
+    name?: StringFilter<"PaymentCorridor"> | string
+    fromCountry?: StringFilter<"PaymentCorridor"> | string
+    toCountry?: StringFilter<"PaymentCorridor"> | string
+    fromCurrency?: StringFilter<"PaymentCorridor"> | string
+    toCurrency?: StringFilter<"PaymentCorridor"> | string
+    collectProviders?: StringNullableListFilter<"PaymentCorridor">
+    payoutProviders?: StringNullableListFilter<"PaymentCorridor">
+    avgTransferTime?: IntNullableFilter<"PaymentCorridor"> | number | null
+    minAmount?: DecimalNullableFilter<"PaymentCorridor"> | Decimal | DecimalJsLike | number | string | null
+    maxAmount?: DecimalNullableFilter<"PaymentCorridor"> | Decimal | DecimalJsLike | number | string | null
+    isActive?: BoolFilter<"PaymentCorridor"> | boolean
+    isPopular?: BoolFilter<"PaymentCorridor"> | boolean
+    createdAt?: DateTimeFilter<"PaymentCorridor"> | Date | string
+    updatedAt?: DateTimeFilter<"PaymentCorridor"> | Date | string
+  }
+
+  export type PaymentCorridorOrderByWithRelationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    fromCountry?: SortOrder
+    toCountry?: SortOrder
+    fromCurrency?: SortOrder
+    toCurrency?: SortOrder
+    collectProviders?: SortOrder
+    payoutProviders?: SortOrder
+    avgTransferTime?: SortOrderInput | SortOrder
+    minAmount?: SortOrderInput | SortOrder
+    maxAmount?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    isPopular?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentCorridorWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    code?: string
+    fromCountry_toCountry?: PaymentCorridorFromCountryToCountryCompoundUniqueInput
+    AND?: PaymentCorridorWhereInput | PaymentCorridorWhereInput[]
+    OR?: PaymentCorridorWhereInput[]
+    NOT?: PaymentCorridorWhereInput | PaymentCorridorWhereInput[]
+    name?: StringFilter<"PaymentCorridor"> | string
+    fromCountry?: StringFilter<"PaymentCorridor"> | string
+    toCountry?: StringFilter<"PaymentCorridor"> | string
+    fromCurrency?: StringFilter<"PaymentCorridor"> | string
+    toCurrency?: StringFilter<"PaymentCorridor"> | string
+    collectProviders?: StringNullableListFilter<"PaymentCorridor">
+    payoutProviders?: StringNullableListFilter<"PaymentCorridor">
+    avgTransferTime?: IntNullableFilter<"PaymentCorridor"> | number | null
+    minAmount?: DecimalNullableFilter<"PaymentCorridor"> | Decimal | DecimalJsLike | number | string | null
+    maxAmount?: DecimalNullableFilter<"PaymentCorridor"> | Decimal | DecimalJsLike | number | string | null
+    isActive?: BoolFilter<"PaymentCorridor"> | boolean
+    isPopular?: BoolFilter<"PaymentCorridor"> | boolean
+    createdAt?: DateTimeFilter<"PaymentCorridor"> | Date | string
+    updatedAt?: DateTimeFilter<"PaymentCorridor"> | Date | string
+  }, "id" | "code" | "fromCountry_toCountry">
+
+  export type PaymentCorridorOrderByWithAggregationInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    fromCountry?: SortOrder
+    toCountry?: SortOrder
+    fromCurrency?: SortOrder
+    toCurrency?: SortOrder
+    collectProviders?: SortOrder
+    payoutProviders?: SortOrder
+    avgTransferTime?: SortOrderInput | SortOrder
+    minAmount?: SortOrderInput | SortOrder
+    maxAmount?: SortOrderInput | SortOrder
+    isActive?: SortOrder
+    isPopular?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PaymentCorridorCountOrderByAggregateInput
+    _avg?: PaymentCorridorAvgOrderByAggregateInput
+    _max?: PaymentCorridorMaxOrderByAggregateInput
+    _min?: PaymentCorridorMinOrderByAggregateInput
+    _sum?: PaymentCorridorSumOrderByAggregateInput
+  }
+
+  export type PaymentCorridorScalarWhereWithAggregatesInput = {
+    AND?: PaymentCorridorScalarWhereWithAggregatesInput | PaymentCorridorScalarWhereWithAggregatesInput[]
+    OR?: PaymentCorridorScalarWhereWithAggregatesInput[]
+    NOT?: PaymentCorridorScalarWhereWithAggregatesInput | PaymentCorridorScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PaymentCorridor"> | string
+    code?: StringWithAggregatesFilter<"PaymentCorridor"> | string
+    name?: StringWithAggregatesFilter<"PaymentCorridor"> | string
+    fromCountry?: StringWithAggregatesFilter<"PaymentCorridor"> | string
+    toCountry?: StringWithAggregatesFilter<"PaymentCorridor"> | string
+    fromCurrency?: StringWithAggregatesFilter<"PaymentCorridor"> | string
+    toCurrency?: StringWithAggregatesFilter<"PaymentCorridor"> | string
+    collectProviders?: StringNullableListFilter<"PaymentCorridor">
+    payoutProviders?: StringNullableListFilter<"PaymentCorridor">
+    avgTransferTime?: IntNullableWithAggregatesFilter<"PaymentCorridor"> | number | null
+    minAmount?: DecimalNullableWithAggregatesFilter<"PaymentCorridor"> | Decimal | DecimalJsLike | number | string | null
+    maxAmount?: DecimalNullableWithAggregatesFilter<"PaymentCorridor"> | Decimal | DecimalJsLike | number | string | null
+    isActive?: BoolWithAggregatesFilter<"PaymentCorridor"> | boolean
+    isPopular?: BoolWithAggregatesFilter<"PaymentCorridor"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"PaymentCorridor"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PaymentCorridor"> | Date | string
+  }
+
   export type ProviderTransactionWhereInput = {
     AND?: ProviderTransactionWhereInput | ProviderTransactionWhereInput[]
     OR?: ProviderTransactionWhereInput[]
@@ -37974,6 +40651,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkListRelationFilter
     decisions?: AgentDecisionListRelationFilter
     checkpoints?: AgentCheckpointListRelationFilter
+    integrationKeys?: IntegrationKeyListRelationFilter
   }
 
   export type AgentOrderByWithRelationInput = {
@@ -38001,6 +40679,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkOrderByRelationAggregateInput
     decisions?: AgentDecisionOrderByRelationAggregateInput
     checkpoints?: AgentCheckpointOrderByRelationAggregateInput
+    integrationKeys?: IntegrationKeyOrderByRelationAggregateInput
   }
 
   export type AgentWhereUniqueInput = Prisma.AtLeast<{
@@ -38031,6 +40710,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkListRelationFilter
     decisions?: AgentDecisionListRelationFilter
     checkpoints?: AgentCheckpointListRelationFilter
+    integrationKeys?: IntegrationKeyListRelationFilter
   }, "id" | "agentWalletId">
 
   export type AgentOrderByWithAggregationInput = {
@@ -38882,6 +41562,129 @@ export namespace Prisma {
     revokedAt?: DateTimeNullableWithAggregatesFilter<"ApiKey"> | Date | string | null
   }
 
+  export type IntegrationKeyWhereInput = {
+    AND?: IntegrationKeyWhereInput | IntegrationKeyWhereInput[]
+    OR?: IntegrationKeyWhereInput[]
+    NOT?: IntegrationKeyWhereInput | IntegrationKeyWhereInput[]
+    id?: StringFilter<"IntegrationKey"> | string
+    organizationId?: StringFilter<"IntegrationKey"> | string
+    agentId?: StringFilter<"IntegrationKey"> | string
+    name?: StringFilter<"IntegrationKey"> | string
+    keyHash?: StringFilter<"IntegrationKey"> | string
+    prefix?: StringFilter<"IntegrationKey"> | string
+    description?: StringNullableFilter<"IntegrationKey"> | string | null
+    allowedCorridors?: StringNullableListFilter<"IntegrationKey">
+    allowedProviders?: StringNullableListFilter<"IntegrationKey">
+    rateLimit?: IntNullableFilter<"IntegrationKey"> | number | null
+    dailyLimit?: IntNullableFilter<"IntegrationKey"> | number | null
+    lastUsedAt?: DateTimeNullableFilter<"IntegrationKey"> | Date | string | null
+    usageCount?: IntFilter<"IntegrationKey"> | number
+    isActive?: BoolFilter<"IntegrationKey"> | boolean
+    expiresAt?: DateTimeNullableFilter<"IntegrationKey"> | Date | string | null
+    createdAt?: DateTimeFilter<"IntegrationKey"> | Date | string
+    revokedAt?: DateTimeNullableFilter<"IntegrationKey"> | Date | string | null
+    organization?: XOR<OrganizationRelationFilter, OrganizationWhereInput>
+    agent?: XOR<AgentRelationFilter, AgentWhereInput>
+    paymentLinks?: PaymentLinkListRelationFilter
+  }
+
+  export type IntegrationKeyOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    agentId?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    prefix?: SortOrder
+    description?: SortOrderInput | SortOrder
+    allowedCorridors?: SortOrder
+    allowedProviders?: SortOrder
+    rateLimit?: SortOrderInput | SortOrder
+    dailyLimit?: SortOrderInput | SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    usageCount?: SortOrder
+    isActive?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    revokedAt?: SortOrderInput | SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    agent?: AgentOrderByWithRelationInput
+    paymentLinks?: PaymentLinkOrderByRelationAggregateInput
+  }
+
+  export type IntegrationKeyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    keyHash?: string
+    AND?: IntegrationKeyWhereInput | IntegrationKeyWhereInput[]
+    OR?: IntegrationKeyWhereInput[]
+    NOT?: IntegrationKeyWhereInput | IntegrationKeyWhereInput[]
+    organizationId?: StringFilter<"IntegrationKey"> | string
+    agentId?: StringFilter<"IntegrationKey"> | string
+    name?: StringFilter<"IntegrationKey"> | string
+    prefix?: StringFilter<"IntegrationKey"> | string
+    description?: StringNullableFilter<"IntegrationKey"> | string | null
+    allowedCorridors?: StringNullableListFilter<"IntegrationKey">
+    allowedProviders?: StringNullableListFilter<"IntegrationKey">
+    rateLimit?: IntNullableFilter<"IntegrationKey"> | number | null
+    dailyLimit?: IntNullableFilter<"IntegrationKey"> | number | null
+    lastUsedAt?: DateTimeNullableFilter<"IntegrationKey"> | Date | string | null
+    usageCount?: IntFilter<"IntegrationKey"> | number
+    isActive?: BoolFilter<"IntegrationKey"> | boolean
+    expiresAt?: DateTimeNullableFilter<"IntegrationKey"> | Date | string | null
+    createdAt?: DateTimeFilter<"IntegrationKey"> | Date | string
+    revokedAt?: DateTimeNullableFilter<"IntegrationKey"> | Date | string | null
+    organization?: XOR<OrganizationRelationFilter, OrganizationWhereInput>
+    agent?: XOR<AgentRelationFilter, AgentWhereInput>
+    paymentLinks?: PaymentLinkListRelationFilter
+  }, "id" | "keyHash">
+
+  export type IntegrationKeyOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    agentId?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    prefix?: SortOrder
+    description?: SortOrderInput | SortOrder
+    allowedCorridors?: SortOrder
+    allowedProviders?: SortOrder
+    rateLimit?: SortOrderInput | SortOrder
+    dailyLimit?: SortOrderInput | SortOrder
+    lastUsedAt?: SortOrderInput | SortOrder
+    usageCount?: SortOrder
+    isActive?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    revokedAt?: SortOrderInput | SortOrder
+    _count?: IntegrationKeyCountOrderByAggregateInput
+    _avg?: IntegrationKeyAvgOrderByAggregateInput
+    _max?: IntegrationKeyMaxOrderByAggregateInput
+    _min?: IntegrationKeyMinOrderByAggregateInput
+    _sum?: IntegrationKeySumOrderByAggregateInput
+  }
+
+  export type IntegrationKeyScalarWhereWithAggregatesInput = {
+    AND?: IntegrationKeyScalarWhereWithAggregatesInput | IntegrationKeyScalarWhereWithAggregatesInput[]
+    OR?: IntegrationKeyScalarWhereWithAggregatesInput[]
+    NOT?: IntegrationKeyScalarWhereWithAggregatesInput | IntegrationKeyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"IntegrationKey"> | string
+    organizationId?: StringWithAggregatesFilter<"IntegrationKey"> | string
+    agentId?: StringWithAggregatesFilter<"IntegrationKey"> | string
+    name?: StringWithAggregatesFilter<"IntegrationKey"> | string
+    keyHash?: StringWithAggregatesFilter<"IntegrationKey"> | string
+    prefix?: StringWithAggregatesFilter<"IntegrationKey"> | string
+    description?: StringNullableWithAggregatesFilter<"IntegrationKey"> | string | null
+    allowedCorridors?: StringNullableListFilter<"IntegrationKey">
+    allowedProviders?: StringNullableListFilter<"IntegrationKey">
+    rateLimit?: IntNullableWithAggregatesFilter<"IntegrationKey"> | number | null
+    dailyLimit?: IntNullableWithAggregatesFilter<"IntegrationKey"> | number | null
+    lastUsedAt?: DateTimeNullableWithAggregatesFilter<"IntegrationKey"> | Date | string | null
+    usageCount?: IntWithAggregatesFilter<"IntegrationKey"> | number
+    isActive?: BoolWithAggregatesFilter<"IntegrationKey"> | boolean
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"IntegrationKey"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"IntegrationKey"> | Date | string
+    revokedAt?: DateTimeNullableWithAggregatesFilter<"IntegrationKey"> | Date | string | null
+  }
+
   export type OrganizationUserWhereInput = {
     AND?: OrganizationUserWhereInput | OrganizationUserWhereInput[]
     OR?: OrganizationUserWhereInput[]
@@ -38984,6 +41787,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
     agents?: AgentCreateNestedManyWithoutOrganizationInput
@@ -39012,6 +41816,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
     agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -39040,6 +41845,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUpdateManyWithoutOrganizationNestedInput
@@ -39068,6 +41874,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -40303,6 +43110,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutPaymentLinksInput
     createdBy: UserCreateNestedOneWithoutPaymentLinksInput
     executingAgent: AgentCreateNestedOneWithoutPaymentLinksInput
+    integrationKey: IntegrationKeyCreateNestedOneWithoutPaymentLinksInput
     price?: PriceCreateNestedOneWithoutPaymentLinksInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutPaymentLinkInput
   }
@@ -40312,6 +43120,7 @@ export namespace Prisma {
     organizationId: string
     createdById: string
     executingAgentId: string
+    integrationKeyId: string
     title: string
     description?: string | null
     referenceId?: string | null
@@ -40363,6 +43172,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutPaymentLinksNestedInput
     createdBy?: UserUpdateOneRequiredWithoutPaymentLinksNestedInput
     executingAgent?: AgentUpdateOneRequiredWithoutPaymentLinksNestedInput
+    integrationKey?: IntegrationKeyUpdateOneRequiredWithoutPaymentLinksNestedInput
     price?: PriceUpdateOneWithoutPaymentLinksNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutPaymentLinkNestedInput
   }
@@ -40372,6 +43182,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdById?: StringFieldUpdateOperationsInput | string
     executingAgentId?: StringFieldUpdateOperationsInput | string
+    integrationKeyId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40402,6 +43213,7 @@ export namespace Prisma {
     organizationId: string
     createdById: string
     executingAgentId: string
+    integrationKeyId: string
     title: string
     description?: string | null
     referenceId?: string | null
@@ -40456,6 +43268,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdById?: StringFieldUpdateOperationsInput | string
     executingAgentId?: StringFieldUpdateOperationsInput | string
+    integrationKeyId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -40765,6 +43578,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderCreatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderCreatepaymentMethodsInput | string[]
     features: JsonNullValueInput | InputJsonValue
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: $Enums.ProviderHealth
     lastHealthCheck?: Date | string
@@ -40784,6 +43599,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderCreatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderCreatepaymentMethodsInput | string[]
     features: JsonNullValueInput | InputJsonValue
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: $Enums.ProviderHealth
     lastHealthCheck?: Date | string
@@ -40803,6 +43620,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderUpdatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderUpdatepaymentMethodsInput | string[]
     features?: JsonNullValueInput | InputJsonValue
+    canCollect?: BoolFieldUpdateOperationsInput | boolean
+    canPayout?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     healthStatus?: EnumProviderHealthFieldUpdateOperationsInput | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40822,6 +43641,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderUpdatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderUpdatepaymentMethodsInput | string[]
     features?: JsonNullValueInput | InputJsonValue
+    canCollect?: BoolFieldUpdateOperationsInput | boolean
+    canPayout?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     healthStatus?: EnumProviderHealthFieldUpdateOperationsInput | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40841,6 +43662,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderCreatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderCreatepaymentMethodsInput | string[]
     features: JsonNullValueInput | InputJsonValue
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: $Enums.ProviderHealth
     lastHealthCheck?: Date | string
@@ -40857,6 +43680,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderUpdatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderUpdatepaymentMethodsInput | string[]
     features?: JsonNullValueInput | InputJsonValue
+    canCollect?: BoolFieldUpdateOperationsInput | boolean
+    canPayout?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     healthStatus?: EnumProviderHealthFieldUpdateOperationsInput | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40873,6 +43698,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderUpdatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderUpdatepaymentMethodsInput | string[]
     features?: JsonNullValueInput | InputJsonValue
+    canCollect?: BoolFieldUpdateOperationsInput | boolean
+    canPayout?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     healthStatus?: EnumProviderHealthFieldUpdateOperationsInput | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -41108,6 +43935,139 @@ export namespace Prisma {
     priority?: IntFieldUpdateOperationsInput | number
   }
 
+  export type PaymentCorridorCreateInput = {
+    id?: string
+    code: string
+    name: string
+    fromCountry: string
+    toCountry: string
+    fromCurrency: string
+    toCurrency: string
+    collectProviders?: PaymentCorridorCreatecollectProvidersInput | string[]
+    payoutProviders?: PaymentCorridorCreatepayoutProvidersInput | string[]
+    avgTransferTime?: number | null
+    minAmount?: Decimal | DecimalJsLike | number | string | null
+    maxAmount?: Decimal | DecimalJsLike | number | string | null
+    isActive?: boolean
+    isPopular?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentCorridorUncheckedCreateInput = {
+    id?: string
+    code: string
+    name: string
+    fromCountry: string
+    toCountry: string
+    fromCurrency: string
+    toCurrency: string
+    collectProviders?: PaymentCorridorCreatecollectProvidersInput | string[]
+    payoutProviders?: PaymentCorridorCreatepayoutProvidersInput | string[]
+    avgTransferTime?: number | null
+    minAmount?: Decimal | DecimalJsLike | number | string | null
+    maxAmount?: Decimal | DecimalJsLike | number | string | null
+    isActive?: boolean
+    isPopular?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentCorridorUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    fromCountry?: StringFieldUpdateOperationsInput | string
+    toCountry?: StringFieldUpdateOperationsInput | string
+    fromCurrency?: StringFieldUpdateOperationsInput | string
+    toCurrency?: StringFieldUpdateOperationsInput | string
+    collectProviders?: PaymentCorridorUpdatecollectProvidersInput | string[]
+    payoutProviders?: PaymentCorridorUpdatepayoutProvidersInput | string[]
+    avgTransferTime?: NullableIntFieldUpdateOperationsInput | number | null
+    minAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    maxAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isPopular?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentCorridorUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    fromCountry?: StringFieldUpdateOperationsInput | string
+    toCountry?: StringFieldUpdateOperationsInput | string
+    fromCurrency?: StringFieldUpdateOperationsInput | string
+    toCurrency?: StringFieldUpdateOperationsInput | string
+    collectProviders?: PaymentCorridorUpdatecollectProvidersInput | string[]
+    payoutProviders?: PaymentCorridorUpdatepayoutProvidersInput | string[]
+    avgTransferTime?: NullableIntFieldUpdateOperationsInput | number | null
+    minAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    maxAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isPopular?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentCorridorCreateManyInput = {
+    id?: string
+    code: string
+    name: string
+    fromCountry: string
+    toCountry: string
+    fromCurrency: string
+    toCurrency: string
+    collectProviders?: PaymentCorridorCreatecollectProvidersInput | string[]
+    payoutProviders?: PaymentCorridorCreatepayoutProvidersInput | string[]
+    avgTransferTime?: number | null
+    minAmount?: Decimal | DecimalJsLike | number | string | null
+    maxAmount?: Decimal | DecimalJsLike | number | string | null
+    isActive?: boolean
+    isPopular?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentCorridorUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    fromCountry?: StringFieldUpdateOperationsInput | string
+    toCountry?: StringFieldUpdateOperationsInput | string
+    fromCurrency?: StringFieldUpdateOperationsInput | string
+    toCurrency?: StringFieldUpdateOperationsInput | string
+    collectProviders?: PaymentCorridorUpdatecollectProvidersInput | string[]
+    payoutProviders?: PaymentCorridorUpdatepayoutProvidersInput | string[]
+    avgTransferTime?: NullableIntFieldUpdateOperationsInput | number | null
+    minAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    maxAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isPopular?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PaymentCorridorUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    fromCountry?: StringFieldUpdateOperationsInput | string
+    toCountry?: StringFieldUpdateOperationsInput | string
+    fromCurrency?: StringFieldUpdateOperationsInput | string
+    toCurrency?: StringFieldUpdateOperationsInput | string
+    collectProviders?: PaymentCorridorUpdatecollectProvidersInput | string[]
+    payoutProviders?: PaymentCorridorUpdatepayoutProvidersInput | string[]
+    avgTransferTime?: NullableIntFieldUpdateOperationsInput | number | null
+    minAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    maxAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isPopular?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type ProviderTransactionCreateInput = {
     id?: string
     type: $Enums.ProviderTxType
@@ -41241,6 +44201,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkCreateNestedManyWithoutExecutingAgentInput
     decisions?: AgentDecisionCreateNestedManyWithoutAgentInput
     checkpoints?: AgentCheckpointCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutAgentInput
   }
 
   export type AgentUncheckedCreateInput = {
@@ -41266,6 +44227,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutExecutingAgentInput
     decisions?: AgentDecisionUncheckedCreateNestedManyWithoutAgentInput
     checkpoints?: AgentCheckpointUncheckedCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutAgentInput
   }
 
   export type AgentUpdateInput = {
@@ -41291,6 +44253,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUpdateManyWithoutExecutingAgentNestedInput
     decisions?: AgentDecisionUpdateManyWithoutAgentNestedInput
     checkpoints?: AgentCheckpointUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutAgentNestedInput
   }
 
   export type AgentUncheckedUpdateInput = {
@@ -41316,6 +44279,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutExecutingAgentNestedInput
     decisions?: AgentDecisionUncheckedUpdateManyWithoutAgentNestedInput
     checkpoints?: AgentCheckpointUncheckedUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutAgentNestedInput
   }
 
   export type AgentCreateManyInput = {
@@ -42267,6 +45231,148 @@ export namespace Prisma {
     revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type IntegrationKeyCreateInput = {
+    id?: string
+    name: string
+    keyHash: string
+    prefix: string
+    description?: string | null
+    allowedCorridors?: IntegrationKeyCreateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyCreateallowedProvidersInput | string[]
+    rateLimit?: number | null
+    dailyLimit?: number | null
+    lastUsedAt?: Date | string | null
+    usageCount?: number
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    revokedAt?: Date | string | null
+    organization: OrganizationCreateNestedOneWithoutIntegrationKeysInput
+    agent: AgentCreateNestedOneWithoutIntegrationKeysInput
+    paymentLinks?: PaymentLinkCreateNestedManyWithoutIntegrationKeyInput
+  }
+
+  export type IntegrationKeyUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    agentId: string
+    name: string
+    keyHash: string
+    prefix: string
+    description?: string | null
+    allowedCorridors?: IntegrationKeyCreateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyCreateallowedProvidersInput | string[]
+    rateLimit?: number | null
+    dailyLimit?: number | null
+    lastUsedAt?: Date | string | null
+    usageCount?: number
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    revokedAt?: Date | string | null
+    paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutIntegrationKeyInput
+  }
+
+  export type IntegrationKeyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutIntegrationKeysNestedInput
+    agent?: AgentUpdateOneRequiredWithoutIntegrationKeysNestedInput
+    paymentLinks?: PaymentLinkUpdateManyWithoutIntegrationKeyNestedInput
+  }
+
+  export type IntegrationKeyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutIntegrationKeyNestedInput
+  }
+
+  export type IntegrationKeyCreateManyInput = {
+    id?: string
+    organizationId: string
+    agentId: string
+    name: string
+    keyHash: string
+    prefix: string
+    description?: string | null
+    allowedCorridors?: IntegrationKeyCreateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyCreateallowedProvidersInput | string[]
+    rateLimit?: number | null
+    dailyLimit?: number | null
+    lastUsedAt?: Date | string | null
+    usageCount?: number
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    revokedAt?: Date | string | null
+  }
+
+  export type IntegrationKeyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type IntegrationKeyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type OrganizationUserCreateInput = {
     id?: string
     role: $Enums.UserRole
@@ -42478,6 +45584,12 @@ export namespace Prisma {
     none?: ApiKeyWhereInput
   }
 
+  export type IntegrationKeyListRelationFilter = {
+    every?: IntegrationKeyWhereInput
+    some?: IntegrationKeyWhereInput
+    none?: IntegrationKeyWhereInput
+  }
+
   export type WebhookListRelationFilter = {
     every?: WebhookWhereInput
     some?: WebhookWhereInput
@@ -42530,6 +45642,10 @@ export namespace Prisma {
   }
 
   export type ApiKeyOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type IntegrationKeyOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -43677,6 +46793,11 @@ export namespace Prisma {
     isNot?: AgentWhereInput
   }
 
+  export type IntegrationKeyRelationFilter = {
+    is?: IntegrationKeyWhereInput
+    isNot?: IntegrationKeyWhereInput
+  }
+
   export type PriceNullableRelationFilter = {
     is?: PriceWhereInput | null
     isNot?: PriceWhereInput | null
@@ -43687,6 +46808,7 @@ export namespace Prisma {
     organizationId?: SortOrder
     createdById?: SortOrder
     executingAgentId?: SortOrder
+    integrationKeyId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     referenceId?: SortOrder
@@ -43722,6 +46844,7 @@ export namespace Prisma {
     organizationId?: SortOrder
     createdById?: SortOrder
     executingAgentId?: SortOrder
+    integrationKeyId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     referenceId?: SortOrder
@@ -43748,6 +46871,7 @@ export namespace Prisma {
     organizationId?: SortOrder
     createdById?: SortOrder
     executingAgentId?: SortOrder
+    integrationKeyId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     referenceId?: SortOrder
@@ -44049,6 +47173,8 @@ export namespace Prisma {
     supportedCurrencies?: SortOrder
     paymentMethods?: SortOrder
     features?: SortOrder
+    canCollect?: SortOrder
+    canPayout?: SortOrder
     isActive?: SortOrder
     healthStatus?: SortOrder
     lastHealthCheck?: SortOrder
@@ -44066,6 +47192,8 @@ export namespace Prisma {
     code?: SortOrder
     name?: SortOrder
     type?: SortOrder
+    canCollect?: SortOrder
+    canPayout?: SortOrder
     isActive?: SortOrder
     healthStatus?: SortOrder
     lastHealthCheck?: SortOrder
@@ -44078,6 +47206,8 @@ export namespace Prisma {
     code?: SortOrder
     name?: SortOrder
     type?: SortOrder
+    canCollect?: SortOrder
+    canPayout?: SortOrder
     isActive?: SortOrder
     healthStatus?: SortOrder
     lastHealthCheck?: SortOrder
@@ -44247,6 +47377,76 @@ export namespace Prisma {
     maxAmount?: SortOrder
     estimatedTime?: SortOrder
     priority?: SortOrder
+  }
+
+  export type PaymentCorridorFromCountryToCountryCompoundUniqueInput = {
+    fromCountry: string
+    toCountry: string
+  }
+
+  export type PaymentCorridorCountOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    fromCountry?: SortOrder
+    toCountry?: SortOrder
+    fromCurrency?: SortOrder
+    toCurrency?: SortOrder
+    collectProviders?: SortOrder
+    payoutProviders?: SortOrder
+    avgTransferTime?: SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrder
+    isActive?: SortOrder
+    isPopular?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentCorridorAvgOrderByAggregateInput = {
+    avgTransferTime?: SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrder
+  }
+
+  export type PaymentCorridorMaxOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    fromCountry?: SortOrder
+    toCountry?: SortOrder
+    fromCurrency?: SortOrder
+    toCurrency?: SortOrder
+    avgTransferTime?: SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrder
+    isActive?: SortOrder
+    isPopular?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentCorridorMinOrderByAggregateInput = {
+    id?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    fromCountry?: SortOrder
+    toCountry?: SortOrder
+    fromCurrency?: SortOrder
+    toCurrency?: SortOrder
+    avgTransferTime?: SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrder
+    isActive?: SortOrder
+    isPopular?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PaymentCorridorSumOrderByAggregateInput = {
+    avgTransferTime?: SortOrder
+    minAmount?: SortOrder
+    maxAmount?: SortOrder
   }
 
   export type EnumProviderTxTypeFilter<$PrismaModel = never> = {
@@ -44951,6 +48151,74 @@ export namespace Prisma {
     rateLimit?: SortOrder
   }
 
+  export type IntegrationKeyCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    agentId?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    prefix?: SortOrder
+    description?: SortOrder
+    allowedCorridors?: SortOrder
+    allowedProviders?: SortOrder
+    rateLimit?: SortOrder
+    dailyLimit?: SortOrder
+    lastUsedAt?: SortOrder
+    usageCount?: SortOrder
+    isActive?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    revokedAt?: SortOrder
+  }
+
+  export type IntegrationKeyAvgOrderByAggregateInput = {
+    rateLimit?: SortOrder
+    dailyLimit?: SortOrder
+    usageCount?: SortOrder
+  }
+
+  export type IntegrationKeyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    agentId?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    prefix?: SortOrder
+    description?: SortOrder
+    rateLimit?: SortOrder
+    dailyLimit?: SortOrder
+    lastUsedAt?: SortOrder
+    usageCount?: SortOrder
+    isActive?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    revokedAt?: SortOrder
+  }
+
+  export type IntegrationKeyMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    agentId?: SortOrder
+    name?: SortOrder
+    keyHash?: SortOrder
+    prefix?: SortOrder
+    description?: SortOrder
+    rateLimit?: SortOrder
+    dailyLimit?: SortOrder
+    lastUsedAt?: SortOrder
+    usageCount?: SortOrder
+    isActive?: SortOrder
+    expiresAt?: SortOrder
+    createdAt?: SortOrder
+    revokedAt?: SortOrder
+  }
+
+  export type IntegrationKeySumOrderByAggregateInput = {
+    rateLimit?: SortOrder
+    dailyLimit?: SortOrder
+    usageCount?: SortOrder
+  }
+
   export type EnumUserRoleFilter<$PrismaModel = never> = {
     equals?: $Enums.UserRole | EnumUserRoleFieldRefInput<$PrismaModel>
     in?: $Enums.UserRole[] | ListEnumUserRoleFieldRefInput<$PrismaModel>
@@ -45063,6 +48331,13 @@ export namespace Prisma {
     connect?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
   }
 
+  export type IntegrationKeyCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<IntegrationKeyCreateWithoutOrganizationInput, IntegrationKeyUncheckedCreateWithoutOrganizationInput> | IntegrationKeyCreateWithoutOrganizationInput[] | IntegrationKeyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutOrganizationInput | IntegrationKeyCreateOrConnectWithoutOrganizationInput[]
+    createMany?: IntegrationKeyCreateManyOrganizationInputEnvelope
+    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+  }
+
   export type WebhookCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<WebhookCreateWithoutOrganizationInput, WebhookUncheckedCreateWithoutOrganizationInput> | WebhookCreateWithoutOrganizationInput[] | WebhookUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: WebhookCreateOrConnectWithoutOrganizationInput | WebhookCreateOrConnectWithoutOrganizationInput[]
@@ -45138,6 +48413,13 @@ export namespace Prisma {
     connectOrCreate?: ApiKeyCreateOrConnectWithoutOrganizationInput | ApiKeyCreateOrConnectWithoutOrganizationInput[]
     createMany?: ApiKeyCreateManyOrganizationInputEnvelope
     connect?: ApiKeyWhereUniqueInput | ApiKeyWhereUniqueInput[]
+  }
+
+  export type IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<IntegrationKeyCreateWithoutOrganizationInput, IntegrationKeyUncheckedCreateWithoutOrganizationInput> | IntegrationKeyCreateWithoutOrganizationInput[] | IntegrationKeyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutOrganizationInput | IntegrationKeyCreateOrConnectWithoutOrganizationInput[]
+    createMany?: IntegrationKeyCreateManyOrganizationInputEnvelope
+    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
   }
 
   export type WebhookUncheckedCreateNestedManyWithoutOrganizationInput = {
@@ -45293,6 +48575,20 @@ export namespace Prisma {
     deleteMany?: ApiKeyScalarWhereInput | ApiKeyScalarWhereInput[]
   }
 
+  export type IntegrationKeyUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<IntegrationKeyCreateWithoutOrganizationInput, IntegrationKeyUncheckedCreateWithoutOrganizationInput> | IntegrationKeyCreateWithoutOrganizationInput[] | IntegrationKeyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutOrganizationInput | IntegrationKeyCreateOrConnectWithoutOrganizationInput[]
+    upsert?: IntegrationKeyUpsertWithWhereUniqueWithoutOrganizationInput | IntegrationKeyUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: IntegrationKeyCreateManyOrganizationInputEnvelope
+    set?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    disconnect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    delete?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    update?: IntegrationKeyUpdateWithWhereUniqueWithoutOrganizationInput | IntegrationKeyUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: IntegrationKeyUpdateManyWithWhereWithoutOrganizationInput | IntegrationKeyUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: IntegrationKeyScalarWhereInput | IntegrationKeyScalarWhereInput[]
+  }
+
   export type WebhookUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<WebhookCreateWithoutOrganizationInput, WebhookUncheckedCreateWithoutOrganizationInput> | WebhookCreateWithoutOrganizationInput[] | WebhookUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: WebhookCreateOrConnectWithoutOrganizationInput | WebhookCreateOrConnectWithoutOrganizationInput[]
@@ -45445,6 +48741,20 @@ export namespace Prisma {
     update?: ApiKeyUpdateWithWhereUniqueWithoutOrganizationInput | ApiKeyUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: ApiKeyUpdateManyWithWhereWithoutOrganizationInput | ApiKeyUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: ApiKeyScalarWhereInput | ApiKeyScalarWhereInput[]
+  }
+
+  export type IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<IntegrationKeyCreateWithoutOrganizationInput, IntegrationKeyUncheckedCreateWithoutOrganizationInput> | IntegrationKeyCreateWithoutOrganizationInput[] | IntegrationKeyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutOrganizationInput | IntegrationKeyCreateOrConnectWithoutOrganizationInput[]
+    upsert?: IntegrationKeyUpsertWithWhereUniqueWithoutOrganizationInput | IntegrationKeyUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: IntegrationKeyCreateManyOrganizationInputEnvelope
+    set?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    disconnect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    delete?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    update?: IntegrationKeyUpdateWithWhereUniqueWithoutOrganizationInput | IntegrationKeyUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: IntegrationKeyUpdateManyWithWhereWithoutOrganizationInput | IntegrationKeyUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: IntegrationKeyScalarWhereInput | IntegrationKeyScalarWhereInput[]
   }
 
   export type WebhookUncheckedUpdateManyWithoutOrganizationNestedInput = {
@@ -46486,6 +49796,12 @@ export namespace Prisma {
     connect?: AgentWhereUniqueInput
   }
 
+  export type IntegrationKeyCreateNestedOneWithoutPaymentLinksInput = {
+    create?: XOR<IntegrationKeyCreateWithoutPaymentLinksInput, IntegrationKeyUncheckedCreateWithoutPaymentLinksInput>
+    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutPaymentLinksInput
+    connect?: IntegrationKeyWhereUniqueInput
+  }
+
   export type PriceCreateNestedOneWithoutPaymentLinksInput = {
     create?: XOR<PriceCreateWithoutPaymentLinksInput, PriceUncheckedCreateWithoutPaymentLinksInput>
     connectOrCreate?: PriceCreateOrConnectWithoutPaymentLinksInput
@@ -46540,6 +49856,14 @@ export namespace Prisma {
     upsert?: AgentUpsertWithoutPaymentLinksInput
     connect?: AgentWhereUniqueInput
     update?: XOR<XOR<AgentUpdateToOneWithWhereWithoutPaymentLinksInput, AgentUpdateWithoutPaymentLinksInput>, AgentUncheckedUpdateWithoutPaymentLinksInput>
+  }
+
+  export type IntegrationKeyUpdateOneRequiredWithoutPaymentLinksNestedInput = {
+    create?: XOR<IntegrationKeyCreateWithoutPaymentLinksInput, IntegrationKeyUncheckedCreateWithoutPaymentLinksInput>
+    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutPaymentLinksInput
+    upsert?: IntegrationKeyUpsertWithoutPaymentLinksInput
+    connect?: IntegrationKeyWhereUniqueInput
+    update?: XOR<XOR<IntegrationKeyUpdateToOneWithWhereWithoutPaymentLinksInput, IntegrationKeyUpdateWithoutPaymentLinksInput>, IntegrationKeyUncheckedUpdateWithoutPaymentLinksInput>
   }
 
   export type PriceUpdateOneWithoutPaymentLinksNestedInput = {
@@ -47058,6 +50382,24 @@ export namespace Prisma {
     update?: XOR<XOR<ProviderUpdateToOneWithWhereWithoutRoutesInput, ProviderUpdateWithoutRoutesInput>, ProviderUncheckedUpdateWithoutRoutesInput>
   }
 
+  export type PaymentCorridorCreatecollectProvidersInput = {
+    set: string[]
+  }
+
+  export type PaymentCorridorCreatepayoutProvidersInput = {
+    set: string[]
+  }
+
+  export type PaymentCorridorUpdatecollectProvidersInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type PaymentCorridorUpdatepayoutProvidersInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
   export type PaymentOrderCreateNestedOneWithoutProviderTransactionsInput = {
     create?: XOR<PaymentOrderCreateWithoutProviderTransactionsInput, PaymentOrderUncheckedCreateWithoutProviderTransactionsInput>
     connectOrCreate?: PaymentOrderCreateOrConnectWithoutProviderTransactionsInput
@@ -47135,6 +50477,13 @@ export namespace Prisma {
     connect?: AgentCheckpointWhereUniqueInput | AgentCheckpointWhereUniqueInput[]
   }
 
+  export type IntegrationKeyCreateNestedManyWithoutAgentInput = {
+    create?: XOR<IntegrationKeyCreateWithoutAgentInput, IntegrationKeyUncheckedCreateWithoutAgentInput> | IntegrationKeyCreateWithoutAgentInput[] | IntegrationKeyUncheckedCreateWithoutAgentInput[]
+    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutAgentInput | IntegrationKeyCreateOrConnectWithoutAgentInput[]
+    createMany?: IntegrationKeyCreateManyAgentInputEnvelope
+    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+  }
+
   export type PaymentLinkUncheckedCreateNestedManyWithoutExecutingAgentInput = {
     create?: XOR<PaymentLinkCreateWithoutExecutingAgentInput, PaymentLinkUncheckedCreateWithoutExecutingAgentInput> | PaymentLinkCreateWithoutExecutingAgentInput[] | PaymentLinkUncheckedCreateWithoutExecutingAgentInput[]
     connectOrCreate?: PaymentLinkCreateOrConnectWithoutExecutingAgentInput | PaymentLinkCreateOrConnectWithoutExecutingAgentInput[]
@@ -47154,6 +50503,13 @@ export namespace Prisma {
     connectOrCreate?: AgentCheckpointCreateOrConnectWithoutAgentInput | AgentCheckpointCreateOrConnectWithoutAgentInput[]
     createMany?: AgentCheckpointCreateManyAgentInputEnvelope
     connect?: AgentCheckpointWhereUniqueInput | AgentCheckpointWhereUniqueInput[]
+  }
+
+  export type IntegrationKeyUncheckedCreateNestedManyWithoutAgentInput = {
+    create?: XOR<IntegrationKeyCreateWithoutAgentInput, IntegrationKeyUncheckedCreateWithoutAgentInput> | IntegrationKeyCreateWithoutAgentInput[] | IntegrationKeyUncheckedCreateWithoutAgentInput[]
+    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutAgentInput | IntegrationKeyCreateOrConnectWithoutAgentInput[]
+    createMany?: IntegrationKeyCreateManyAgentInputEnvelope
+    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
   }
 
   export type EnumAgentTypeFieldUpdateOperationsInput = {
@@ -47235,6 +50591,20 @@ export namespace Prisma {
     deleteMany?: AgentCheckpointScalarWhereInput | AgentCheckpointScalarWhereInput[]
   }
 
+  export type IntegrationKeyUpdateManyWithoutAgentNestedInput = {
+    create?: XOR<IntegrationKeyCreateWithoutAgentInput, IntegrationKeyUncheckedCreateWithoutAgentInput> | IntegrationKeyCreateWithoutAgentInput[] | IntegrationKeyUncheckedCreateWithoutAgentInput[]
+    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutAgentInput | IntegrationKeyCreateOrConnectWithoutAgentInput[]
+    upsert?: IntegrationKeyUpsertWithWhereUniqueWithoutAgentInput | IntegrationKeyUpsertWithWhereUniqueWithoutAgentInput[]
+    createMany?: IntegrationKeyCreateManyAgentInputEnvelope
+    set?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    disconnect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    delete?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    update?: IntegrationKeyUpdateWithWhereUniqueWithoutAgentInput | IntegrationKeyUpdateWithWhereUniqueWithoutAgentInput[]
+    updateMany?: IntegrationKeyUpdateManyWithWhereWithoutAgentInput | IntegrationKeyUpdateManyWithWhereWithoutAgentInput[]
+    deleteMany?: IntegrationKeyScalarWhereInput | IntegrationKeyScalarWhereInput[]
+  }
+
   export type PaymentLinkUncheckedUpdateManyWithoutExecutingAgentNestedInput = {
     create?: XOR<PaymentLinkCreateWithoutExecutingAgentInput, PaymentLinkUncheckedCreateWithoutExecutingAgentInput> | PaymentLinkCreateWithoutExecutingAgentInput[] | PaymentLinkUncheckedCreateWithoutExecutingAgentInput[]
     connectOrCreate?: PaymentLinkCreateOrConnectWithoutExecutingAgentInput | PaymentLinkCreateOrConnectWithoutExecutingAgentInput[]
@@ -47275,6 +50645,20 @@ export namespace Prisma {
     update?: AgentCheckpointUpdateWithWhereUniqueWithoutAgentInput | AgentCheckpointUpdateWithWhereUniqueWithoutAgentInput[]
     updateMany?: AgentCheckpointUpdateManyWithWhereWithoutAgentInput | AgentCheckpointUpdateManyWithWhereWithoutAgentInput[]
     deleteMany?: AgentCheckpointScalarWhereInput | AgentCheckpointScalarWhereInput[]
+  }
+
+  export type IntegrationKeyUncheckedUpdateManyWithoutAgentNestedInput = {
+    create?: XOR<IntegrationKeyCreateWithoutAgentInput, IntegrationKeyUncheckedCreateWithoutAgentInput> | IntegrationKeyCreateWithoutAgentInput[] | IntegrationKeyUncheckedCreateWithoutAgentInput[]
+    connectOrCreate?: IntegrationKeyCreateOrConnectWithoutAgentInput | IntegrationKeyCreateOrConnectWithoutAgentInput[]
+    upsert?: IntegrationKeyUpsertWithWhereUniqueWithoutAgentInput | IntegrationKeyUpsertWithWhereUniqueWithoutAgentInput[]
+    createMany?: IntegrationKeyCreateManyAgentInputEnvelope
+    set?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    disconnect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    delete?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    connect?: IntegrationKeyWhereUniqueInput | IntegrationKeyWhereUniqueInput[]
+    update?: IntegrationKeyUpdateWithWhereUniqueWithoutAgentInput | IntegrationKeyUpdateWithWhereUniqueWithoutAgentInput[]
+    updateMany?: IntegrationKeyUpdateManyWithWhereWithoutAgentInput | IntegrationKeyUpdateManyWithWhereWithoutAgentInput[]
+    deleteMany?: IntegrationKeyScalarWhereInput | IntegrationKeyScalarWhereInput[]
   }
 
   export type AgentCreateNestedOneWithoutDecisionsInput = {
@@ -47573,6 +50957,94 @@ export namespace Prisma {
     upsert?: OrganizationUpsertWithoutApiKeysInput
     connect?: OrganizationWhereUniqueInput
     update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutApiKeysInput, OrganizationUpdateWithoutApiKeysInput>, OrganizationUncheckedUpdateWithoutApiKeysInput>
+  }
+
+  export type IntegrationKeyCreateallowedCorridorsInput = {
+    set: string[]
+  }
+
+  export type IntegrationKeyCreateallowedProvidersInput = {
+    set: string[]
+  }
+
+  export type OrganizationCreateNestedOneWithoutIntegrationKeysInput = {
+    create?: XOR<OrganizationCreateWithoutIntegrationKeysInput, OrganizationUncheckedCreateWithoutIntegrationKeysInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutIntegrationKeysInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type AgentCreateNestedOneWithoutIntegrationKeysInput = {
+    create?: XOR<AgentCreateWithoutIntegrationKeysInput, AgentUncheckedCreateWithoutIntegrationKeysInput>
+    connectOrCreate?: AgentCreateOrConnectWithoutIntegrationKeysInput
+    connect?: AgentWhereUniqueInput
+  }
+
+  export type PaymentLinkCreateNestedManyWithoutIntegrationKeyInput = {
+    create?: XOR<PaymentLinkCreateWithoutIntegrationKeyInput, PaymentLinkUncheckedCreateWithoutIntegrationKeyInput> | PaymentLinkCreateWithoutIntegrationKeyInput[] | PaymentLinkUncheckedCreateWithoutIntegrationKeyInput[]
+    connectOrCreate?: PaymentLinkCreateOrConnectWithoutIntegrationKeyInput | PaymentLinkCreateOrConnectWithoutIntegrationKeyInput[]
+    createMany?: PaymentLinkCreateManyIntegrationKeyInputEnvelope
+    connect?: PaymentLinkWhereUniqueInput | PaymentLinkWhereUniqueInput[]
+  }
+
+  export type PaymentLinkUncheckedCreateNestedManyWithoutIntegrationKeyInput = {
+    create?: XOR<PaymentLinkCreateWithoutIntegrationKeyInput, PaymentLinkUncheckedCreateWithoutIntegrationKeyInput> | PaymentLinkCreateWithoutIntegrationKeyInput[] | PaymentLinkUncheckedCreateWithoutIntegrationKeyInput[]
+    connectOrCreate?: PaymentLinkCreateOrConnectWithoutIntegrationKeyInput | PaymentLinkCreateOrConnectWithoutIntegrationKeyInput[]
+    createMany?: PaymentLinkCreateManyIntegrationKeyInputEnvelope
+    connect?: PaymentLinkWhereUniqueInput | PaymentLinkWhereUniqueInput[]
+  }
+
+  export type IntegrationKeyUpdateallowedCorridorsInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type IntegrationKeyUpdateallowedProvidersInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutIntegrationKeysNestedInput = {
+    create?: XOR<OrganizationCreateWithoutIntegrationKeysInput, OrganizationUncheckedCreateWithoutIntegrationKeysInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutIntegrationKeysInput
+    upsert?: OrganizationUpsertWithoutIntegrationKeysInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutIntegrationKeysInput, OrganizationUpdateWithoutIntegrationKeysInput>, OrganizationUncheckedUpdateWithoutIntegrationKeysInput>
+  }
+
+  export type AgentUpdateOneRequiredWithoutIntegrationKeysNestedInput = {
+    create?: XOR<AgentCreateWithoutIntegrationKeysInput, AgentUncheckedCreateWithoutIntegrationKeysInput>
+    connectOrCreate?: AgentCreateOrConnectWithoutIntegrationKeysInput
+    upsert?: AgentUpsertWithoutIntegrationKeysInput
+    connect?: AgentWhereUniqueInput
+    update?: XOR<XOR<AgentUpdateToOneWithWhereWithoutIntegrationKeysInput, AgentUpdateWithoutIntegrationKeysInput>, AgentUncheckedUpdateWithoutIntegrationKeysInput>
+  }
+
+  export type PaymentLinkUpdateManyWithoutIntegrationKeyNestedInput = {
+    create?: XOR<PaymentLinkCreateWithoutIntegrationKeyInput, PaymentLinkUncheckedCreateWithoutIntegrationKeyInput> | PaymentLinkCreateWithoutIntegrationKeyInput[] | PaymentLinkUncheckedCreateWithoutIntegrationKeyInput[]
+    connectOrCreate?: PaymentLinkCreateOrConnectWithoutIntegrationKeyInput | PaymentLinkCreateOrConnectWithoutIntegrationKeyInput[]
+    upsert?: PaymentLinkUpsertWithWhereUniqueWithoutIntegrationKeyInput | PaymentLinkUpsertWithWhereUniqueWithoutIntegrationKeyInput[]
+    createMany?: PaymentLinkCreateManyIntegrationKeyInputEnvelope
+    set?: PaymentLinkWhereUniqueInput | PaymentLinkWhereUniqueInput[]
+    disconnect?: PaymentLinkWhereUniqueInput | PaymentLinkWhereUniqueInput[]
+    delete?: PaymentLinkWhereUniqueInput | PaymentLinkWhereUniqueInput[]
+    connect?: PaymentLinkWhereUniqueInput | PaymentLinkWhereUniqueInput[]
+    update?: PaymentLinkUpdateWithWhereUniqueWithoutIntegrationKeyInput | PaymentLinkUpdateWithWhereUniqueWithoutIntegrationKeyInput[]
+    updateMany?: PaymentLinkUpdateManyWithWhereWithoutIntegrationKeyInput | PaymentLinkUpdateManyWithWhereWithoutIntegrationKeyInput[]
+    deleteMany?: PaymentLinkScalarWhereInput | PaymentLinkScalarWhereInput[]
+  }
+
+  export type PaymentLinkUncheckedUpdateManyWithoutIntegrationKeyNestedInput = {
+    create?: XOR<PaymentLinkCreateWithoutIntegrationKeyInput, PaymentLinkUncheckedCreateWithoutIntegrationKeyInput> | PaymentLinkCreateWithoutIntegrationKeyInput[] | PaymentLinkUncheckedCreateWithoutIntegrationKeyInput[]
+    connectOrCreate?: PaymentLinkCreateOrConnectWithoutIntegrationKeyInput | PaymentLinkCreateOrConnectWithoutIntegrationKeyInput[]
+    upsert?: PaymentLinkUpsertWithWhereUniqueWithoutIntegrationKeyInput | PaymentLinkUpsertWithWhereUniqueWithoutIntegrationKeyInput[]
+    createMany?: PaymentLinkCreateManyIntegrationKeyInputEnvelope
+    set?: PaymentLinkWhereUniqueInput | PaymentLinkWhereUniqueInput[]
+    disconnect?: PaymentLinkWhereUniqueInput | PaymentLinkWhereUniqueInput[]
+    delete?: PaymentLinkWhereUniqueInput | PaymentLinkWhereUniqueInput[]
+    connect?: PaymentLinkWhereUniqueInput | PaymentLinkWhereUniqueInput[]
+    update?: PaymentLinkUpdateWithWhereUniqueWithoutIntegrationKeyInput | PaymentLinkUpdateWithWhereUniqueWithoutIntegrationKeyInput[]
+    updateMany?: PaymentLinkUpdateManyWithWhereWithoutIntegrationKeyInput | PaymentLinkUpdateManyWithWhereWithoutIntegrationKeyInput[]
+    deleteMany?: PaymentLinkScalarWhereInput | PaymentLinkScalarWhereInput[]
   }
 
   export type OrganizationUserCreatepermissionsInput = {
@@ -48505,6 +51977,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     createdBy: UserCreateNestedOneWithoutPaymentLinksInput
     executingAgent: AgentCreateNestedOneWithoutPaymentLinksInput
+    integrationKey: IntegrationKeyCreateNestedOneWithoutPaymentLinksInput
     price?: PriceCreateNestedOneWithoutPaymentLinksInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutPaymentLinkInput
   }
@@ -48513,6 +51986,7 @@ export namespace Prisma {
     id?: string
     createdById: string
     executingAgentId: string
+    integrationKeyId: string
     title: string
     description?: string | null
     referenceId?: string | null
@@ -48712,6 +52186,56 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type IntegrationKeyCreateWithoutOrganizationInput = {
+    id?: string
+    name: string
+    keyHash: string
+    prefix: string
+    description?: string | null
+    allowedCorridors?: IntegrationKeyCreateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyCreateallowedProvidersInput | string[]
+    rateLimit?: number | null
+    dailyLimit?: number | null
+    lastUsedAt?: Date | string | null
+    usageCount?: number
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    revokedAt?: Date | string | null
+    agent: AgentCreateNestedOneWithoutIntegrationKeysInput
+    paymentLinks?: PaymentLinkCreateNestedManyWithoutIntegrationKeyInput
+  }
+
+  export type IntegrationKeyUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    agentId: string
+    name: string
+    keyHash: string
+    prefix: string
+    description?: string | null
+    allowedCorridors?: IntegrationKeyCreateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyCreateallowedProvidersInput | string[]
+    rateLimit?: number | null
+    dailyLimit?: number | null
+    lastUsedAt?: Date | string | null
+    usageCount?: number
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    revokedAt?: Date | string | null
+    paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutIntegrationKeyInput
+  }
+
+  export type IntegrationKeyCreateOrConnectWithoutOrganizationInput = {
+    where: IntegrationKeyWhereUniqueInput
+    create: XOR<IntegrationKeyCreateWithoutOrganizationInput, IntegrationKeyUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type IntegrationKeyCreateManyOrganizationInputEnvelope = {
+    data: IntegrationKeyCreateManyOrganizationInput | IntegrationKeyCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WebhookCreateWithoutOrganizationInput = {
     id?: string
     url: string
@@ -48808,6 +52332,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkCreateNestedManyWithoutExecutingAgentInput
     decisions?: AgentDecisionCreateNestedManyWithoutAgentInput
     checkpoints?: AgentCheckpointCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutAgentInput
   }
 
   export type AgentUncheckedCreateWithoutOrganizationInput = {
@@ -48832,6 +52357,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutExecutingAgentInput
     decisions?: AgentDecisionUncheckedCreateNestedManyWithoutAgentInput
     checkpoints?: AgentCheckpointUncheckedCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutAgentInput
   }
 
   export type AgentCreateOrConnectWithoutOrganizationInput = {
@@ -49002,6 +52528,7 @@ export namespace Prisma {
     organizationId?: StringFilter<"PaymentLink"> | string
     createdById?: StringFilter<"PaymentLink"> | string
     executingAgentId?: StringFilter<"PaymentLink"> | string
+    integrationKeyId?: StringFilter<"PaymentLink"> | string
     title?: StringFilter<"PaymentLink"> | string
     description?: StringNullableFilter<"PaymentLink"> | string | null
     referenceId?: StringNullableFilter<"PaymentLink"> | string | null
@@ -49146,6 +52673,45 @@ export namespace Prisma {
     lastUsedAt?: DateTimeNullableFilter<"ApiKey"> | Date | string | null
     createdAt?: DateTimeFilter<"ApiKey"> | Date | string
     revokedAt?: DateTimeNullableFilter<"ApiKey"> | Date | string | null
+  }
+
+  export type IntegrationKeyUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: IntegrationKeyWhereUniqueInput
+    update: XOR<IntegrationKeyUpdateWithoutOrganizationInput, IntegrationKeyUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<IntegrationKeyCreateWithoutOrganizationInput, IntegrationKeyUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type IntegrationKeyUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: IntegrationKeyWhereUniqueInput
+    data: XOR<IntegrationKeyUpdateWithoutOrganizationInput, IntegrationKeyUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type IntegrationKeyUpdateManyWithWhereWithoutOrganizationInput = {
+    where: IntegrationKeyScalarWhereInput
+    data: XOR<IntegrationKeyUpdateManyMutationInput, IntegrationKeyUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type IntegrationKeyScalarWhereInput = {
+    AND?: IntegrationKeyScalarWhereInput | IntegrationKeyScalarWhereInput[]
+    OR?: IntegrationKeyScalarWhereInput[]
+    NOT?: IntegrationKeyScalarWhereInput | IntegrationKeyScalarWhereInput[]
+    id?: StringFilter<"IntegrationKey"> | string
+    organizationId?: StringFilter<"IntegrationKey"> | string
+    agentId?: StringFilter<"IntegrationKey"> | string
+    name?: StringFilter<"IntegrationKey"> | string
+    keyHash?: StringFilter<"IntegrationKey"> | string
+    prefix?: StringFilter<"IntegrationKey"> | string
+    description?: StringNullableFilter<"IntegrationKey"> | string | null
+    allowedCorridors?: StringNullableListFilter<"IntegrationKey">
+    allowedProviders?: StringNullableListFilter<"IntegrationKey">
+    rateLimit?: IntNullableFilter<"IntegrationKey"> | number | null
+    dailyLimit?: IntNullableFilter<"IntegrationKey"> | number | null
+    lastUsedAt?: DateTimeNullableFilter<"IntegrationKey"> | Date | string | null
+    usageCount?: IntFilter<"IntegrationKey"> | number
+    isActive?: BoolFilter<"IntegrationKey"> | boolean
+    expiresAt?: DateTimeNullableFilter<"IntegrationKey"> | Date | string | null
+    createdAt?: DateTimeFilter<"IntegrationKey"> | Date | string
+    revokedAt?: DateTimeNullableFilter<"IntegrationKey"> | Date | string | null
   }
 
   export type WebhookUpsertWithWhereUniqueWithoutOrganizationInput = {
@@ -49403,6 +52969,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutPaymentLinksInput
     executingAgent: AgentCreateNestedOneWithoutPaymentLinksInput
+    integrationKey: IntegrationKeyCreateNestedOneWithoutPaymentLinksInput
     price?: PriceCreateNestedOneWithoutPaymentLinksInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutPaymentLinkInput
   }
@@ -49411,6 +52978,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     executingAgentId: string
+    integrationKeyId: string
     title: string
     description?: string | null
     referenceId?: string | null
@@ -49679,6 +53247,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
     agents?: AgentCreateNestedManyWithoutOrganizationInput
@@ -49706,6 +53275,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
     agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -49935,6 +53505,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUpdateManyWithoutOrganizationNestedInput
@@ -49962,6 +53533,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -50527,6 +54099,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
     agents?: AgentCreateNestedManyWithoutOrganizationInput
@@ -50554,6 +54127,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
     agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -50632,6 +54206,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkCreateNestedManyWithoutExecutingAgentInput
     decisions?: AgentDecisionCreateNestedManyWithoutAgentInput
     checkpoints?: AgentCheckpointCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutAgentInput
   }
 
   export type AgentUncheckedCreateWithoutAgentWalletInput = {
@@ -50656,6 +54231,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutExecutingAgentInput
     decisions?: AgentDecisionUncheckedCreateNestedManyWithoutAgentInput
     checkpoints?: AgentCheckpointUncheckedCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutAgentInput
   }
 
   export type AgentCreateOrConnectWithoutAgentWalletInput = {
@@ -50829,6 +54405,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUpdateManyWithoutOrganizationNestedInput
@@ -50856,6 +54433,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -50927,6 +54505,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUpdateManyWithoutExecutingAgentNestedInput
     decisions?: AgentDecisionUpdateManyWithoutAgentNestedInput
     checkpoints?: AgentCheckpointUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutAgentNestedInput
   }
 
   export type AgentUncheckedUpdateWithoutAgentWalletInput = {
@@ -50951,6 +54530,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutExecutingAgentNestedInput
     decisions?: AgentDecisionUncheckedUpdateManyWithoutAgentNestedInput
     checkpoints?: AgentCheckpointUncheckedUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutAgentNestedInput
   }
 
   export type BlockchainTransactionUpsertWithWhereUniqueWithoutWalletInput = {
@@ -51543,6 +55123,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
     agents?: AgentCreateNestedManyWithoutOrganizationInput
@@ -51570,6 +55151,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
     agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -51655,6 +55237,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUpdateManyWithoutOrganizationNestedInput
@@ -51682,6 +55265,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -51806,6 +55390,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutPaymentLinksInput
     createdBy: UserCreateNestedOneWithoutPaymentLinksInput
     executingAgent: AgentCreateNestedOneWithoutPaymentLinksInput
+    integrationKey: IntegrationKeyCreateNestedOneWithoutPaymentLinksInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutPaymentLinkInput
   }
 
@@ -51814,6 +55399,7 @@ export namespace Prisma {
     organizationId: string
     createdById: string
     executingAgentId: string
+    integrationKeyId: string
     title: string
     description?: string | null
     referenceId?: string | null
@@ -51939,6 +55525,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
     agents?: AgentCreateNestedManyWithoutOrganizationInput
@@ -51966,6 +55553,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
     agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -52039,6 +55627,7 @@ export namespace Prisma {
     agentWallet?: WalletCreateNestedOneWithoutAgentInput
     decisions?: AgentDecisionCreateNestedManyWithoutAgentInput
     checkpoints?: AgentCheckpointCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutAgentInput
   }
 
   export type AgentUncheckedCreateWithoutPaymentLinksInput = {
@@ -52063,11 +55652,57 @@ export namespace Prisma {
     updatedAt?: Date | string
     decisions?: AgentDecisionUncheckedCreateNestedManyWithoutAgentInput
     checkpoints?: AgentCheckpointUncheckedCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutAgentInput
   }
 
   export type AgentCreateOrConnectWithoutPaymentLinksInput = {
     where: AgentWhereUniqueInput
     create: XOR<AgentCreateWithoutPaymentLinksInput, AgentUncheckedCreateWithoutPaymentLinksInput>
+  }
+
+  export type IntegrationKeyCreateWithoutPaymentLinksInput = {
+    id?: string
+    name: string
+    keyHash: string
+    prefix: string
+    description?: string | null
+    allowedCorridors?: IntegrationKeyCreateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyCreateallowedProvidersInput | string[]
+    rateLimit?: number | null
+    dailyLimit?: number | null
+    lastUsedAt?: Date | string | null
+    usageCount?: number
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    revokedAt?: Date | string | null
+    organization: OrganizationCreateNestedOneWithoutIntegrationKeysInput
+    agent: AgentCreateNestedOneWithoutIntegrationKeysInput
+  }
+
+  export type IntegrationKeyUncheckedCreateWithoutPaymentLinksInput = {
+    id?: string
+    organizationId: string
+    agentId: string
+    name: string
+    keyHash: string
+    prefix: string
+    description?: string | null
+    allowedCorridors?: IntegrationKeyCreateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyCreateallowedProvidersInput | string[]
+    rateLimit?: number | null
+    dailyLimit?: number | null
+    lastUsedAt?: Date | string | null
+    usageCount?: number
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    revokedAt?: Date | string | null
+  }
+
+  export type IntegrationKeyCreateOrConnectWithoutPaymentLinksInput = {
+    where: IntegrationKeyWhereUniqueInput
+    create: XOR<IntegrationKeyCreateWithoutPaymentLinksInput, IntegrationKeyUncheckedCreateWithoutPaymentLinksInput>
   }
 
   export type PriceCreateWithoutPaymentLinksInput = {
@@ -52232,6 +55867,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUpdateManyWithoutOrganizationNestedInput
@@ -52259,6 +55895,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -52344,6 +55981,7 @@ export namespace Prisma {
     agentWallet?: WalletUpdateOneWithoutAgentNestedInput
     decisions?: AgentDecisionUpdateManyWithoutAgentNestedInput
     checkpoints?: AgentCheckpointUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutAgentNestedInput
   }
 
   export type AgentUncheckedUpdateWithoutPaymentLinksInput = {
@@ -52368,6 +56006,58 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     decisions?: AgentDecisionUncheckedUpdateManyWithoutAgentNestedInput
     checkpoints?: AgentCheckpointUncheckedUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutAgentNestedInput
+  }
+
+  export type IntegrationKeyUpsertWithoutPaymentLinksInput = {
+    update: XOR<IntegrationKeyUpdateWithoutPaymentLinksInput, IntegrationKeyUncheckedUpdateWithoutPaymentLinksInput>
+    create: XOR<IntegrationKeyCreateWithoutPaymentLinksInput, IntegrationKeyUncheckedCreateWithoutPaymentLinksInput>
+    where?: IntegrationKeyWhereInput
+  }
+
+  export type IntegrationKeyUpdateToOneWithWhereWithoutPaymentLinksInput = {
+    where?: IntegrationKeyWhereInput
+    data: XOR<IntegrationKeyUpdateWithoutPaymentLinksInput, IntegrationKeyUncheckedUpdateWithoutPaymentLinksInput>
+  }
+
+  export type IntegrationKeyUpdateWithoutPaymentLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutIntegrationKeysNestedInput
+    agent?: AgentUpdateOneRequiredWithoutIntegrationKeysNestedInput
+  }
+
+  export type IntegrationKeyUncheckedUpdateWithoutPaymentLinksInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type PriceUpsertWithoutPaymentLinksInput = {
@@ -52451,6 +56141,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
     agents?: AgentCreateNestedManyWithoutOrganizationInput
@@ -52478,6 +56169,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
     agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -52514,6 +56206,7 @@ export namespace Prisma {
     organization: OrganizationCreateNestedOneWithoutPaymentLinksInput
     createdBy: UserCreateNestedOneWithoutPaymentLinksInput
     executingAgent: AgentCreateNestedOneWithoutPaymentLinksInput
+    integrationKey: IntegrationKeyCreateNestedOneWithoutPaymentLinksInput
     price?: PriceCreateNestedOneWithoutPaymentLinksInput
   }
 
@@ -52522,6 +56215,7 @@ export namespace Prisma {
     organizationId: string
     createdById: string
     executingAgentId: string
+    integrationKeyId: string
     title: string
     description?: string | null
     referenceId?: string | null
@@ -52841,6 +56535,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUpdateManyWithoutOrganizationNestedInput
@@ -52868,6 +56563,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -52910,6 +56606,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutPaymentLinksNestedInput
     createdBy?: UserUpdateOneRequiredWithoutPaymentLinksNestedInput
     executingAgent?: AgentUpdateOneRequiredWithoutPaymentLinksNestedInput
+    integrationKey?: IntegrationKeyUpdateOneRequiredWithoutPaymentLinksNestedInput
     price?: PriceUpdateOneWithoutPaymentLinksNestedInput
   }
 
@@ -52918,6 +56615,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdById?: StringFieldUpdateOperationsInput | string
     executingAgentId?: StringFieldUpdateOperationsInput | string
+    integrationKeyId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -53362,6 +57060,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkCreateNestedManyWithoutOrganizationInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
     agents?: AgentCreateNestedManyWithoutOrganizationInput
@@ -53389,6 +57088,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutOrganizationInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
     agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -53408,6 +57108,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderCreatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderCreatepaymentMethodsInput | string[]
     features: JsonNullValueInput | InputJsonValue
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: $Enums.ProviderHealth
     lastHealthCheck?: Date | string
@@ -53426,6 +57128,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderCreatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderCreatepaymentMethodsInput | string[]
     features: JsonNullValueInput | InputJsonValue
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: $Enums.ProviderHealth
     lastHealthCheck?: Date | string
@@ -53473,6 +57177,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUpdateManyWithoutOrganizationNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUpdateManyWithoutOrganizationNestedInput
@@ -53500,6 +57205,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -53525,6 +57231,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderUpdatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderUpdatepaymentMethodsInput | string[]
     features?: JsonNullValueInput | InputJsonValue
+    canCollect?: BoolFieldUpdateOperationsInput | boolean
+    canPayout?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     healthStatus?: EnumProviderHealthFieldUpdateOperationsInput | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53543,6 +57251,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderUpdatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderUpdatepaymentMethodsInput | string[]
     features?: JsonNullValueInput | InputJsonValue
+    canCollect?: BoolFieldUpdateOperationsInput | boolean
+    canPayout?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     healthStatus?: EnumProviderHealthFieldUpdateOperationsInput | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53561,6 +57271,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderCreatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderCreatepaymentMethodsInput | string[]
     features: JsonNullValueInput | InputJsonValue
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: $Enums.ProviderHealth
     lastHealthCheck?: Date | string
@@ -53579,6 +57291,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderCreatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderCreatepaymentMethodsInput | string[]
     features: JsonNullValueInput | InputJsonValue
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: $Enums.ProviderHealth
     lastHealthCheck?: Date | string
@@ -53613,6 +57327,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderUpdatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderUpdatepaymentMethodsInput | string[]
     features?: JsonNullValueInput | InputJsonValue
+    canCollect?: BoolFieldUpdateOperationsInput | boolean
+    canPayout?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     healthStatus?: EnumProviderHealthFieldUpdateOperationsInput | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53631,6 +57347,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderUpdatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderUpdatepaymentMethodsInput | string[]
     features?: JsonNullValueInput | InputJsonValue
+    canCollect?: BoolFieldUpdateOperationsInput | boolean
+    canPayout?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     healthStatus?: EnumProviderHealthFieldUpdateOperationsInput | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53736,6 +57454,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderCreatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderCreatepaymentMethodsInput | string[]
     features: JsonNullValueInput | InputJsonValue
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: $Enums.ProviderHealth
     lastHealthCheck?: Date | string
@@ -53754,6 +57474,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderCreatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderCreatepaymentMethodsInput | string[]
     features: JsonNullValueInput | InputJsonValue
+    canCollect?: boolean
+    canPayout?: boolean
     isActive?: boolean
     healthStatus?: $Enums.ProviderHealth
     lastHealthCheck?: Date | string
@@ -53881,6 +57603,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderUpdatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderUpdatepaymentMethodsInput | string[]
     features?: JsonNullValueInput | InputJsonValue
+    canCollect?: BoolFieldUpdateOperationsInput | boolean
+    canPayout?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     healthStatus?: EnumProviderHealthFieldUpdateOperationsInput | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53899,6 +57623,8 @@ export namespace Prisma {
     supportedCurrencies?: ProviderUpdatesupportedCurrenciesInput | string[]
     paymentMethods?: ProviderUpdatepaymentMethodsInput | string[]
     features?: JsonNullValueInput | InputJsonValue
+    canCollect?: BoolFieldUpdateOperationsInput | boolean
+    canPayout?: BoolFieldUpdateOperationsInput | boolean
     isActive?: BoolFieldUpdateOperationsInput | boolean
     healthStatus?: EnumProviderHealthFieldUpdateOperationsInput | $Enums.ProviderHealth
     lastHealthCheck?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -53931,6 +57657,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
   }
@@ -53958,6 +57685,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
   }
@@ -54035,6 +57763,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutPaymentLinksInput
     createdBy: UserCreateNestedOneWithoutPaymentLinksInput
+    integrationKey: IntegrationKeyCreateNestedOneWithoutPaymentLinksInput
     price?: PriceCreateNestedOneWithoutPaymentLinksInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutPaymentLinkInput
   }
@@ -54043,6 +57772,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     createdById: string
+    integrationKeyId: string
     title: string
     description?: string | null
     referenceId?: string | null
@@ -54150,6 +57880,56 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type IntegrationKeyCreateWithoutAgentInput = {
+    id?: string
+    name: string
+    keyHash: string
+    prefix: string
+    description?: string | null
+    allowedCorridors?: IntegrationKeyCreateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyCreateallowedProvidersInput | string[]
+    rateLimit?: number | null
+    dailyLimit?: number | null
+    lastUsedAt?: Date | string | null
+    usageCount?: number
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    revokedAt?: Date | string | null
+    organization: OrganizationCreateNestedOneWithoutIntegrationKeysInput
+    paymentLinks?: PaymentLinkCreateNestedManyWithoutIntegrationKeyInput
+  }
+
+  export type IntegrationKeyUncheckedCreateWithoutAgentInput = {
+    id?: string
+    organizationId: string
+    name: string
+    keyHash: string
+    prefix: string
+    description?: string | null
+    allowedCorridors?: IntegrationKeyCreateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyCreateallowedProvidersInput | string[]
+    rateLimit?: number | null
+    dailyLimit?: number | null
+    lastUsedAt?: Date | string | null
+    usageCount?: number
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    revokedAt?: Date | string | null
+    paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutIntegrationKeyInput
+  }
+
+  export type IntegrationKeyCreateOrConnectWithoutAgentInput = {
+    where: IntegrationKeyWhereUniqueInput
+    create: XOR<IntegrationKeyCreateWithoutAgentInput, IntegrationKeyUncheckedCreateWithoutAgentInput>
+  }
+
+  export type IntegrationKeyCreateManyAgentInputEnvelope = {
+    data: IntegrationKeyCreateManyAgentInput | IntegrationKeyCreateManyAgentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationUpsertWithoutAgentsInput = {
     update: XOR<OrganizationUpdateWithoutAgentsInput, OrganizationUncheckedUpdateWithoutAgentsInput>
     create: XOR<OrganizationCreateWithoutAgentsInput, OrganizationUncheckedCreateWithoutAgentsInput>
@@ -54184,6 +57964,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
   }
@@ -54211,6 +57992,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
   }
@@ -54325,6 +58107,22 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"AgentCheckpoint"> | Date | string
   }
 
+  export type IntegrationKeyUpsertWithWhereUniqueWithoutAgentInput = {
+    where: IntegrationKeyWhereUniqueInput
+    update: XOR<IntegrationKeyUpdateWithoutAgentInput, IntegrationKeyUncheckedUpdateWithoutAgentInput>
+    create: XOR<IntegrationKeyCreateWithoutAgentInput, IntegrationKeyUncheckedCreateWithoutAgentInput>
+  }
+
+  export type IntegrationKeyUpdateWithWhereUniqueWithoutAgentInput = {
+    where: IntegrationKeyWhereUniqueInput
+    data: XOR<IntegrationKeyUpdateWithoutAgentInput, IntegrationKeyUncheckedUpdateWithoutAgentInput>
+  }
+
+  export type IntegrationKeyUpdateManyWithWhereWithoutAgentInput = {
+    where: IntegrationKeyScalarWhereInput
+    data: XOR<IntegrationKeyUpdateManyMutationInput, IntegrationKeyUncheckedUpdateManyWithoutAgentInput>
+  }
+
   export type AgentCreateWithoutDecisionsInput = {
     id?: string
     name: string
@@ -54347,6 +58145,7 @@ export namespace Prisma {
     agentWallet?: WalletCreateNestedOneWithoutAgentInput
     paymentLinks?: PaymentLinkCreateNestedManyWithoutExecutingAgentInput
     checkpoints?: AgentCheckpointCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutAgentInput
   }
 
   export type AgentUncheckedCreateWithoutDecisionsInput = {
@@ -54371,6 +58170,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutExecutingAgentInput
     checkpoints?: AgentCheckpointUncheckedCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutAgentInput
   }
 
   export type AgentCreateOrConnectWithoutDecisionsInput = {
@@ -54528,6 +58328,7 @@ export namespace Prisma {
     agentWallet?: WalletUpdateOneWithoutAgentNestedInput
     paymentLinks?: PaymentLinkUpdateManyWithoutExecutingAgentNestedInput
     checkpoints?: AgentCheckpointUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutAgentNestedInput
   }
 
   export type AgentUncheckedUpdateWithoutDecisionsInput = {
@@ -54552,6 +58353,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutExecutingAgentNestedInput
     checkpoints?: AgentCheckpointUncheckedUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutAgentNestedInput
   }
 
   export type PaymentOrderUpsertWithoutAgentDecisionsInput = {
@@ -54685,6 +58487,7 @@ export namespace Prisma {
     agentWallet?: WalletCreateNestedOneWithoutAgentInput
     paymentLinks?: PaymentLinkCreateNestedManyWithoutExecutingAgentInput
     decisions?: AgentDecisionCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutAgentInput
   }
 
   export type AgentUncheckedCreateWithoutCheckpointsInput = {
@@ -54709,6 +58512,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutExecutingAgentInput
     decisions?: AgentDecisionUncheckedCreateNestedManyWithoutAgentInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutAgentInput
   }
 
   export type AgentCreateOrConnectWithoutCheckpointsInput = {
@@ -54749,6 +58553,7 @@ export namespace Prisma {
     agentWallet?: WalletUpdateOneWithoutAgentNestedInput
     paymentLinks?: PaymentLinkUpdateManyWithoutExecutingAgentNestedInput
     decisions?: AgentDecisionUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutAgentNestedInput
   }
 
   export type AgentUncheckedUpdateWithoutCheckpointsInput = {
@@ -54773,6 +58578,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutExecutingAgentNestedInput
     decisions?: AgentDecisionUncheckedUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutAgentNestedInput
   }
 
   export type AgentDecisionCreateWithoutInteractionsInput = {
@@ -54970,6 +58776,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
     agents?: AgentCreateNestedManyWithoutOrganizationInput
   }
@@ -54997,6 +58804,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
     agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
   }
@@ -55078,6 +58886,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUpdateManyWithoutOrganizationNestedInput
   }
@@ -55105,6 +58914,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
   }
@@ -55594,6 +59404,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
     agents?: AgentCreateNestedManyWithoutOrganizationInput
   }
@@ -55621,6 +59432,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
     agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
   }
@@ -55705,6 +59517,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUpdateManyWithoutOrganizationNestedInput
   }
@@ -55732,6 +59545,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
   }
@@ -55805,6 +59619,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkCreateNestedManyWithoutOrganizationInput
     paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
     agents?: AgentCreateNestedManyWithoutOrganizationInput
@@ -55832,6 +59647,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutOrganizationInput
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
     agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -55875,6 +59691,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUpdateManyWithoutOrganizationNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUpdateManyWithoutOrganizationNestedInput
@@ -55902,9 +59719,340 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutOrganizationNestedInput
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationCreateWithoutIntegrationKeysInput = {
+    id?: string
+    name: string
+    slug: string
+    description?: string | null
+    billingEmail: string
+    taxId?: string | null
+    country: string
+    complianceStatus?: $Enums.ComplianceStatus
+    kycVerifiedAt?: Date | string | null
+    settings?: JsonNullValueInput | InputJsonValue
+    features?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownerId: string
+    users?: OrganizationUserCreateNestedManyWithoutOrganizationInput
+    customers?: CustomerCreateNestedManyWithoutOrganizationInput
+    products?: ProductCreateNestedManyWithoutOrganizationInput
+    wallets?: WalletCreateNestedManyWithoutOrganizationInput
+    paymentLinks?: PaymentLinkCreateNestedManyWithoutOrganizationInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
+    providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
+    apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
+    auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
+    agents?: AgentCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutIntegrationKeysInput = {
+    id?: string
+    name: string
+    slug: string
+    description?: string | null
+    billingEmail: string
+    taxId?: string | null
+    country: string
+    complianceStatus?: $Enums.ComplianceStatus
+    kycVerifiedAt?: Date | string | null
+    settings?: JsonNullValueInput | InputJsonValue
+    features?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    ownerId: string
+    users?: OrganizationUserUncheckedCreateNestedManyWithoutOrganizationInput
+    customers?: CustomerUncheckedCreateNestedManyWithoutOrganizationInput
+    products?: ProductUncheckedCreateNestedManyWithoutOrganizationInput
+    wallets?: WalletUncheckedCreateNestedManyWithoutOrganizationInput
+    paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutOrganizationInput
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
+    apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
+    auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
+    agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutIntegrationKeysInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutIntegrationKeysInput, OrganizationUncheckedCreateWithoutIntegrationKeysInput>
+  }
+
+  export type AgentCreateWithoutIntegrationKeysInput = {
+    id?: string
+    name: string
+    type: $Enums.AgentType
+    version: string
+    model: string
+    graphDefinition: JsonNullValueInput | InputJsonValue
+    tools?: AgentCreatetoolsInput | string[]
+    systemPrompt?: string | null
+    supportedProviders?: AgentCreatesupportedProvidersInput | string[]
+    supportedChains?: AgentCreatesupportedChainsInput | number[]
+    capabilities?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    totalExecutions?: number
+    avgExecutionTime?: number | null
+    successRate?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutAgentsInput
+    agentWallet?: WalletCreateNestedOneWithoutAgentInput
+    paymentLinks?: PaymentLinkCreateNestedManyWithoutExecutingAgentInput
+    decisions?: AgentDecisionCreateNestedManyWithoutAgentInput
+    checkpoints?: AgentCheckpointCreateNestedManyWithoutAgentInput
+  }
+
+  export type AgentUncheckedCreateWithoutIntegrationKeysInput = {
+    id?: string
+    organizationId: string
+    name: string
+    type: $Enums.AgentType
+    version: string
+    model: string
+    agentWalletId?: string | null
+    graphDefinition: JsonNullValueInput | InputJsonValue
+    tools?: AgentCreatetoolsInput | string[]
+    systemPrompt?: string | null
+    supportedProviders?: AgentCreatesupportedProvidersInput | string[]
+    supportedChains?: AgentCreatesupportedChainsInput | number[]
+    capabilities?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: boolean
+    totalExecutions?: number
+    avgExecutionTime?: number | null
+    successRate?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    paymentLinks?: PaymentLinkUncheckedCreateNestedManyWithoutExecutingAgentInput
+    decisions?: AgentDecisionUncheckedCreateNestedManyWithoutAgentInput
+    checkpoints?: AgentCheckpointUncheckedCreateNestedManyWithoutAgentInput
+  }
+
+  export type AgentCreateOrConnectWithoutIntegrationKeysInput = {
+    where: AgentWhereUniqueInput
+    create: XOR<AgentCreateWithoutIntegrationKeysInput, AgentUncheckedCreateWithoutIntegrationKeysInput>
+  }
+
+  export type PaymentLinkCreateWithoutIntegrationKeyInput = {
+    id?: string
+    title: string
+    description?: string | null
+    referenceId?: string | null
+    shortCode: string
+    qrCode?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    targetAmount?: Decimal | DecimalJsLike | number | string | null
+    targetCurrency?: string | null
+    smartContractAddress?: string | null
+    smartContractChainId?: number | null
+    tokenAddress?: string | null
+    status?: $Enums.PaymentLinkStatus
+    allowMultiplePayments?: boolean
+    requiresKyc?: boolean
+    expiresAt?: Date | string | null
+    redirectUrls?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    theme?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutPaymentLinksInput
+    createdBy: UserCreateNestedOneWithoutPaymentLinksInput
+    executingAgent: AgentCreateNestedOneWithoutPaymentLinksInput
+    price?: PriceCreateNestedOneWithoutPaymentLinksInput
+    paymentOrders?: PaymentOrderCreateNestedManyWithoutPaymentLinkInput
+  }
+
+  export type PaymentLinkUncheckedCreateWithoutIntegrationKeyInput = {
+    id?: string
+    organizationId: string
+    createdById: string
+    executingAgentId: string
+    title: string
+    description?: string | null
+    referenceId?: string | null
+    shortCode: string
+    qrCode?: string | null
+    priceId?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    targetAmount?: Decimal | DecimalJsLike | number | string | null
+    targetCurrency?: string | null
+    smartContractAddress?: string | null
+    smartContractChainId?: number | null
+    tokenAddress?: string | null
+    status?: $Enums.PaymentLinkStatus
+    allowMultiplePayments?: boolean
+    requiresKyc?: boolean
+    expiresAt?: Date | string | null
+    redirectUrls?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    theme?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutPaymentLinkInput
+  }
+
+  export type PaymentLinkCreateOrConnectWithoutIntegrationKeyInput = {
+    where: PaymentLinkWhereUniqueInput
+    create: XOR<PaymentLinkCreateWithoutIntegrationKeyInput, PaymentLinkUncheckedCreateWithoutIntegrationKeyInput>
+  }
+
+  export type PaymentLinkCreateManyIntegrationKeyInputEnvelope = {
+    data: PaymentLinkCreateManyIntegrationKeyInput | PaymentLinkCreateManyIntegrationKeyInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrganizationUpsertWithoutIntegrationKeysInput = {
+    update: XOR<OrganizationUpdateWithoutIntegrationKeysInput, OrganizationUncheckedUpdateWithoutIntegrationKeysInput>
+    create: XOR<OrganizationCreateWithoutIntegrationKeysInput, OrganizationUncheckedCreateWithoutIntegrationKeysInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutIntegrationKeysInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutIntegrationKeysInput, OrganizationUncheckedUpdateWithoutIntegrationKeysInput>
+  }
+
+  export type OrganizationUpdateWithoutIntegrationKeysInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    billingEmail?: StringFieldUpdateOperationsInput | string
+    taxId?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    complianceStatus?: EnumComplianceStatusFieldUpdateOperationsInput | $Enums.ComplianceStatus
+    kycVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settings?: JsonNullValueInput | InputJsonValue
+    features?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    users?: OrganizationUserUpdateManyWithoutOrganizationNestedInput
+    customers?: CustomerUpdateManyWithoutOrganizationNestedInput
+    products?: ProductUpdateManyWithoutOrganizationNestedInput
+    wallets?: WalletUpdateManyWithoutOrganizationNestedInput
+    paymentLinks?: PaymentLinkUpdateManyWithoutOrganizationNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
+    providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
+    apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
+    auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
+    agents?: AgentUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutIntegrationKeysInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    billingEmail?: StringFieldUpdateOperationsInput | string
+    taxId?: NullableStringFieldUpdateOperationsInput | string | null
+    country?: StringFieldUpdateOperationsInput | string
+    complianceStatus?: EnumComplianceStatusFieldUpdateOperationsInput | $Enums.ComplianceStatus
+    kycVerifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settings?: JsonNullValueInput | InputJsonValue
+    features?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ownerId?: StringFieldUpdateOperationsInput | string
+    users?: OrganizationUserUncheckedUpdateManyWithoutOrganizationNestedInput
+    customers?: CustomerUncheckedUpdateManyWithoutOrganizationNestedInput
+    products?: ProductUncheckedUpdateManyWithoutOrganizationNestedInput
+    wallets?: WalletUncheckedUpdateManyWithoutOrganizationNestedInput
+    paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutOrganizationNestedInput
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
+    apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
+    auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
+    agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type AgentUpsertWithoutIntegrationKeysInput = {
+    update: XOR<AgentUpdateWithoutIntegrationKeysInput, AgentUncheckedUpdateWithoutIntegrationKeysInput>
+    create: XOR<AgentCreateWithoutIntegrationKeysInput, AgentUncheckedCreateWithoutIntegrationKeysInput>
+    where?: AgentWhereInput
+  }
+
+  export type AgentUpdateToOneWithWhereWithoutIntegrationKeysInput = {
+    where?: AgentWhereInput
+    data: XOR<AgentUpdateWithoutIntegrationKeysInput, AgentUncheckedUpdateWithoutIntegrationKeysInput>
+  }
+
+  export type AgentUpdateWithoutIntegrationKeysInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+    version?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    graphDefinition?: JsonNullValueInput | InputJsonValue
+    tools?: AgentUpdatetoolsInput | string[]
+    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
+    supportedProviders?: AgentUpdatesupportedProvidersInput | string[]
+    supportedChains?: AgentUpdatesupportedChainsInput | number[]
+    capabilities?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    totalExecutions?: IntFieldUpdateOperationsInput | number
+    avgExecutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    successRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutAgentsNestedInput
+    agentWallet?: WalletUpdateOneWithoutAgentNestedInput
+    paymentLinks?: PaymentLinkUpdateManyWithoutExecutingAgentNestedInput
+    decisions?: AgentDecisionUpdateManyWithoutAgentNestedInput
+    checkpoints?: AgentCheckpointUpdateManyWithoutAgentNestedInput
+  }
+
+  export type AgentUncheckedUpdateWithoutIntegrationKeysInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    type?: EnumAgentTypeFieldUpdateOperationsInput | $Enums.AgentType
+    version?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    agentWalletId?: NullableStringFieldUpdateOperationsInput | string | null
+    graphDefinition?: JsonNullValueInput | InputJsonValue
+    tools?: AgentUpdatetoolsInput | string[]
+    systemPrompt?: NullableStringFieldUpdateOperationsInput | string | null
+    supportedProviders?: AgentUpdatesupportedProvidersInput | string[]
+    supportedChains?: AgentUpdatesupportedChainsInput | number[]
+    capabilities?: NullableJsonNullValueInput | InputJsonValue
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    totalExecutions?: IntFieldUpdateOperationsInput | number
+    avgExecutionTime?: NullableIntFieldUpdateOperationsInput | number | null
+    successRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutExecutingAgentNestedInput
+    decisions?: AgentDecisionUncheckedUpdateManyWithoutAgentNestedInput
+    checkpoints?: AgentCheckpointUncheckedUpdateManyWithoutAgentNestedInput
+  }
+
+  export type PaymentLinkUpsertWithWhereUniqueWithoutIntegrationKeyInput = {
+    where: PaymentLinkWhereUniqueInput
+    update: XOR<PaymentLinkUpdateWithoutIntegrationKeyInput, PaymentLinkUncheckedUpdateWithoutIntegrationKeyInput>
+    create: XOR<PaymentLinkCreateWithoutIntegrationKeyInput, PaymentLinkUncheckedCreateWithoutIntegrationKeyInput>
+  }
+
+  export type PaymentLinkUpdateWithWhereUniqueWithoutIntegrationKeyInput = {
+    where: PaymentLinkWhereUniqueInput
+    data: XOR<PaymentLinkUpdateWithoutIntegrationKeyInput, PaymentLinkUncheckedUpdateWithoutIntegrationKeyInput>
+  }
+
+  export type PaymentLinkUpdateManyWithWhereWithoutIntegrationKeyInput = {
+    where: PaymentLinkScalarWhereInput
+    data: XOR<PaymentLinkUpdateManyMutationInput, PaymentLinkUncheckedUpdateManyWithoutIntegrationKeyInput>
   }
 
   export type OrganizationCreateWithoutUsersInput = {
@@ -55929,6 +60077,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogCreateNestedManyWithoutOrganizationInput
     agents?: AgentCreateNestedManyWithoutOrganizationInput
@@ -55956,6 +60105,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedCreateNestedManyWithoutOrganizationInput
     providers?: ProviderConfigUncheckedCreateNestedManyWithoutOrganizationInput
     apiKeys?: ApiKeyUncheckedCreateNestedManyWithoutOrganizationInput
+    integrationKeys?: IntegrationKeyUncheckedCreateNestedManyWithoutOrganizationInput
     webhooks?: WebhookUncheckedCreateNestedManyWithoutOrganizationInput
     auditLogs?: AuditLogUncheckedCreateNestedManyWithoutOrganizationInput
     agents?: AgentUncheckedCreateNestedManyWithoutOrganizationInput
@@ -56040,6 +60190,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUpdateManyWithoutOrganizationNestedInput
@@ -56067,6 +60218,7 @@ export namespace Prisma {
     paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutOrganizationNestedInput
     providers?: ProviderConfigUncheckedUpdateManyWithoutOrganizationNestedInput
     apiKeys?: ApiKeyUncheckedUpdateManyWithoutOrganizationNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutOrganizationNestedInput
     webhooks?: WebhookUncheckedUpdateManyWithoutOrganizationNestedInput
     auditLogs?: AuditLogUncheckedUpdateManyWithoutOrganizationNestedInput
     agents?: AgentUncheckedUpdateManyWithoutOrganizationNestedInput
@@ -56177,6 +60329,7 @@ export namespace Prisma {
     id?: string
     createdById: string
     executingAgentId: string
+    integrationKeyId: string
     title: string
     description?: string | null
     referenceId?: string | null
@@ -56259,6 +60412,25 @@ export namespace Prisma {
     isActive?: boolean
     expiresAt?: Date | string | null
     lastUsedAt?: Date | string | null
+    createdAt?: Date | string
+    revokedAt?: Date | string | null
+  }
+
+  export type IntegrationKeyCreateManyOrganizationInput = {
+    id?: string
+    agentId: string
+    name: string
+    keyHash: string
+    prefix: string
+    description?: string | null
+    allowedCorridors?: IntegrationKeyCreateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyCreateallowedProvidersInput | string[]
+    rateLimit?: number | null
+    dailyLimit?: number | null
+    lastUsedAt?: Date | string | null
+    usageCount?: number
+    isActive?: boolean
+    expiresAt?: Date | string | null
     createdAt?: Date | string
     revokedAt?: Date | string | null
   }
@@ -56513,6 +60685,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     createdBy?: UserUpdateOneRequiredWithoutPaymentLinksNestedInput
     executingAgent?: AgentUpdateOneRequiredWithoutPaymentLinksNestedInput
+    integrationKey?: IntegrationKeyUpdateOneRequiredWithoutPaymentLinksNestedInput
     price?: PriceUpdateOneWithoutPaymentLinksNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutPaymentLinkNestedInput
   }
@@ -56521,6 +60694,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdById?: StringFieldUpdateOperationsInput | string
     executingAgentId?: StringFieldUpdateOperationsInput | string
+    integrationKeyId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56550,6 +60724,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     createdById?: StringFieldUpdateOperationsInput | string
     executingAgentId?: StringFieldUpdateOperationsInput | string
+    integrationKeyId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -56770,6 +60945,65 @@ export namespace Prisma {
     revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type IntegrationKeyUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    agent?: AgentUpdateOneRequiredWithoutIntegrationKeysNestedInput
+    paymentLinks?: PaymentLinkUpdateManyWithoutIntegrationKeyNestedInput
+  }
+
+  export type IntegrationKeyUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutIntegrationKeyNestedInput
+  }
+
+  export type IntegrationKeyUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    agentId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type WebhookUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
@@ -56872,6 +61106,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUpdateManyWithoutExecutingAgentNestedInput
     decisions?: AgentDecisionUpdateManyWithoutAgentNestedInput
     checkpoints?: AgentCheckpointUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUpdateManyWithoutAgentNestedInput
   }
 
   export type AgentUncheckedUpdateWithoutOrganizationInput = {
@@ -56896,6 +61131,7 @@ export namespace Prisma {
     paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutExecutingAgentNestedInput
     decisions?: AgentDecisionUncheckedUpdateManyWithoutAgentNestedInput
     checkpoints?: AgentCheckpointUncheckedUpdateManyWithoutAgentNestedInput
+    integrationKeys?: IntegrationKeyUncheckedUpdateManyWithoutAgentNestedInput
   }
 
   export type AgentUncheckedUpdateManyWithoutOrganizationInput = {
@@ -56949,6 +61185,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     executingAgentId: string
+    integrationKeyId: string
     title: string
     description?: string | null
     referenceId?: string | null
@@ -57108,6 +61345,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutPaymentLinksNestedInput
     executingAgent?: AgentUpdateOneRequiredWithoutPaymentLinksNestedInput
+    integrationKey?: IntegrationKeyUpdateOneRequiredWithoutPaymentLinksNestedInput
     price?: PriceUpdateOneWithoutPaymentLinksNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutPaymentLinkNestedInput
   }
@@ -57116,6 +61354,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     executingAgentId?: StringFieldUpdateOperationsInput | string
+    integrationKeyId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57145,6 +61384,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     executingAgentId?: StringFieldUpdateOperationsInput | string
+    integrationKeyId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -57927,6 +62167,7 @@ export namespace Prisma {
     organizationId: string
     createdById: string
     executingAgentId: string
+    integrationKeyId: string
     title: string
     description?: string | null
     referenceId?: string | null
@@ -58003,6 +62244,7 @@ export namespace Prisma {
     organization?: OrganizationUpdateOneRequiredWithoutPaymentLinksNestedInput
     createdBy?: UserUpdateOneRequiredWithoutPaymentLinksNestedInput
     executingAgent?: AgentUpdateOneRequiredWithoutPaymentLinksNestedInput
+    integrationKey?: IntegrationKeyUpdateOneRequiredWithoutPaymentLinksNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutPaymentLinkNestedInput
   }
 
@@ -58011,6 +62253,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdById?: StringFieldUpdateOperationsInput | string
     executingAgentId?: StringFieldUpdateOperationsInput | string
+    integrationKeyId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58040,6 +62283,7 @@ export namespace Prisma {
     organizationId?: StringFieldUpdateOperationsInput | string
     createdById?: StringFieldUpdateOperationsInput | string
     executingAgentId?: StringFieldUpdateOperationsInput | string
+    integrationKeyId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58731,6 +62975,7 @@ export namespace Prisma {
     id?: string
     organizationId: string
     createdById: string
+    integrationKeyId: string
     title: string
     description?: string | null
     referenceId?: string | null
@@ -58780,6 +63025,25 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type IntegrationKeyCreateManyAgentInput = {
+    id?: string
+    organizationId: string
+    name: string
+    keyHash: string
+    prefix: string
+    description?: string | null
+    allowedCorridors?: IntegrationKeyCreateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyCreateallowedProvidersInput | string[]
+    rateLimit?: number | null
+    dailyLimit?: number | null
+    lastUsedAt?: Date | string | null
+    usageCount?: number
+    isActive?: boolean
+    expiresAt?: Date | string | null
+    createdAt?: Date | string
+    revokedAt?: Date | string | null
+  }
+
   export type PaymentLinkUpdateWithoutExecutingAgentInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -58805,6 +63069,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutPaymentLinksNestedInput
     createdBy?: UserUpdateOneRequiredWithoutPaymentLinksNestedInput
+    integrationKey?: IntegrationKeyUpdateOneRequiredWithoutPaymentLinksNestedInput
     price?: PriceUpdateOneWithoutPaymentLinksNestedInput
     paymentOrders?: PaymentOrderUpdateManyWithoutPaymentLinkNestedInput
   }
@@ -58813,6 +63078,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     createdById?: StringFieldUpdateOperationsInput | string
+    integrationKeyId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58842,6 +63108,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     organizationId?: StringFieldUpdateOperationsInput | string
     createdById?: StringFieldUpdateOperationsInput | string
+    integrationKeyId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     referenceId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -58943,6 +63210,65 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type IntegrationKeyUpdateWithoutAgentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    organization?: OrganizationUpdateOneRequiredWithoutIntegrationKeysNestedInput
+    paymentLinks?: PaymentLinkUpdateManyWithoutIntegrationKeyNestedInput
+  }
+
+  export type IntegrationKeyUncheckedUpdateWithoutAgentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentLinks?: PaymentLinkUncheckedUpdateManyWithoutIntegrationKeyNestedInput
+  }
+
+  export type IntegrationKeyUncheckedUpdateManyWithoutAgentInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    keyHash?: StringFieldUpdateOperationsInput | string
+    prefix?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    allowedCorridors?: IntegrationKeyUpdateallowedCorridorsInput | string[]
+    allowedProviders?: IntegrationKeyUpdateallowedProvidersInput | string[]
+    rateLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    dailyLimit?: NullableIntFieldUpdateOperationsInput | number | null
+    lastUsedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    usageCount?: IntFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    revokedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
   export type AgentInteractionCreateManyAgentDecisionInput = {
     id?: string
     userId: string
@@ -59039,6 +63365,124 @@ export namespace Prisma {
     deliveredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type PaymentLinkCreateManyIntegrationKeyInput = {
+    id?: string
+    organizationId: string
+    createdById: string
+    executingAgentId: string
+    title: string
+    description?: string | null
+    referenceId?: string | null
+    shortCode: string
+    qrCode?: string | null
+    priceId?: string | null
+    amount: Decimal | DecimalJsLike | number | string
+    currency: string
+    targetAmount?: Decimal | DecimalJsLike | number | string | null
+    targetCurrency?: string | null
+    smartContractAddress?: string | null
+    smartContractChainId?: number | null
+    tokenAddress?: string | null
+    status?: $Enums.PaymentLinkStatus
+    allowMultiplePayments?: boolean
+    requiresKyc?: boolean
+    expiresAt?: Date | string | null
+    redirectUrls?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    theme?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PaymentLinkUpdateWithoutIntegrationKeyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    shortCode?: StringFieldUpdateOperationsInput | string
+    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    targetCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    smartContractAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    smartContractChainId?: NullableIntFieldUpdateOperationsInput | number | null
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPaymentLinkStatusFieldUpdateOperationsInput | $Enums.PaymentLinkStatus
+    allowMultiplePayments?: BoolFieldUpdateOperationsInput | boolean
+    requiresKyc?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redirectUrls?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    theme?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutPaymentLinksNestedInput
+    createdBy?: UserUpdateOneRequiredWithoutPaymentLinksNestedInput
+    executingAgent?: AgentUpdateOneRequiredWithoutPaymentLinksNestedInput
+    price?: PriceUpdateOneWithoutPaymentLinksNestedInput
+    paymentOrders?: PaymentOrderUpdateManyWithoutPaymentLinkNestedInput
+  }
+
+  export type PaymentLinkUncheckedUpdateWithoutIntegrationKeyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    executingAgentId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    shortCode?: StringFieldUpdateOperationsInput | string
+    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
+    priceId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    targetCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    smartContractAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    smartContractChainId?: NullableIntFieldUpdateOperationsInput | number | null
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPaymentLinkStatusFieldUpdateOperationsInput | $Enums.PaymentLinkStatus
+    allowMultiplePayments?: BoolFieldUpdateOperationsInput | boolean
+    requiresKyc?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redirectUrls?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    theme?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentOrders?: PaymentOrderUncheckedUpdateManyWithoutPaymentLinkNestedInput
+  }
+
+  export type PaymentLinkUncheckedUpdateManyWithoutIntegrationKeyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    createdById?: StringFieldUpdateOperationsInput | string
+    executingAgentId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    referenceId?: NullableStringFieldUpdateOperationsInput | string | null
+    shortCode?: StringFieldUpdateOperationsInput | string
+    qrCode?: NullableStringFieldUpdateOperationsInput | string | null
+    priceId?: NullableStringFieldUpdateOperationsInput | string | null
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    targetAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    targetCurrency?: NullableStringFieldUpdateOperationsInput | string | null
+    smartContractAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    smartContractChainId?: NullableIntFieldUpdateOperationsInput | number | null
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPaymentLinkStatusFieldUpdateOperationsInput | $Enums.PaymentLinkStatus
+    allowMultiplePayments?: BoolFieldUpdateOperationsInput | boolean
+    requiresKyc?: BoolFieldUpdateOperationsInput | boolean
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    redirectUrls?: NullableJsonNullValueInput | InputJsonValue
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    theme?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
 
 
   /**
@@ -59100,6 +63544,10 @@ export namespace Prisma {
      * @deprecated Use WebhookCountOutputTypeDefaultArgs instead
      */
     export type WebhookCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = WebhookCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use IntegrationKeyCountOutputTypeDefaultArgs instead
+     */
+    export type IntegrationKeyCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = IntegrationKeyCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use OrganizationDefaultArgs instead
      */
@@ -59165,6 +63613,10 @@ export namespace Prisma {
      */
     export type ProviderRouteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProviderRouteDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use PaymentCorridorDefaultArgs instead
+     */
+    export type PaymentCorridorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PaymentCorridorDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use ProviderTransactionDefaultArgs instead
      */
     export type ProviderTransactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ProviderTransactionDefaultArgs<ExtArgs>
@@ -59208,6 +63660,10 @@ export namespace Prisma {
      * @deprecated Use ApiKeyDefaultArgs instead
      */
     export type ApiKeyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = ApiKeyDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use IntegrationKeyDefaultArgs instead
+     */
+    export type IntegrationKeyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = IntegrationKeyDefaultArgs<ExtArgs>
     /**
      * @deprecated Use OrganizationUserDefaultArgs instead
      */

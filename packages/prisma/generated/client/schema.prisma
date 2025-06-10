@@ -35,18 +35,19 @@ model Organization {
   updatedAt DateTime @updatedAt
 
   // Relations
-  ownerId       String
-  users         OrganizationUser[]
-  customers     Customer[]
-  products      Product[]
-  wallets       Wallet[]
-  paymentLinks  PaymentLink[]
-  paymentOrders PaymentOrder[]
-  providers     ProviderConfig[]
-  apiKeys       ApiKey[]
-  webhooks      Webhook[]
-  auditLogs     AuditLog[]
-  agents        Agent[]
+  ownerId         String
+  users           OrganizationUser[]
+  customers       Customer[]
+  products        Product[]
+  wallets         Wallet[]
+  paymentLinks    PaymentLink[]
+  paymentOrders   PaymentOrder[]
+  providers       ProviderConfig[]
+  apiKeys         ApiKey[]
+  integrationKeys IntegrationKey[]
+  webhooks        Webhook[]
+  auditLogs       AuditLog[]
+  agents          Agent[]
 
   @@index([slug])
   @@index([ownerId])
@@ -460,9 +461,11 @@ model PaymentLink {
   createdById    String
   createdBy      User         @relation(fields: [createdById], references: [id])
 
-  // Agent Execution
+  // Agent Execution & Authorization
   executingAgentId String // The agent that will execute this payment
-  executingAgent   Agent  @relation(fields: [executingAgentId], references: [id])
+  executingAgent   Agent          @relation(fields: [executingAgentId], references: [id])
+  integrationKeyId String // The integration key authorizing this payment link
+  integrationKey   IntegrationKey @relation(fields: [integrationKeyId], references: [id])
 
   // Link Details
   title       String
@@ -506,6 +509,7 @@ model PaymentLink {
   @@index([shortCode])
   @@index([status])
   @@index([executingAgentId])
+  @@index([integrationKeyId])
 }
 
 enum PaymentLinkStatus {
@@ -617,10 +621,14 @@ model Provider {
   type ProviderType
 
   // Capabilities
-  supportedCountries  String[]
-  supportedCurrencies String[]
-  paymentMethods      String[]
+  supportedCountries  String[] // ISO 3166-1 alpha-2 codes (e.g., ["CO", "MX", "US"])
+  supportedCurrencies String[] // ISO 4217 codes (e.g., ["COP", "MXN", "USD"])
+  paymentMethods      String[] // ["bank_transfer", "card", "crypto", etc]
   features            Json // {instantPayouts: true, webhooks: true, etc}
+
+  // Provider-specific capabilities
+  canCollect Boolean @default(false) // Can receive money in supported countries
+  canPayout  Boolean @default(false) // Can send money to supported countries
 
   // Status
   isActive        Boolean        @default(true)
@@ -717,6 +725,38 @@ model ProviderRoute {
   @@index([fromCountry, toCountry, isActive])
 }
 
+model PaymentCorridor {
+  id   String @id @default(cuid())
+  code String @unique // e.g., "CO-MX"
+  name String // e.g., "Colombia to Mexico"
+
+  // Corridor Definition
+  fromCountry  String // ISO 3166-1 alpha-2 code
+  toCountry    String // ISO 3166-1 alpha-2 code
+  fromCurrency String // ISO 4217 code
+  toCurrency   String // ISO 4217 code
+
+  // Available Providers for this corridor
+  collectProviders String[] // Provider codes that can collect in fromCountry
+  payoutProviders  String[] // Provider codes that can payout in toCountry
+
+  // Corridor Metrics
+  avgTransferTime Int? // Average time in minutes
+  minAmount       Decimal? @db.Decimal(20, 8)
+  maxAmount       Decimal? @db.Decimal(20, 8)
+
+  // Status
+  isActive  Boolean @default(true)
+  isPopular Boolean @default(false) // Mark popular corridors
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([fromCountry, toCountry])
+  @@index([isActive, isPopular])
+}
+
 model ProviderTransaction {
   id             String       @id @default(cuid())
   paymentOrderId String
@@ -797,9 +837,10 @@ model Agent {
   updatedAt DateTime @updatedAt
 
   // Relations
-  paymentLinks PaymentLink[] // Payment links this agent executes
-  decisions    AgentDecision[]
-  checkpoints  AgentCheckpoint[]
+  paymentLinks    PaymentLink[] // Payment links this agent executes
+  decisions       AgentDecision[]
+  checkpoints     AgentCheckpoint[]
+  integrationKeys IntegrationKey[] // Integration keys associated with this agent
 
   @@index([organizationId])
   @@index([type])
@@ -1089,6 +1130,47 @@ model ApiKey {
   revokedAt DateTime?
 
   @@index([organizationId])
+  @@index([prefix])
+}
+
+model IntegrationKey {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  agentId        String
+  agent          Agent        @relation(fields: [agentId], references: [id])
+
+  // Key Details
+  name        String
+  keyHash     String  @unique
+  prefix      String // wedi_ik_... for easy identification
+  description String?
+
+  // Capabilities & Restrictions
+  allowedCorridors String[] // Allowed payment corridors (e.g., ["CO-MX", "MX-CO"])
+  allowedProviders String[] // Allowed provider codes (e.g., ["YOINT", "TRUBIT"])
+
+  // Rate Limiting
+  rateLimit  Int? // Requests per minute
+  dailyLimit Int? // Max transactions per day
+
+  // Usage Tracking
+  lastUsedAt DateTime?
+  usageCount Int       @default(0)
+
+  // Status
+  isActive  Boolean   @default(true)
+  expiresAt DateTime?
+
+  // Timestamps
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  // Relations
+  paymentLinks PaymentLink[]
+
+  @@index([organizationId])
+  @@index([agentId])
   @@index([prefix])
 }
 

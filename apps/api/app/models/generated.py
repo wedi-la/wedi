@@ -1,6 +1,6 @@
 """
 SQLAlchemy models generated from Prisma schema
-Generated at: 2025-06-10T02:32:36.099912
+Generated at: 2025-06-10T03:01:53.060219
 """
 
 from datetime import datetime
@@ -492,6 +492,32 @@ class OrganizationUser(Base):
 
     __table_args__ = (
         UniqueConstraint("organization_id", "user_id"),
+    )
+
+class PaymentCorridor(Base):
+    """Generated from Prisma model PaymentCorridor"""
+    __tablename__ = "payment_corridor"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, nullable=False)
+    code: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    from_country: Mapped[str] = mapped_column(String, nullable=False)
+    to_country: Mapped[str] = mapped_column(String, nullable=False)
+    from_currency: Mapped[str] = mapped_column(String, nullable=False)
+    to_currency: Mapped[str] = mapped_column(String, nullable=False)
+    collect_providers: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
+    payout_providers: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
+    avg_transfer_time: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    min_amount: Mapped[Optional[Decimal]] = mapped_column(Numeric(20, 8), nullable=True)
+    max_amount: Mapped[Optional[Decimal]] = mapped_column(Numeric(20, 8), nullable=True)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, index=True)
+    is_popular: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False, index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+
+    __table_args__ = (
+        Index("idx_paymentcorridor_isActive_isPopular", "is_active", "is_popular"),
+        UniqueConstraint("from_country", "to_country")
     )
 
 class PaymentEvent(Base):

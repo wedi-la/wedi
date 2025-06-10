@@ -301,6 +301,7 @@ exports.Prisma.PaymentLinkScalarFieldEnum = {
   organizationId: 'organizationId',
   createdById: 'createdById',
   executingAgentId: 'executingAgentId',
+  integrationKeyId: 'integrationKeyId',
   title: 'title',
   description: 'description',
   referenceId: 'referenceId',
@@ -371,6 +372,8 @@ exports.Prisma.ProviderScalarFieldEnum = {
   supportedCurrencies: 'supportedCurrencies',
   paymentMethods: 'paymentMethods',
   features: 'features',
+  canCollect: 'canCollect',
+  canPayout: 'canPayout',
   isActive: 'isActive',
   healthStatus: 'healthStatus',
   lastHealthCheck: 'lastHealthCheck',
@@ -409,6 +412,25 @@ exports.Prisma.ProviderRouteScalarFieldEnum = {
   workingDays: 'workingDays',
   isActive: 'isActive',
   priority: 'priority'
+};
+
+exports.Prisma.PaymentCorridorScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  name: 'name',
+  fromCountry: 'fromCountry',
+  toCountry: 'toCountry',
+  fromCurrency: 'fromCurrency',
+  toCurrency: 'toCurrency',
+  collectProviders: 'collectProviders',
+  payoutProviders: 'payoutProviders',
+  avgTransferTime: 'avgTransferTime',
+  minAmount: 'minAmount',
+  maxAmount: 'maxAmount',
+  isActive: 'isActive',
+  isPopular: 'isPopular',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ProviderTransactionScalarFieldEnum = {
@@ -572,6 +594,26 @@ exports.Prisma.ApiKeyScalarFieldEnum = {
   isActive: 'isActive',
   expiresAt: 'expiresAt',
   lastUsedAt: 'lastUsedAt',
+  createdAt: 'createdAt',
+  revokedAt: 'revokedAt'
+};
+
+exports.Prisma.IntegrationKeyScalarFieldEnum = {
+  id: 'id',
+  organizationId: 'organizationId',
+  agentId: 'agentId',
+  name: 'name',
+  keyHash: 'keyHash',
+  prefix: 'prefix',
+  description: 'description',
+  allowedCorridors: 'allowedCorridors',
+  allowedProviders: 'allowedProviders',
+  rateLimit: 'rateLimit',
+  dailyLimit: 'dailyLimit',
+  lastUsedAt: 'lastUsedAt',
+  usageCount: 'usageCount',
+  isActive: 'isActive',
+  expiresAt: 'expiresAt',
   createdAt: 'createdAt',
   revokedAt: 'revokedAt'
 };
@@ -802,6 +844,7 @@ exports.Prisma.ModelName = {
   Provider: 'Provider',
   ProviderConfig: 'ProviderConfig',
   ProviderRoute: 'ProviderRoute',
+  PaymentCorridor: 'PaymentCorridor',
   ProviderTransaction: 'ProviderTransaction',
   Agent: 'Agent',
   AgentDecision: 'AgentDecision',
@@ -813,6 +856,7 @@ exports.Prisma.ModelName = {
   PaymentEvent: 'PaymentEvent',
   AuditLog: 'AuditLog',
   ApiKey: 'ApiKey',
+  IntegrationKey: 'IntegrationKey',
   OrganizationUser: 'OrganizationUser'
 };
 
