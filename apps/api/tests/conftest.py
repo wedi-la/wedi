@@ -12,7 +12,7 @@ from sqlalchemy import NullPool, create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.core.config import get_settings
+from app.core.config import settings
 from app.core.database import Base
 from app.main import create_application
 
@@ -32,13 +32,13 @@ def event_loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
 @pytest.fixture(scope="session")
 def test_settings():
     """Override settings for testing."""
-    settings = get_settings()
-    settings.DATABASE_URL = TEST_DATABASE_URL
-    settings.DEBUG = True
-    settings.JWT_SECRET_KEY = "test-secret-key"
-    settings.FRONTEND_URL = "http://localhost:3000"
-    settings.ALLOWED_HOSTS = ["testserver"]
-    return settings
+    test_settings = settings
+    test_settings.DATABASE_URL = TEST_DATABASE_URL
+    test_settings.DEBUG = True
+    test_settings.JWT_SECRET_KEY = "test-secret-key"
+    test_settings.FRONTEND_URL = "http://localhost:3000"
+    test_settings.ALLOWED_HOSTS = ["testserver"]
+    return test_settings
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -173,10 +173,5 @@ def auth_headers(test_user):
     }
 
 
-# Import get_db from wherever it's defined in your app
-try:
-    from app.api.dependencies import get_db
-except ImportError:
-    # Fallback if import path is different
-    async def get_db():
-        pass 
+# Import get_db from the correct location
+from app.db.session import get_db 

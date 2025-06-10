@@ -687,8 +687,8 @@ model PaymentOrderEvent {
 *   **Rationale:** Chosen for its Kafka compatibility with lower operational overhead for a small team compared to self-managed Kafka. Provides durability, replayability, and asynchronous processing. [6, 7, 8, 9, 10, 11, 12]
 *   **Key Event Topics (MVP):**
     *   `wedi.organization.events` (e.g., `OrganizationCreated`, `UserInvitedToOrganization`)
-    *   `wedi.paymentlink.events` (e.g., `PaymentLinkCreated`, `PaymentLinkActivated`)
-    *   `wedi.paymentorder.events` (e.g., `PaymentOrderInitiated`, `PaymentOrderProcessing`, `PaymentOrderSucceeded`, `PaymentOrderFailed`, `PaymentOrderManualInterventionRequired`)
+    *   `wedi.lamentlink.events` (e.g., `PaymentLinkCreated`, `PaymentLinkActivated`)
+    *   `wedi.lamentorder.events` (e.g., `PaymentOrderInitiated`, `PaymentOrderProcessing`, `PaymentOrderSucceeded`, `PaymentOrderFailed`, `PaymentOrderManualInterventionRequired`)
 *   **Producers:** FastAPI backend (Payment Execution Agent, User/Org Mgmt, Link Mgmt modules).
 *   **Consumers (MVP):**
     *   Notification module within FastAPI (or a simple separate worker if needed) for sending emails/webhooks.

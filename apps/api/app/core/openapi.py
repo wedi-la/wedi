@@ -67,17 +67,17 @@ The API uses standard HTTP status codes and returns detailed error messages in t
 
 ## Support
 
-For API support, please contact: api-support@wedi.pay
+For API support, please contact: api-support@wedi.la
         """,
         routes=app.routes,
         tags=tags_metadata,
         servers=[
             {
-                "url": "https://api.wedi.pay",
+                "url": "https://api.wedi.la",
                 "description": "Production server"
             },
             {
-                "url": "https://staging-api.wedi.pay", 
+                "url": "https://staging-api.wedi.la", 
                 "description": "Staging server"
             },
             {
@@ -87,12 +87,12 @@ For API support, please contact: api-support@wedi.pay
         ],
         contact={
             "name": "Wedi Pay API Support",
-            "email": "api-support@wedi.pay",
-            "url": "https://docs.wedi.pay"
+            "email": "api-support@wedi.la",
+            "url": "https://docs.wedi.la"
         },
         license_info={
             "name": "Proprietary",
-            "url": "https://wedi.pay/terms"
+            "url": "https://wedi.la/terms"
         },
     )
     
@@ -113,7 +113,7 @@ tags_metadata = [
         "description": "Operations related to user authentication and authorization",
         "externalDocs": {
             "description": "Authentication guide",
-            "url": "https://docs.wedi.pay/authentication"
+            "url": "https://docs.wedi.la/authentication"
         }
     },
     {
@@ -129,7 +129,7 @@ tags_metadata = [
         "description": "Create and manage payment links for B2B transactions",
         "externalDocs": {
             "description": "Payment links guide",
-            "url": "https://docs.wedi.pay/payment-links"
+            "url": "https://docs.wedi.la/payment-links"
         }
     },
     {
@@ -186,7 +186,7 @@ data = {
 }
 
 response = requests.post(
-    "https://api.wedi.pay/api/v1/payment-links",
+    "https://api.wedi.la/api/v1/payment-links",
     json=data,
     headers=headers
 )
@@ -215,13 +215,13 @@ const data = {
     }
 };
 
-axios.post('https://api.wedi.pay/api/v1/payment-links', data, { headers })
+axios.post('https://api.wedi.la/api/v1/payment-links', data, { headers })
     .then(response => console.log(response.data))
     .catch(error => console.error(error));"""
                 },
                 {
                     "lang": "cURL",
-                    "source": """curl -X POST https://api.wedi.pay/api/v1/payment-links \\
+                    "source": """curl -X POST https://api.wedi.la/api/v1/payment-links \\
   -H "Authorization: Bearer YOUR_JWT_TOKEN" \\
   -H "Content-Type: application/json" \\
   -d '{

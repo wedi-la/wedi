@@ -63,7 +63,7 @@ The API is organized into the following tags:
 All endpoints (except public payment link access) require JWT authentication:
 
 ```bash
-curl -H "Authorization: Bearer YOUR_JWT_TOKEN" https://api.wedi.pay/api/v1/...
+curl -H "Authorization: Bearer YOUR_JWT_TOKEN" https://api.wedi.la/api/v1/...
 ```
 
 ## Rate Limiting
@@ -92,7 +92,7 @@ data = {
 }
 
 response = requests.post(
-    "https://api.wedi.pay/api/v1/payment-links",
+    "https://api.wedi.la/api/v1/payment-links",
     json=data,
     headers=headers
 )
@@ -159,5 +159,5 @@ The Scalar UI is configured in `configure_scalar_ui()` with:
 ## Support
 
 For API support or documentation issues:
-- Email: api-support@wedi.pay
-- Documentation: https://docs.wedi.pay 
+- Email: api-support@wedi.la
+- Documentation: https://docs.wedi.la 
