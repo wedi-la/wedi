@@ -36,8 +36,8 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     
     # CORS
-    ALLOWED_ORIGINS: list[str] = ["http://localhost:3000"]
-    ALLOWED_HOSTS: list[str] = ["localhost", "127.0.0.1"]
+    ALLOWED_ORIGINS: list[str] = ["http://localhost:3000", "https://api.wedi.la", "https://wedi.la", "https://app.wedi.la", "https://pay.wedi.la"]
+    ALLOWED_HOSTS: list[str] = ["localhost", "127.0.0.1", "https://api.wedi.la", "https://wedi.la", "https://app.wedi.la", "https://pay.wedi.la"]
     
     # Frontend
     FRONTEND_URL: str = "localhost:3000"

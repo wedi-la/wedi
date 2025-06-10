@@ -1,6 +1,15 @@
 """
 Global test configuration and fixtures for FastAPI testing.
 """
+# Set test environment variables BEFORE importing any app modules
+import os
+os.environ["DATABASE_URL"] = "sqlite+aiosqlite:///./test.db"
+os.environ["DEBUG"] = "True"
+os.environ["SECRET_KEY"] = "test-secret-key"
+os.environ["FRONTEND_URL"] = "http://localhost:3000"
+os.environ["ENVIRONMENT"] = "test"
+os.environ["ALLOWED_HOSTS"] = '["localhost", "127.0.0.1", "testserver"]'
+
 import asyncio
 import uuid
 from typing import AsyncGenerator, Generator
@@ -13,7 +22,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.core.config import settings
-from app.core.database import Base
+from app.models import Base
 from app.main import create_application
 
 # Override settings for testing
@@ -32,13 +41,7 @@ def event_loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
 @pytest.fixture(scope="session")
 def test_settings():
     """Override settings for testing."""
-    test_settings = settings
-    test_settings.DATABASE_URL = TEST_DATABASE_URL
-    test_settings.DEBUG = True
-    test_settings.JWT_SECRET_KEY = "test-secret-key"
-    test_settings.FRONTEND_URL = "http://localhost:3000"
-    test_settings.ALLOWED_HOSTS = ["testserver"]
-    return test_settings
+    return settings
 
 
 @pytest_asyncio.fixture(scope="session")
@@ -120,7 +123,9 @@ async def app(test_settings, db_session):
 @pytest_asyncio.fixture(scope="function")
 async def client(app) -> AsyncGenerator[AsyncClient, None]:
     """Create a test client for making requests."""
-    async with AsyncClient(app=app, base_url="http://testserver") as ac:
+    from httpx import ASGITransport
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://testserver") as ac:
         yield ac
 
 

@@ -21,15 +21,21 @@ class TestAuthEndpoints:
                 "chainId": 1,
             }
         )
+        if response.status_code != 200:
+            print(f"Response: {response.status_code} - {response.text}")
         assert response.status_code == 200
         data = response.json()
-        assert "payload" in data
-        assert "domain" in data["payload"]
-        assert "address" in data["payload"]
-        assert "statement" in data["payload"]
-        assert "nonce" in data["payload"]
-        assert "issuedAt" in data["payload"]
-        assert "expirationTime" in data["payload"]
+        # Check that all required SIWE fields are present
+        assert "domain" in data
+        assert "address" in data
+        assert "statement" in data
+        assert "uri" in data
+        assert "version" in data
+        assert "chain_id" in data
+        assert "nonce" in data
+        assert "issued_at" in data
+        assert "expiration_time" in data
+        assert "message" in data
     
     @pytest.mark.asyncio
     async def test_login_creates_new_user(self, client: AsyncClient, db_session):

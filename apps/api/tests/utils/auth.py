@@ -26,8 +26,8 @@ def create_test_token(user: User, expires_delta: timedelta = None) -> str:
     
     encoded_jwt = jwt.encode(
         token_data,
-        settings.JWT_SECRET_KEY,
-        algorithm=settings.JWT_ALGORITHM
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM
     )
     return encoded_jwt
 

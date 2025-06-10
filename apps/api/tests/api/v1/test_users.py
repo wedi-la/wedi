@@ -4,7 +4,7 @@ Tests for user management endpoints.
 import pytest
 from httpx import AsyncClient
 
-from app.models import Role
+from app.models import UserRole
 from tests.factories.organization_factory import OrganizationFactory
 from tests.factories.user_factory import UserFactory
 from tests.utils.auth import get_auth_headers
@@ -102,7 +102,7 @@ class TestUserEndpoints:
         owner, _ = await UserFactory.create_user_with_wallet(db_session)
         member, _ = await UserFactory.create_user_with_wallet(db_session)
         org, _ = await OrganizationFactory.create_organization_with_owner(db_session, owner)
-        await OrganizationFactory.add_member(db_session, org, member, Role.MEMBER)
+        await OrganizationFactory.add_member(db_session, org, member, UserRole.VIEWER)
         
         headers = get_auth_headers(member)
         headers["X-Organization-ID"] = org.id

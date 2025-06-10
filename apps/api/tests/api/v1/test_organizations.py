@@ -4,7 +4,7 @@ Tests for organization management endpoints.
 import pytest
 from httpx import AsyncClient
 
-from app.models import Role
+from app.models import UserRole
 from tests.factories.organization_factory import OrganizationFactory
 from tests.factories.user_factory import UserFactory
 from tests.utils.auth import get_auth_headers
@@ -130,7 +130,7 @@ class TestOrganizationEndpoints:
         owner, _ = await UserFactory.create_user_with_wallet(db_session)
         member, _ = await UserFactory.create_user_with_wallet(db_session)
         org, _ = await OrganizationFactory.create_organization_with_owner(db_session, owner)
-        await OrganizationFactory.add_member(db_session, org, member, Role.MEMBER)
+        await OrganizationFactory.add_member(db_session, org, member, UserRole.VIEWER)
         
         headers = get_auth_headers(member)
         response = await client.put(
@@ -149,8 +149,8 @@ class TestOrganizationEndpoints:
         member2, _ = await UserFactory.create_user_with_wallet(db_session)
         
         org, _ = await OrganizationFactory.create_organization_with_owner(db_session, owner)
-        await OrganizationFactory.add_member(db_session, org, member1, Role.ADMIN)
-        await OrganizationFactory.add_member(db_session, org, member2, Role.MEMBER)
+        await OrganizationFactory.add_member(db_session, org, member1, UserRole.ADMIN)
+        await OrganizationFactory.add_member(db_session, org, member2, UserRole.VIEWER)
         
         headers = get_auth_headers(owner)
         response = await client.get(f"/api/v1/organizations/{org.id}/members", headers=headers)
@@ -163,7 +163,7 @@ class TestOrganizationEndpoints:
         role_map = {m["user"]["id"]: m["role"] for m in data}
         assert role_map[owner.id] == "OWNER"
         assert role_map[member1.id] == "ADMIN"
-        assert role_map[member2.id] == "MEMBER"
+        assert role_map[member2.id] == "VIEWER"
     
     @pytest.mark.asyncio
     async def test_add_organization_member(self, client: AsyncClient, db_session):
@@ -177,7 +177,7 @@ class TestOrganizationEndpoints:
             f"/api/v1/organizations/{org.id}/members",
             json={
                 "email": new_member.email,
-                "role": "MEMBER",
+                "role": "VIEWER",
             },
             headers=headers
         )
@@ -185,7 +185,7 @@ class TestOrganizationEndpoints:
         assert response.status_code == 201
         data = response.json()
         assert data["user"]["id"] == new_member.id
-        assert data["role"] == "MEMBER"
+        assert data["role"] == "VIEWER"
     
     @pytest.mark.asyncio
     async def test_update_member_role(self, client: AsyncClient, db_session):
@@ -193,7 +193,7 @@ class TestOrganizationEndpoints:
         owner, _ = await UserFactory.create_user_with_wallet(db_session)
         member, _ = await UserFactory.create_user_with_wallet(db_session)
         org, _ = await OrganizationFactory.create_organization_with_owner(db_session, owner)
-        await OrganizationFactory.add_member(db_session, org, member, Role.MEMBER)
+        await OrganizationFactory.add_member(db_session, org, member, UserRole.VIEWER)
         
         headers = get_auth_headers(owner)
         response = await client.put(
@@ -212,7 +212,7 @@ class TestOrganizationEndpoints:
         owner, _ = await UserFactory.create_user_with_wallet(db_session)
         member, _ = await UserFactory.create_user_with_wallet(db_session)
         org, _ = await OrganizationFactory.create_organization_with_owner(db_session, owner)
-        await OrganizationFactory.add_member(db_session, org, member, Role.MEMBER)
+        await OrganizationFactory.add_member(db_session, org, member, UserRole.VIEWER)
         
         headers = get_auth_headers(owner)
         response = await client.delete(
@@ -228,7 +228,7 @@ class TestOrganizationEndpoints:
         owner, _ = await UserFactory.create_user_with_wallet(db_session)
         member, _ = await UserFactory.create_user_with_wallet(db_session)
         org, _ = await OrganizationFactory.create_organization_with_owner(db_session, owner)
-        await OrganizationFactory.add_member(db_session, org, member, Role.MEMBER)
+        await OrganizationFactory.add_member(db_session, org, member, UserRole.VIEWER)
         
         headers = get_auth_headers(member)
         response = await client.delete(

@@ -205,7 +205,7 @@ class SQLAlchemyGenerator:
         'Decimal': 'Numeric',
         'Boolean': 'Boolean',
         'DateTime': 'DateTime',
-        'Json': 'JSON',
+        # 'Json' is handled specially to use JSONType
         'Bytes': 'LargeBinary',
     }
     
@@ -243,7 +243,11 @@ class SQLAlchemyGenerator:
         if self.has_func_default:
             output.append('from sqlalchemy.sql import func')
         output.append('from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship')
-        output.append('from sqlalchemy.dialects.postgresql import ARRAY, JSON, UUID')
+        output.append('from sqlalchemy.dialects.postgresql import UUID')
+        output.append('# Import custom types for cross-database compatibility')
+        output.append('from app.db.types import ArrayType, JSONType')
+        output.append('# Keep original imports for type hinting')
+        output.append('from sqlalchemy.dialects.postgresql import ARRAY, JSON')
         output.append('')
         output.append('')
         
@@ -291,6 +295,8 @@ class SQLAlchemyGenerator:
                     self.imports.add('LargeBinary')
                 if field.type in self.enums:
                     self.imports.add('Enum')
+                if field.db_type == 'Text':
+                    self.imports.add('Text')
                 if field.default_value == 'now()':
                     self.has_func_default = True
     
@@ -363,7 +369,11 @@ class SQLAlchemyGenerator:
                 fk_model = field.relation_model
                 fk_table = self._to_snake_case(fk_model)
                 fk_column = self._to_snake_case(field.references[i] if i < len(field.references) else 'id')
-                column_args.append(f'ForeignKey("{fk_table}.{fk_column}")')
+                # Handle circular dependencies between user and wallet
+                if model.name == 'User' and fk_model == 'Wallet':
+                    column_args.append(f'ForeignKey("{fk_table}.{fk_column}", use_alter=True)')
+                else:
+                    column_args.append(f'ForeignKey("{fk_table}.{fk_column}")')
         
         # Unique
         if field.is_unique:
@@ -409,10 +419,14 @@ class SQLAlchemyGenerator:
             elif field.db_type == 'Text':
                 return 'Text'
         
-        # Handle arrays
+        # Handle JSON type with custom type
+        if field.type == 'Json':
+            return 'JSONType'
+        
+        # Handle arrays with custom type
         if field.is_array:
             inner_type = self.TYPE_MAPPINGS.get(field.type, 'String')
-            return f'ARRAY({inner_type})'
+            return f'ArrayType({inner_type})'
         
         # Handle enums
         if field.type in self.enums:

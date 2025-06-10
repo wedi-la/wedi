@@ -4,7 +4,7 @@ Organization factory for generating test data.
 import uuid
 from datetime import datetime, timezone
 
-from app.models import Organization, Membership, Role
+from app.models import Organization, OrganizationUser, UserRole
 
 
 class OrganizationFactory:
@@ -42,7 +42,7 @@ class OrganizationFactory:
             "id": str(uuid.uuid4()),
             "user_id": user_id,
             "organization_id": organization_id,
-            "role": Role.OWNER,
+            "role": UserRole.OWNER,
             "is_active": True,
             "created_at": datetime.now(timezone.utc),
             "updated_at": datetime.now(timezone.utc),
@@ -75,9 +75,9 @@ class OrganizationFactory:
         membership_data = OrganizationFactory.create_membership_data(
             user_id=user.id,
             organization_id=organization.id,
-            role=Role.OWNER,
+            role=UserRole.OWNER,
         )
-        membership = Membership(**membership_data)
+        membership = OrganizationUser(**membership_data)
         db_session.add(membership)
         await db_session.commit()
         await db_session.refresh(membership)
@@ -85,14 +85,14 @@ class OrganizationFactory:
         return organization, membership
     
     @staticmethod
-    async def add_member(db_session, organization, user, role=Role.MEMBER):
+    async def add_member(db_session, organization, user, role=UserRole.VIEWER):
         """Add a member to an organization."""
         membership_data = OrganizationFactory.create_membership_data(
             user_id=user.id,
             organization_id=organization.id,
             role=role,
         )
-        membership = Membership(**membership_data)
+        membership = OrganizationUser(**membership_data)
         db_session.add(membership)
         await db_session.commit()
         await db_session.refresh(membership)

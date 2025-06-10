@@ -1,6 +1,6 @@
 """
 SQLAlchemy models generated from Prisma schema
-Generated at: 2025-06-08T20:30:46.989257
+Generated at: 2025-06-10T01:52:39.982706
 """
 
 from datetime import datetime
@@ -24,7 +24,11 @@ from sqlalchemy import (
 )
 from sqlalchemy.sql import func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy.dialects.postgresql import ARRAY, JSON, UUID
+from sqlalchemy.dialects.postgresql import UUID
+# Import custom types for cross-database compatibility
+from app.db.types import ArrayType, JSONType
+# Keep original imports for type hinting
+from sqlalchemy.dialects.postgresql import ARRAY, JSON
 
 
 class Base(DeclarativeBase):
@@ -213,12 +217,12 @@ class Agent(Base):
     model: Mapped[str] = mapped_column(String, nullable=False)
     agent_wallet_id: Mapped[Optional[str]] = mapped_column(String, unique=True, nullable=True)
     agent_wallet: Mapped[Optional[str]] = mapped_column(String, ForeignKey("wallet.id"), nullable=True)
-    graph_definition: Mapped[dict] = mapped_column(JSON, nullable=False)
-    tools: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=False)
+    graph_definition: Mapped[dict] = mapped_column(JSONType, nullable=False)
+    tools: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
     system_prompt: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    supported_providers: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=False)
-    supported_chains: Mapped[List[int]] = mapped_column(ARRAY(Integer), nullable=False)
-    capabilities: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    supported_providers: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
+    supported_chains: Mapped[List[int]] = mapped_column(ArrayType(Integer), nullable=False)
+    capabilities: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     total_executions: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     avg_execution_time: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
@@ -238,8 +242,8 @@ class AgentCheckpoint(Base):
     agent: Mapped[str] = mapped_column(String, ForeignKey("agent.id"), nullable=False)
     thread_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
     checkpoint_id: Mapped[str] = mapped_column(String, nullable=False)
-    state: Mapped[dict] = mapped_column(JSON, nullable=False)
-    metadata_: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    state: Mapped[dict] = mapped_column(JSONType, nullable=False)
+    metadata_: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
 
     __table_args__ = (
@@ -257,9 +261,9 @@ class AgentDecision(Base):
     payment_order_id: Mapped[Optional[str]] = mapped_column(String, nullable=True, index=True)
     payment_order: Mapped[Optional[str]] = mapped_column(String, ForeignKey("payment_order.id"), nullable=True)
     decision_type: Mapped[str] = mapped_column(String, nullable=False)
-    input: Mapped[dict] = mapped_column(JSON, nullable=False)
-    reasoning: Mapped[dict] = mapped_column(JSON, nullable=False)
-    decision: Mapped[dict] = mapped_column(JSON, nullable=False)
+    input: Mapped[dict] = mapped_column(JSONType, nullable=False)
+    reasoning: Mapped[dict] = mapped_column(JSONType, nullable=False)
+    decision: Mapped[dict] = mapped_column(JSONType, nullable=False)
     confidence: Mapped[Decimal] = mapped_column(Numeric(3, 2), nullable=False)
     execution_time: Mapped[int] = mapped_column(Integer, nullable=False)
     tokens_used: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
@@ -281,7 +285,7 @@ class AgentInteraction(Base):
     type: Mapped[InteractionType] = mapped_column(Enum(InteractionType), nullable=False)
     message: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     action: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    result: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    result: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
 
 class ApiKey(Base):
@@ -294,7 +298,7 @@ class ApiKey(Base):
     name: Mapped[str] = mapped_column(String, nullable=False)
     key_hash: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     prefix: Mapped[str] = mapped_column(String, nullable=False, index=True)
-    scopes: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=False)
+    scopes: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
     rate_limit: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     expires_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
@@ -314,8 +318,8 @@ class AuditLog(Base):
     action: Mapped[str] = mapped_column(String, nullable=False)
     entity_type: Mapped[Optional[str]] = mapped_column(String, nullable=True, index=True)
     entity_id: Mapped[Optional[str]] = mapped_column(String, nullable=True, index=True)
-    changes: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
-    metadata_: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    changes: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
+    metadata_: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     ip_address: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     user_agent: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     request_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)
@@ -363,7 +367,7 @@ class Customer(Base):
     email: Mapped[str] = mapped_column(String, nullable=False)
     name: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     phone: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    billing_address: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    billing_address: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
 
 class CustomerPaymentMethod(Base):
     """Generated from Prisma model CustomerPaymentMethod"""
@@ -385,7 +389,7 @@ class CustomerPaymentMethod(Base):
     chain_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     is_default: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    metadata_: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    metadata_: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -442,7 +446,7 @@ class Organization(Base):
     country: Mapped[str] = mapped_column(String, nullable=False)
     compliance_status: Mapped[ComplianceStatus] = mapped_column(Enum(ComplianceStatus), nullable=False, default="PENDING")
     kyc_verified_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    settings: Mapped[dict] = mapped_column(JSON, nullable=False)
+    settings: Mapped[dict] = mapped_column(JSONType, nullable=False)
 
 class OrganizationUser(Base):
     """Generated from Prisma model OrganizationUser"""
@@ -454,7 +458,7 @@ class OrganizationUser(Base):
     user_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
     user: Mapped[str] = mapped_column(String, ForeignKey("user.id"), nullable=False)
     role: Mapped[UserRole] = mapped_column(Enum(UserRole), nullable=False)
-    permissions: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=False)
+    permissions: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
     invited_by: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     invited_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
     accepted_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
@@ -474,8 +478,8 @@ class PaymentEvent(Base):
     sequence_number: Mapped[int] = mapped_column(Integer, nullable=False)
     event_type: Mapped[str] = mapped_column(String, nullable=False, index=True)
     event_version: Mapped[str] = mapped_column(String, nullable=False, default="1.0")
-    data: Mapped[dict] = mapped_column(JSON, nullable=False)
-    metadata_: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    data: Mapped[dict] = mapped_column(JSONType, nullable=False)
+    metadata_: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     kafka_topic: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     kafka_partition: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     kafka_offset: Mapped[Optional[int]] = mapped_column(BigInteger, nullable=True)
@@ -514,7 +518,7 @@ class PaymentLink(Base):
     allow_multiple_payments: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     requires_kyc: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     expires_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    redirect_urls: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    redirect_urls: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
 
 class PaymentOrder(Base):
     """Generated from Prisma model PaymentOrder"""
@@ -546,10 +550,10 @@ class PaymentOrder(Base):
     customer_ip: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     customer_country: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     risk_score: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
-    risk_factors: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    risk_factors: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     kyc_status: Mapped[KycStatus] = mapped_column(Enum(KycStatus), nullable=False, default="NOT_REQUIRED")
     kyc_verified_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    selected_route: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    selected_route: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     failure_reason: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     failure_code: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     retry_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
@@ -581,7 +585,7 @@ class Price(Base):
     interval_count: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     trial_period_days: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    metadata_: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    metadata_: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     # subscriptionItems: Mapped["SubscriptionItem"] = relationship(back_populates="price")
@@ -598,8 +602,8 @@ class Product(Base):
     description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     type: Mapped[ProductType] = mapped_column(Enum(ProductType), nullable=False, default="SERVICE")
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
-    metadata_: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
-    images: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=False)
+    metadata_: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
+    images: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     # prices: Mapped["Price"] = relationship(back_populates="product")
@@ -612,10 +616,10 @@ class Provider(Base):
     code: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     name: Mapped[str] = mapped_column(String, nullable=False)
     type: Mapped[ProviderType] = mapped_column(Enum(ProviderType), nullable=False)
-    supported_countries: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=False)
-    supported_currencies: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=False)
-    payment_methods: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=False)
-    features: Mapped[dict] = mapped_column(JSON, nullable=False)
+    supported_countries: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
+    supported_currencies: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
+    payment_methods: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
+    features: Mapped[dict] = mapped_column(JSONType, nullable=False)
 
 class ProviderConfig(Base):
     """Generated from Prisma model ProviderConfig"""
@@ -627,9 +631,9 @@ class ProviderConfig(Base):
     provider_id: Mapped[str] = mapped_column(String, nullable=False)
     provider: Mapped[str] = mapped_column(String, ForeignKey("provider.id"), nullable=False)
     environment: Mapped[Environment] = mapped_column(Enum(Environment), nullable=False, default="PRODUCTION")
-    credentials: Mapped[dict] = mapped_column(JSON, nullable=False)
+    credentials: Mapped[dict] = mapped_column(JSONType, nullable=False)
     webhook_secret: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    settings: Mapped[dict] = mapped_column(JSON, nullable=False)
+    settings: Mapped[dict] = mapped_column(JSONType, nullable=False)
 
 class ProviderRoute(Base):
     """Generated from Prisma model ProviderRoute"""
@@ -650,7 +654,7 @@ class ProviderRoute(Base):
     max_amount: Mapped[Decimal] = mapped_column(Numeric(20, 8), nullable=False)
     estimated_time: Mapped[int] = mapped_column(Integer, nullable=False)
     cutoff_time: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    working_days: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=False)
+    working_days: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True, index=True)
     priority: Mapped[int] = mapped_column(Integer, nullable=False, default=100)
 
@@ -670,8 +674,8 @@ class ProviderTransaction(Base):
     type: Mapped[ProviderTxType] = mapped_column(Enum(ProviderTxType), nullable=False)
     external_id: Mapped[Optional[str]] = mapped_column(String, nullable=True, index=True)
     status: Mapped[str] = mapped_column(String, nullable=False)
-    request: Mapped[dict] = mapped_column(JSON, nullable=False)
-    response: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    request: Mapped[dict] = mapped_column(JSONType, nullable=False)
+    response: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     error_code: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     error_message: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     is_retryable: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
@@ -694,7 +698,7 @@ class Subscription(Base):
     ended_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
     trial_start: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
     trial_end: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
-    metadata_: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    metadata_: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     # items: Mapped["SubscriptionItem"] = relationship(back_populates="subscription")
@@ -709,7 +713,7 @@ class SubscriptionItem(Base):
     price_id: Mapped[str] = mapped_column(String, nullable=False)
     price: Mapped[str] = mapped_column(String, ForeignKey("price.id"), nullable=False)
     quantity: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
-    metadata_: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    metadata_: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
@@ -725,7 +729,7 @@ class User(Base):
     auth_provider_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     email_verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     primary_wallet_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    primary_wallet: Mapped[Optional[str]] = mapped_column(String, ForeignKey("wallet.id"), nullable=True)
+    primary_wallet: Mapped[Optional[str]] = mapped_column(String, ForeignKey("wallet.id", use_alter=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     last_login_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
@@ -752,7 +756,7 @@ class Wallet(Base):
     organization_id: Mapped[Optional[str]] = mapped_column(String, nullable=True, index=True)
     organization: Mapped[Optional[str]] = mapped_column(String, ForeignKey("organization.id"), nullable=True)
     smart_wallet_factory: Mapped[Optional[str]] = mapped_column(String, nullable=True)
-    smart_wallet_config: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    smart_wallet_config: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     allowlist: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     blocklist: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
@@ -775,7 +779,7 @@ class Webhook(Base):
     organization_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
     organization: Mapped[str] = mapped_column(String, ForeignKey("organization.id"), nullable=False)
     url: Mapped[str] = mapped_column(String, nullable=False)
-    events: Mapped[List[str]] = mapped_column(ARRAY(String), nullable=False)
+    events: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
     secret: Mapped[str] = mapped_column(String, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     failure_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
@@ -793,7 +797,7 @@ class WebhookDelivery(Base):
     webhook: Mapped[str] = mapped_column(String, ForeignKey("webhook.id"), nullable=False)
     event_type: Mapped[str] = mapped_column(String, nullable=False)
     event_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
-    payload: Mapped[dict] = mapped_column(JSON, nullable=False)
+    payload: Mapped[dict] = mapped_column(JSONType, nullable=False)
     status_code: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     response: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     error: Mapped[Optional[str]] = mapped_column(String, nullable=True)
