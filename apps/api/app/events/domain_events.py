@@ -218,6 +218,59 @@ class PaymentLinkExpiredEvent(DomainEvent):
         )
 
 
+class PaymentLinkUpdatedEvent(DomainEvent):
+    """Event emitted when a payment link is updated."""
+    
+    def __init__(
+        self,
+        payment_link_id: str,
+        organization_id: str,
+        updated_by: str,
+        old_status: Optional[str] = None,
+        new_status: Optional[str] = None,
+        **kwargs
+    ):
+        """Initialize payment link updated event."""
+        data = {
+            "organization_id": organization_id,
+            "updated_by": updated_by,
+        }
+        if old_status and new_status:
+            data["old_status"] = old_status
+            data["new_status"] = new_status
+        
+        super().__init__(
+            event_type="payment_link.updated",
+            aggregate_id=payment_link_id,
+            aggregate_type="payment_link",
+            data=data,
+            **kwargs
+        )
+
+
+class PaymentLinkArchivedEvent(DomainEvent):
+    """Event emitted when a payment link is archived."""
+    
+    def __init__(
+        self,
+        payment_link_id: str,
+        organization_id: str,
+        archived_by: str,
+        **kwargs
+    ):
+        """Initialize payment link archived event."""
+        super().__init__(
+            event_type="payment_link.archived",
+            aggregate_id=payment_link_id,
+            aggregate_type="payment_link",
+            data={
+                "organization_id": organization_id,
+                "archived_by": archived_by,
+            },
+            **kwargs
+        )
+
+
 # Payment Order Events
 class PaymentOrderCreatedEvent(DomainEvent):
     """Event emitted when a payment order is created."""

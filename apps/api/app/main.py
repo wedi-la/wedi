@@ -14,6 +14,7 @@ from fastapi.responses import JSONResponse
 
 from app.core.config import settings
 from app.core.logging import get_logger
+from app.core.openapi import configure_scalar_ui, custom_openapi_schema
 from app.db.session import init_db, close_db
 from app.events.config import shutdown_event_publisher, startup_event_publisher
 from app.middleware.auth import JWTAuthMiddleware
@@ -91,10 +92,18 @@ def create_application() -> FastAPI:
         description="AI-native payment orchestration platform API",
         version=settings.APP_VERSION,
         lifespan=lifespan,
-        # docs_url="/api/docs" if settings.ENVIRONMENT != "production" else None,
-        # redoc_url="/api/redoc" if settings.ENVIRONMENT != "production" else None,
-        # openapi_url="/api/openapi.json" if settings.ENVIRONMENT != "production" else None,
+        # Enable documentation URLs (disabled in production via env check)
+        docs_url=None,  # We'll use Scalar instead of default Swagger UI
+        redoc_url="/redoc" if settings.ENVIRONMENT != "production" else None,
+        openapi_url="/openapi.json" if settings.ENVIRONMENT != "production" else None,
     )
+    
+    # Configure custom OpenAPI schema
+    app.openapi = lambda: custom_openapi_schema(app)
+    
+    # Configure Scalar documentation UI
+    if settings.ENVIRONMENT != "production":
+        configure_scalar_ui(app)
     
     # Add middleware stack (order matters - applied in reverse)
     
@@ -142,6 +151,7 @@ def create_application() -> FastAPI:
             "version": settings.APP_VERSION,
             "status": "running",
             "environment": settings.ENVIRONMENT,
+            "docs": "/docs" if settings.ENVIRONMENT != "production" else None,
         }
     
     @app.get("/health", include_in_schema=False)

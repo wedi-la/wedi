@@ -2101,8 +2101,8 @@
             3,
             4
           ],
-          "details": "Create endpoints for creating, updating, and deleting payment links. Ensure data integrity and validation.",
-          "status": "pending",
+          "details": "Create endpoints for creating, updating, and deleting payment links. Ensure data integrity and validation.\n<info added on 2025-06-10T04:36:45.722Z>\nSuccessfully implemented Payment Link Endpoints with comprehensive functionality:\n\n1. Created payment_links.py router with the following endpoints:\n   - GET /api/v1/payment-links/ - List payment links with filtering\n   - POST /api/v1/payment-links/ - Create new payment link\n   - GET /api/v1/payment-links/active - List only active links\n   - GET /api/v1/payment-links/search - Advanced search with filters\n   - GET /api/v1/payment-links/{id} - Get specific link with statistics\n   - GET /api/v1/payment-links/by-short-code/{code} - Public endpoint for payment page\n   - PUT /api/v1/payment-links/{id} - Update payment link\n   - DELETE /api/v1/payment-links/{id} - Archive payment link\n   - POST /api/v1/payment-links/{id}/duplicate - Duplicate a link\n\n2. Key features implemented:\n   - Full CRUD operations with proper authorization\n   - Agent validation when creating links with executing agents\n   - Automatic short code generation and QR code placeholder\n   - Reference ID duplicate checking\n   - Statistics integration showing payment counts and success rates\n   - Public endpoint for payment page access (no auth required)\n   - Status transition validation (cannot update paid links, etc.)\n   - Archive functionality with safety checks\n   - Event emission for all state changes\n\n3. Events integration:\n   - Added PaymentLinkUpdatedEvent and PaymentLinkArchivedEvent to domain_events.py\n   - Updated events/__init__.py to export new events\n   - Integrated event publishing in all state-changing operations\n\n4. Security updates:\n   - Added public path pattern to JWTAuthMiddleware for /api/v1/payment-links/by-short-code/* endpoints\n   - Proper permission checks (creator or admin can update/archive)\n   - Organization context enforcement\n\n5. Integration:\n   - Added router to v1 API module\n   - Uses Unit of Work pattern for transactional consistency\n   - Leverages existing repositories and schemas\n   - Follows RESTful principles\n\nThe payment link endpoints are now fully implemented and ready for testing. The next steps would be to test the endpoints and potentially implement the remaining endpoints for payment orders, customers, and products.\n</info added on 2025-06-10T04:36:45.722Z>",
+          "status": "done",
           "testStrategy": "Test payment link endpoints with various scenarios, including invalid data."
         },
         {
@@ -2127,7 +2127,7 @@
             8
           ],
           "details": "Use FastAPI's built-in support to generate and customize OpenAPI documentation. Add examples for clarity.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Review the generated OpenAPI documentation for completeness and accuracy."
         },
         {
@@ -2141,7 +2141,7 @@
             8
           ],
           "details": "Integrate an event system to emit events (e.g., using a message broker) after successful state changes in endpoints.",
-          "status": "pending",
+          "status": "done",
           "testStrategy": "Verify that events are emitted correctly by subscribing to the event stream and observing changes."
         },
         {

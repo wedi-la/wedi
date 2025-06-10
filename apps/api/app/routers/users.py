@@ -22,6 +22,11 @@ from app.api.dependencies import (
 from app.core.exceptions import ForbiddenException, NotFoundException
 from app.core.logging import get_logger
 from app.db.session import get_db
+from app.events import (
+    UserWalletLinkedEvent,
+    WalletCreatedEvent,
+)
+from app.events.event_publisher import get_event_publisher, EventPublisher
 from app.models import User, UserRole, WalletType
 from app.repositories.user import UserRepository
 from app.repositories.wallet import WalletRepository
@@ -424,6 +429,7 @@ async def add_user_wallet(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
     wallet_repository: WalletRepository = Depends(get_wallet_repository),
+    event_publisher: EventPublisher = Depends(get_event_publisher),
 ) -> Wallet:
     """
     Add a wallet to user.
@@ -444,6 +450,25 @@ async def add_user_wallet(
     
     try:
         wallet = await wallet_repository.create(db, data=create_data)
+        
+        # Emit wallet created event
+        wallet_created_event = WalletCreatedEvent(
+            wallet_id=wallet.id,
+            wallet_type=wallet.wallet_type,
+            address=wallet.address,
+            chain_id=wallet.chain_id,
+            owner_id=user_id,
+        )
+        await event_publisher.publish_event(wallet_created_event)
+        
+        # Emit wallet linked event
+        wallet_linked_event = UserWalletLinkedEvent(
+            user_id=user_id,
+            wallet_id=wallet.id,
+            wallet_address=wallet.address,
+        )
+        await event_publisher.publish_event(wallet_linked_event)
+        
         return Wallet.model_validate(wallet)
     except Exception as e:
         if "duplicate key" in str(e).lower():

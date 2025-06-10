@@ -399,11 +399,54 @@ Successfully implemented User Management Endpoints:
 The user management endpoints are now ready for testing and integration with the frontend, providing comprehensive user profile and wallet management capabilities.
 </info added on 2025-06-08T23:52:11.342Z>
 
-## 8. Implement Payment Link Endpoints [pending]
+## 8. Implement Payment Link Endpoints [done]
 ### Dependencies: 27.2, 27.3, 27.4
 ### Description: Develop endpoints for managing payment links under /api/v1/payment-links/*.
 ### Details:
 Create endpoints for creating, updating, and deleting payment links. Ensure data integrity and validation.
+<info added on 2025-06-10T04:36:45.722Z>
+Successfully implemented Payment Link Endpoints with comprehensive functionality:
+
+1. Created payment_links.py router with the following endpoints:
+   - GET /api/v1/payment-links/ - List payment links with filtering
+   - POST /api/v1/payment-links/ - Create new payment link
+   - GET /api/v1/payment-links/active - List only active links
+   - GET /api/v1/payment-links/search - Advanced search with filters
+   - GET /api/v1/payment-links/{id} - Get specific link with statistics
+   - GET /api/v1/payment-links/by-short-code/{code} - Public endpoint for payment page
+   - PUT /api/v1/payment-links/{id} - Update payment link
+   - DELETE /api/v1/payment-links/{id} - Archive payment link
+   - POST /api/v1/payment-links/{id}/duplicate - Duplicate a link
+
+2. Key features implemented:
+   - Full CRUD operations with proper authorization
+   - Agent validation when creating links with executing agents
+   - Automatic short code generation and QR code placeholder
+   - Reference ID duplicate checking
+   - Statistics integration showing payment counts and success rates
+   - Public endpoint for payment page access (no auth required)
+   - Status transition validation (cannot update paid links, etc.)
+   - Archive functionality with safety checks
+   - Event emission for all state changes
+
+3. Events integration:
+   - Added PaymentLinkUpdatedEvent and PaymentLinkArchivedEvent to domain_events.py
+   - Updated events/__init__.py to export new events
+   - Integrated event publishing in all state-changing operations
+
+4. Security updates:
+   - Added public path pattern to JWTAuthMiddleware for /api/v1/payment-links/by-short-code/* endpoints
+   - Proper permission checks (creator or admin can update/archive)
+   - Organization context enforcement
+
+5. Integration:
+   - Added router to v1 API module
+   - Uses Unit of Work pattern for transactional consistency
+   - Leverages existing repositories and schemas
+   - Follows RESTful principles
+
+The payment link endpoints are now fully implemented and ready for testing. The next steps would be to test the endpoints and potentially implement the remaining endpoints for payment orders, customers, and products.
+</info added on 2025-06-10T04:36:45.722Z>
 
 ## 9. Set Up Error Handling and Exception Middleware [done]
 ### Dependencies: 27.1
@@ -428,13 +471,13 @@ Enhanced error handling and exception middleware:
 4. Added handler for APIException to extract additional context.
 </info added on 2025-06-08T19:27:45.184Z>
 
-## 10. Configure OpenAPI Documentation [pending]
+## 10. Configure OpenAPI Documentation [done]
 ### Dependencies: 27.5, 27.6, 27.7, 27.8
 ### Description: Automatically generate OpenAPI documentation with examples for each endpoint.
 ### Details:
 Use FastAPI's built-in support to generate and customize OpenAPI documentation. Add examples for clarity.
 
-## 11. Implement Event Emission After State Changes [pending]
+## 11. Implement Event Emission After State Changes [done]
 ### Dependencies: 27.5, 27.6, 27.7, 27.8
 ### Description: Ensure each endpoint emits events after state changes.
 ### Details:

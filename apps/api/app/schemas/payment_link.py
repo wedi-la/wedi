@@ -3,7 +3,7 @@ Payment link schemas for API validation and serialization.
 """
 from datetime import datetime
 from decimal import Decimal
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, HttpUrl, validator
 
@@ -149,4 +149,75 @@ class PaymentLinkFilter(BaseModel):
     expires_before: Optional[datetime] = None
     expires_after: Optional[datetime] = None
     has_smart_contract: Optional[bool] = None
-    executing_agent_id: Optional[str] = None 
+    executing_agent_id: Optional[str] = None
+
+
+# Additional schemas needed for the payment links router
+
+class PaymentLinkListResponse(BaseModel):
+    """Response schema for listing payment links."""
+    
+    items: List[PaymentLinkSummary]
+    total: int
+    page: int
+    limit: int
+    has_next: bool
+    
+    class Config:
+        """Pydantic config."""
+        from_attributes = True
+
+
+class PaymentLinkPublicResponse(BaseModel):
+    """Public payment link response (no sensitive data)."""
+    
+    id: str
+    title: str
+    description: Optional[str]
+    amount: Decimal
+    currency: str
+    target_amount: Optional[Decimal]
+    target_currency: Optional[str]
+    status: PaymentLinkStatus
+    requires_kyc: bool
+    expires_at: Optional[datetime]
+    theme: Optional[Dict]
+    redirect_urls: Optional[Dict[str, str]]
+    organization_name: Optional[str]  # From organization lookup
+    
+    class Config:
+        """Pydantic config."""
+        from_attributes = True
+
+
+class PaymentLinkSearchParams(BaseModel):
+    """Advanced search parameters for payment links."""
+    
+    query: Optional[str] = Field(None, description="Search in title, description, reference_id")
+    status: Optional[PaymentLinkStatus] = None
+    currency: Optional[str] = None
+    created_by_id: Optional[str] = None
+    smart_contract_address: Optional[str] = None
+    min_amount: Optional[Decimal] = None
+    max_amount: Optional[Decimal] = None
+    created_after: Optional[datetime] = None
+    created_before: Optional[datetime] = None
+    expires_after: Optional[datetime] = None
+    expires_before: Optional[datetime] = None
+    page: int = Field(1, ge=1)
+    limit: int = Field(20, ge=1, le=100)
+
+
+class PaymentLinkSearchResponse(BaseModel):
+    """Response for payment link search."""
+    
+    items: List[PaymentLink]
+    total: int
+    page: int
+    limit: int
+    query: Optional[str]
+    filters_applied: Dict[str, Any]
+    
+    class Config:
+        """Pydantic config."""
+        from_attributes = True 

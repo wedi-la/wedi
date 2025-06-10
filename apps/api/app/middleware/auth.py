@@ -4,6 +4,7 @@ JWT Authentication middleware.
 This middleware handles JWT token validation and user authentication
 for protected endpoints.
 """
+import re
 from typing import Optional
 
 from fastapi import HTTPException, Request, status
@@ -48,6 +49,7 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
         "/api/v1/auth/forgot-password",
         "/api/v1/auth/reset-password",
         "/api/v1/auth/verify-email",
+        "/api/v1/auth/payload",  # For thirdweb SIWE payload generation
     }
     
     # Path prefixes that are always public
@@ -55,6 +57,11 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
         "/static",
         "/public",
     }
+    
+    # Path patterns that are public (regex patterns)
+    PUBLIC_PATH_PATTERNS = [
+        re.compile(r"^/api/v1/payment-links/by-short-code/[a-z0-9]+$"),
+    ]
     
     async def dispatch(self, request: Request, call_next) -> Response:
         """
@@ -148,6 +155,11 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
         # Prefix match
         for prefix in self.PUBLIC_PATH_PREFIXES:
             if path.startswith(prefix):
+                return True
+        
+        # Pattern match
+        for pattern in self.PUBLIC_PATH_PATTERNS:
+            if pattern.match(path):
                 return True
         
         return False

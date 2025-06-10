@@ -12,6 +12,8 @@ from app.api.dependencies import (
 )
 from app.core.logging import get_logger
 from app.db.session import get_db
+from app.events import UserCreatedEvent, UserWalletLinkedEvent
+from app.events.event_publisher import get_event_publisher, EventPublisher
 from app.models import User
 from app.repositories.user import UserRepository
 from app.repositories.organization import OrganizationRepository
@@ -68,6 +70,7 @@ async def login(
     db: AsyncSession = Depends(get_db),
     user_repository: UserRepository = Depends(get_user_repository),
     organization_repository: OrganizationRepository = Depends(get_organization_repository),
+    event_publisher: EventPublisher = Depends(get_event_publisher),
 ) -> LoginResponse:
     """
     Verify the signed SIWE message and create a session.
@@ -78,12 +81,39 @@ async def login(
     logger.info(f"Login attempt for address: {login_request.payload.address}")
     
     try:
+        # Check if this is a new user registration
+        existing_user = await user_repository.get_by_email(
+            db,
+            email=login_request.payload.address.lower()  # Using address as email for wallet auth
+        )
+        
         response = await AuthService.verify_and_login(
             db,
             user_repository,
             organization_repository,
             login_request
         )
+        
+        # If this was a new user, emit user created event
+        if not existing_user:
+            logger.info(f"New user created during login: {response.user.id}")
+            
+            # Emit user created event
+            user_created_event = UserCreatedEvent(
+                user_id=str(response.user.id),
+                email=response.user.email,
+                auth_provider=response.user.auth_provider,
+            )
+            await event_publisher.publish_event(user_created_event)
+            
+            # If user has a wallet, emit wallet linked event
+            if response.user.primary_wallet_id:
+                wallet_linked_event = UserWalletLinkedEvent(
+                    user_id=str(response.user.id),
+                    wallet_id=str(response.user.primary_wallet_id),
+                    wallet_address=login_request.payload.address,
+                )
+                await event_publisher.publish_event(wallet_linked_event)
         
         logger.info(f"Successful login for user: {response.user.id}")
         return response

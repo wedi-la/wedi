@@ -21,11 +21,11 @@ from app.api.dependencies import (
 from app.core.logging import get_logger
 from app.db.session import get_db
 from app.events import (
-    get_event_publisher,
     OrganizationCreatedEvent,
     MemberAddedEvent,
     MemberRemovedEvent,
 )
+from app.events.event_publisher import get_event_publisher, EventPublisher
 from app.models import User, UserRole
 from app.repositories.organization import OrganizationRepository
 from app.repositories.base import DuplicateError, NotFoundError
@@ -88,6 +88,7 @@ async def create_organization(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
     uow = Depends(get_unit_of_work),
+    event_publisher: EventPublisher = Depends(get_event_publisher),
 ) -> Organization:
     """
     Create a new organization.
@@ -127,16 +128,16 @@ async def create_organization(
                 invited_by=str(current_user.id),
             )
             
+            await uow.commit()
+            
             # Emit organization created event
-            event_publisher = await get_event_publisher()
             event = OrganizationCreatedEvent(
                 organization_id=organization.id,
                 name=organization.name,
+                slug=organization.slug,
                 owner_id=str(current_user.id),
             )
-            await event_publisher.publish(event)
-            
-            await uow.commit()
+            await event_publisher.publish_event(event)
             
             logger.info(f"Organization created successfully: {organization.id}")
             return Organization.model_validate(organization)
@@ -291,6 +292,7 @@ async def add_organization_member(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
     uow = Depends(get_unit_of_work),
+    event_publisher: EventPublisher = Depends(get_event_publisher),
 ) -> OrganizationMembership:
     """
     Add a member to the organization.
@@ -318,17 +320,16 @@ async def add_organization_member(
                 invited_by=str(current_user.id),
             )
             
+            await uow.commit()
+            
             # Emit event
-            event_publisher = await get_event_publisher()
             event = MemberAddedEvent(
                 organization_id=organization_id,
                 user_id=member_data.user_id,
-                role=member_data.role.value,
+                role=member_data.role,
                 invited_by=str(current_user.id),
             )
-            await event_publisher.publish(event)
-            
-            await uow.commit()
+            await event_publisher.publish_event(event)
             
             logger.info(f"User {member_data.user_id} added to organization {organization_id}")
             return OrganizationMembership.model_validate(membership)
@@ -411,6 +412,7 @@ async def remove_organization_member(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
     uow = Depends(get_unit_of_work),
+    event_publisher: EventPublisher = Depends(get_event_publisher),
 ) -> None:
     """
     Remove a member from the organization.
@@ -446,16 +448,15 @@ async def remove_organization_member(
                     detail="Member not found in organization",
                 )
             
+            await uow.commit()
+            
             # Emit event
-            event_publisher = await get_event_publisher()
             event = MemberRemovedEvent(
                 organization_id=organization_id,
                 user_id=user_id,
                 removed_by=str(current_user.id),
             )
-            await event_publisher.publish(event)
-            
-            await uow.commit()
+            await event_publisher.publish_event(event)
             
             logger.info(f"User {user_id} removed from organization {organization_id}")
             
