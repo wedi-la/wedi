@@ -53,3 +53,67 @@ Agents should operate autonomously, executing payments and making decisions base
 10. **Marketplace Functionality**: Test the agent marketplace infrastructure to ensure it supports dynamic deployment and scaling.
 
 11. **Database Synchronization Testing**: Verify that the synchronization between Prisma and SQLAlchemy is accurate for all key models, and that FastAPI endpoints return responses matching Prisma-generated TypeScript types.
+
+# Subtasks:
+## 1. Implement Agent CRUD APIs [pending]
+### Dependencies: None
+### Description: Develop RESTful APIs to create, read, update, and delete agent records. Ensure these APIs are secure and scalable.
+### Details:
+Use FastAPI for API development. Implement Prisma models for database operations. Ensure multi-tenancy by using organizationId. Secure the endpoints with proper authentication and authorization mechanisms.
+
+## 2. Integrate Agent Wallet Creation [pending]
+### Dependencies: 23.1
+### Description: Automatically create and manage wallets for each agent using Thirdweb Engine.
+### Details:
+Implement wallet creation logic in the agent creation API. Store wallet metadata consistently across Prisma and SQLAlchemy. Ensure secure storage of wallet information.
+
+## 3. Configure Agent Capabilities [pending]
+### Dependencies: 23.1
+### Description: Implement functionality to configure agent capabilities, including supported providers and decision authority levels.
+### Details:
+Create API endpoints for configuring agent capabilities. Store capability configurations in the database using Prisma models.
+
+## 4. Implement Agent Assignment Logic [pending]
+### Dependencies: 23.1, 23.3
+### Description: Develop logic to assign tasks to agents based on their capabilities and current load.
+### Details:
+Create a task assignment algorithm that considers agent capabilities and load. Implement load balancing to optimize performance.
+
+## 5. Monitor Agent Health [pending]
+### Dependencies: 23.1
+### Description: Create a system to monitor agent health and status, including uptime, response times, and error rates.
+### Details:
+Implement health monitoring endpoints. Collect and store health metrics in the database using Prisma models.
+
+## 6. Log Agent Decisions [pending]
+### Dependencies: 23.1
+### Description: Implement logging for all agent decisions and actions to create an audit trail.
+### Details:
+Create a logging mechanism that records agent decisions. Ensure logs are immutable and securely stored in the database using Prisma models.
+
+## 7. Track Agent Performance Metrics [pending]
+### Dependencies: 23.1
+### Description: Develop analytics to track agent performance, including transaction success rates and processing times.
+### Details:
+Implement performance tracking endpoints. Collect and store performance metrics in the database using Prisma models.
+
+## 8. Implement Agent Version Control [pending]
+### Dependencies: 23.1
+### Description: Allow for updates and rollbacks of agent software.
+### Details:
+Create a version control system for agent software. Implement endpoints to update and rollback agent versions.
+
+## 9. Manage Integration Keys for Agents [pending]
+### Dependencies: 23.1, 23.2
+### Description: Implement integration key generation and management system for connecting agents to payment links
+### Details:
+Develop comprehensive integration key management:
+- Generate secure integration keys with proper prefixes (wedi_ik_...)
+- Hash keys before storage using industry-standard algorithms
+- Associate keys with specific agents and their capabilities
+- Implement key rotation and expiration policies
+- Track key usage statistics and last used timestamps
+- Create API endpoints for key management (create, list, revoke)
+- Ensure proper access control (only organization admins can manage keys)
+- Integrate with payment link creation to ensure valid key assignment
+

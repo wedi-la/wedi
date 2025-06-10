@@ -15,7 +15,7 @@ from app.core.security import (
 )
 from app.repositories.user import UserRepository
 from app.repositories.organization import OrganizationRepository
-from app.models import User, Organization, Wallet
+from app.models import User, Organization, Wallet, AuthProvider
 from app.schemas.auth import (
     SIWEPayloadRequest,
     SIWEPayload,
@@ -29,6 +29,8 @@ from app.core.exceptions import (
     BadRequestException,
     NotFoundException,
 )
+from app.schemas.user import UserCreate
+from app.schemas.wallet import WalletCreate
 
 
 class AuthService:
@@ -124,7 +126,7 @@ Expiration Time: {expiration_time.isoformat()}"""
         access_token = create_access_token(
             data={
                 "sub": str(user.id),
-                "wallet_address": user.wallet_address,
+                "wallet_address": address,  # Use the address from the login request
                 "email": user.email,
             }
         )
@@ -174,11 +176,23 @@ Expiration Time: {expiration_time.isoformat()}"""
             if not user:
                 raise UnauthorizedException("User not found")
             
+            # Get wallet address from primary wallet or auth_provider_id
+            wallet_address = None
+            if user.auth_provider == AuthProvider.THIRDWEB and user.auth_provider_id:
+                wallet_address = user.auth_provider_id
+            elif user.primary_wallet_id:
+                # Get wallet address from primary wallet if needed
+                from app.repositories.wallet import WalletRepository
+                wallet_repo = WalletRepository()
+                wallet = await wallet_repo.get(db, id=user.primary_wallet_id)
+                if wallet:
+                    wallet_address = wallet.address
+            
             # Create new tokens
             access_token = create_access_token(
                 data={
                     "sub": str(user.id),
-                    "wallet_address": user.wallet_address,
+                    "wallet_address": wallet_address,
                     "email": user.email,
                 }
             )
@@ -259,30 +273,32 @@ Expiration Time: {expiration_time.isoformat()}"""
     ) -> User:
         """Create a new user from wallet address."""
         # Generate a placeholder email (users can update later)
-        email = f"{wallet_address}@wallet.local"
+        # Using a valid email format that clearly indicates it's a wallet user
+        email = f"{wallet_address.lower()}@wallet.wedi.com"
         
-        # Create user without wallet initially
-        # The wallet will be created separately
-        user_data = {
-            "email": email,
-            "name": f"User {wallet_address[:8]}",
-            "email_verified": True,  # Auto-verify for wallet users
-        }
+        # Create user schema object
+        user_create = UserCreate(
+            email=email,
+            name=f"User {wallet_address[:8]}",
+            auth_provider=AuthProvider.THIRDWEB,
+            auth_provider_id=wallet_address
+        )
         
-        user = await user_repository.create(db, data=user_data)
+        # Create user using the repository
+        user = await user_repository.create(db, obj_in=user_create)
         
         # Create wallet for the user
         from app.repositories.wallet import WalletRepository
         wallet_repo = WalletRepository()
         
-        wallet_data = {
-            "address": wallet_address,
-            "chain_id": 1,  # Default to mainnet
-            "user_id": user.id,
-            "is_verified": True,
-        }
+        wallet_create = WalletCreate(
+            address=wallet_address,
+            chain_id=1,  # Default to mainnet
+            user_id=str(user.id),
+            type="EOA"
+        )
         
-        wallet = await wallet_repo.create(db, data=wallet_data)
+        wallet = await wallet_repo.create(db, obj_in=wallet_create)
         
         # Set as primary wallet
         await user_repository.set_primary_wallet(

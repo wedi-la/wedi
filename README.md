@@ -24,7 +24,7 @@ This monorepo is organized using Turborepo and contains:
 - **Database**: PostgreSQL with multi-tenancy support
 - **Message Queue**: Kafka (Redpanda Cloud)
 - **Cache**: Redis
-- **Authentication**: Stack Auth
+- **Authentication**: Thirdweb Auth (with automatic wallet creation)
 - **Payment Providers**: Yoint (Colombia), Trubit/Prometeo (Mexico)
 
 ## Getting Started

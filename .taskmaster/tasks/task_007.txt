@@ -22,6 +22,9 @@ Define state transitions and ensure consistency across the payment lifecycle.
 ### Description: Develop logic to route payments between Colombia and Mexico through appropriate providers.
 ### Details:
 Analyze provider capabilities and establish routing rules for optimal transaction processing.
+<info added on 2025-06-10T07:25:24.411Z>
+Include integration key validation in the provider routing logic. When a payment is initiated through a public payment link, validate the integration key to ensure the associated agent is authorized to process payments for that corridor before routing to the appropriate provider.
+</info added on 2025-06-10T07:25:24.411Z>
 
 ## 3. Implement Idempotency Handling for Payment Operations [pending]
 ### Dependencies: 7.1
@@ -94,4 +97,17 @@ Ensure agents can consume Payment.Initiated events and emit terminal events like
 ### Description: Ensure all agent decisions and actions are logged for auditability.
 ### Details:
 Develop comprehensive logging mechanisms to capture agent reasoning and decision-making processes.
+
+## 15. Implement Integration Key Validation for Payment Execution [pending]
+### Dependencies: 7.1
+### Description: Validate integration keys on public payment endpoints to ensure authorized agent access
+### Details:
+Implement validation logic for integration keys when payments are initiated through public endpoints:
+- Extract integration key from payment link data
+- Validate key against hashed values in database
+- Verify associated agent is active and authorized
+- Check agent capabilities match payment corridor requirements
+- Log integration key usage for audit purposes
+- Return appropriate error messages for invalid/expired keys
+- Ensure validation happens before any payment processing begins
 

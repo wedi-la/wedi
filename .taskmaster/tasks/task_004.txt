@@ -34,12 +34,18 @@ Support role assignments such as OWNER, ADMIN, and MEMBER, and ensure users can 
 ### Description: Implement functionality for generating and managing API keys for organizations.
 ### Details:
 Ensure API keys can be created, revoked, and associated with specific organization wallets for secure Engine access. Ensure both ORMs handle multi-tenant data isolation correctly.
+<info added on 2025-06-10T07:28:01.084Z>
+Ensure API key management for direct API access using Thirdweb JWT, including generation, viewing, and revocation of keys associated with specific organization wallets. Additionally, implement integration key management for connecting payment links to agents, allowing organizations to generate, view, and revoke these keys to authorize agent payments through public endpoints.
+</info added on 2025-06-10T07:28:01.084Z>
 
 ## 5. Implement Audit Logging for Compliance [pending]
 ### Dependencies: 4.1, 4.2, 4.3, 4.4
 ### Description: Develop a logging system to track changes and access for compliance purposes.
 ### Details:
 Ensure all critical actions are logged, including organization changes, role assignments, API key usage, and blockchain transactions.
+<info added on 2025-06-10T07:27:37.606Z>
+Ensure integration key management, including authorizing agents to process payments through public payment link endpoints, is also logged and managed alongside API keys for direct API access.
+</info added on 2025-06-10T07:27:37.606Z>
 
 ## 6. Implement Wallet Security Features [pending]
 ### Dependencies: 4.1, 4.2

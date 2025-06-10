@@ -59,3 +59,17 @@ Ensure all interfaces are mobile-friendly by leveraging Shadcn UI components and
 ### Details:
 Integrate Thirdweb's wallet connection features to allow customers to connect their wallets for payments. Ensure the integration is seamless and supports various wallet providers.
 
+## 9. Design Integration Key Management Interface [pending]
+### Dependencies: 9.5
+### Description: Create UI for managing integration keys that connect payment links to agents
+### Details:
+Design user interface components for integration key management:
+- List view showing all integration keys with associated agents
+- Create new integration key form with agent selection
+- Key details view showing usage statistics and last used time
+- Revoke/rotate key functionality with confirmation dialogs
+- Copy key functionality with secure clipboard handling
+- Filter and search integration keys by agent or status
+- Visual indicators for key health and usage patterns
+- Help text explaining the difference between API keys and integration keys
+

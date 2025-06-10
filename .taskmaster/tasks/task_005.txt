@@ -98,3 +98,16 @@ After each write operation, emit appropriate domain events to Redpanda:
 - PaymentLink.AgentAssigned
 - PaymentLink.Expired
 
+## 18. Implement Integration Key Management for Payment Links [pending]
+### Dependencies: 5.17
+### Description: Create API endpoints for managing integration keys that connect payment links to authorized agents
+### Details:
+Implement the following functionality:
+- Create integration keys for organizations with proper hashing and prefix generation (wedi_ik_...)
+- Associate integration keys with specific agents
+- Validate integration keys on public payment endpoints
+- Track integration key usage and last used timestamps
+- Implement key rotation and revocation features
+- Ensure payment links are created with valid integration keys
+- Add integration key validation to the payment initiation flow
+

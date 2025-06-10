@@ -174,8 +174,8 @@ class TestAuthEndpoints:
         headers = get_auth_headers(user)
         
         response = await client.post("/api/v1/auth/logout", headers=headers)
-        assert response.status_code == 200
-        assert response.json()["message"] == "Successfully logged out"
+        assert response.status_code == 204
+        # No content is returned for 204 responses
     
     @pytest.mark.asyncio
     async def test_expired_token(self, client: AsyncClient, db_session):

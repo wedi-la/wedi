@@ -1,6 +1,6 @@
 """
 SQLAlchemy models generated from Prisma schema
-Generated at: 2025-06-10T01:52:39.982706
+Generated at: 2025-06-10T02:32:36.099912
 """
 
 from datetime import datetime
@@ -232,6 +232,7 @@ class Agent(Base):
     # paymentLinks: Mapped["PaymentLink"] = relationship(back_populates="executingAgent")
     # decisions: Mapped["AgentDecision"] = relationship(back_populates="agent")
     # checkpoints: Mapped["AgentCheckpoint"] = relationship(back_populates="agent")
+    # integrationKeys: Mapped["IntegrationKey"] = relationship(back_populates="agent")
 
 class AgentCheckpoint(Base):
     """Generated from Prisma model AgentCheckpoint"""
@@ -409,6 +410,31 @@ class GasSponsorship(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
 
+class IntegrationKey(Base):
+    """Generated from Prisma model IntegrationKey"""
+    __tablename__ = "integration_key"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, nullable=False)
+    organization_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    organization: Mapped[str] = mapped_column(String, ForeignKey("organization.id"), nullable=False)
+    agent_id: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    agent: Mapped[str] = mapped_column(String, ForeignKey("agent.id"), nullable=False)
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    key_hash: Mapped[str] = mapped_column(String, unique=True, nullable=False)
+    prefix: Mapped[str] = mapped_column(String, nullable=False, index=True)
+    description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
+    allowed_corridors: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
+    allowed_providers: Mapped[List[str]] = mapped_column(ArrayType(String), nullable=False)
+    rate_limit: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    daily_limit: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    last_used_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    usage_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    expires_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
+    revoked_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    # paymentLinks: Mapped["PaymentLink"] = relationship(back_populates="integrationKey")
+
 class ManualProcessStep(Base):
     """Generated from Prisma model ManualProcessStep"""
     __tablename__ = "manual_process_step"
@@ -500,6 +526,8 @@ class PaymentLink(Base):
     created_by: Mapped[str] = mapped_column(String, ForeignKey("user.id"), nullable=False)
     executing_agent_id: Mapped[str] = mapped_column(String, nullable=False)
     executing_agent: Mapped[str] = mapped_column(String, ForeignKey("agent.id"), nullable=False)
+    integration_key_id: Mapped[str] = mapped_column(String, nullable=False)
+    integration_key: Mapped[str] = mapped_column(String, ForeignKey("integration_key.id"), nullable=False)
     title: Mapped[str] = mapped_column(String, nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String, nullable=True)
     reference_id: Mapped[Optional[str]] = mapped_column(String, nullable=True)

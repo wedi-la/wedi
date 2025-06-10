@@ -116,7 +116,7 @@
     {
       "id": 3,
       "title": "Implement User Authentication",
-      "description": "Set up user authentication using Thirdweb for secure access control.",
+      "description": "Set up user authentication using Thirdweb for secure access control, with automatic wallet creation for users logging in via Google Auth or other providers.",
       "status": "pending",
       "dependencies": [
         1,
@@ -125,8 +125,8 @@
         "27"
       ],
       "priority": "high",
-      "details": "Integrate Thirdweb authentication into the Next.js frontend for seamless web2/web3 login options, including email, social, and wallet connections. Implement Sign in with Ethereum (SIWE) standard with JWT tokens stored in cookies. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate JWTs and handle automatic blockchain wallet creation for web2 logins. Obtain Client ID and Secret Key from the Thirdweb dashboard and use a private key for JWT signing.",
-      "testStrategy": "Test user registration, login, and session persistence using Thirdweb Connect. Verify JWT token validity, expiration handling, and backend validation. Ensure seamless login via email, social, and wallet connections, and test automatic wallet creation for web2 logins.",
+      "details": "Integrate Thirdweb authentication into the Next.js frontend for seamless web2/web3 login options, including email, social (like Google Auth), and wallet connections. Implement Sign in with Ethereum (SIWE) standard with JWT tokens stored in cookies. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate Thirdweb JWTs and handle automatic blockchain wallet creation for web2 logins. The backend also needs to support a dual authentication model where authenticated users use JWT tokens while payment links use integration keys. Obtain Client ID and Secret Key from the Thirdweb dashboard and use a private key for JWT signing.",
+      "testStrategy": "Test user registration, login, and session persistence using Thirdweb Connect. Verify JWT token validity, expiration handling, and backend validation. Ensure seamless login via email, social (including Google Auth), and wallet connections, test automatic wallet creation for web2 logins, and validate the dual authentication model where authenticated users use JWT tokens while payment links use integration keys.",
       "subtasks": [
         {
           "id": 1,
@@ -153,7 +153,7 @@
           "dependencies": [
             2
           ],
-          "details": "Use the Thirdweb hooks and methods to manage authentication state and actions.",
+          "details": "Use the Thirdweb hooks and methods to manage authentication state and actions. Include support for Google Auth and other social providers.",
           "status": "pending"
         },
         {
@@ -163,7 +163,7 @@
           "dependencies": [
             3
           ],
-          "details": "Ensure these actions are secure and properly manage user sessions.",
+          "details": "Ensure these actions are secure and properly manage user sessions. Include support for the dual authentication model where authenticated users use JWT tokens while payment links use integration keys.",
           "status": "pending"
         },
         {
@@ -173,7 +173,7 @@
           "dependencies": [
             4
           ],
-          "details": "Ensure tokens are securely generated and stored, and cookies are managed for user sessions.",
+          "details": "Ensure tokens are securely generated and stored, and cookies are managed for user sessions. Include support for the dual authentication model where authenticated users use JWT tokens while payment links use integration keys.",
           "status": "pending"
         },
         {
@@ -183,13 +183,13 @@
           "dependencies": [
             5
           ],
-          "details": "Ensure endpoints are secure and correctly validate the JWTs for user authentication.",
+          "details": "Ensure endpoints are secure and correctly validate the JWTs for user authentication. Include support for the dual authentication model where authenticated users use JWT tokens while payment links use integration keys.",
           "status": "pending"
         },
         {
           "id": 7,
           "title": "Implement automatic wallet creation for web2 logins",
-          "description": "Develop functionality to automatically create wallets for users logging in via web2 methods such as email or social logins.",
+          "description": "Develop functionality to automatically create wallets for users logging in via web2 methods such as email or social logins (including Google Auth).",
           "dependencies": [
             6
           ],
@@ -262,7 +262,7 @@
             1,
             2
           ],
-          "details": "Ensure API keys can be created, revoked, and associated with specific organization wallets for secure Engine access. Ensure both ORMs handle multi-tenant data isolation correctly.",
+          "details": "Ensure API keys can be created, revoked, and associated with specific organization wallets for secure Engine access. Ensure both ORMs handle multi-tenant data isolation correctly.\n<info added on 2025-06-10T07:28:01.084Z>\nEnsure API key management for direct API access using Thirdweb JWT, including generation, viewing, and revocation of keys associated with specific organization wallets. Additionally, implement integration key management for connecting payment links to agents, allowing organizations to generate, view, and revoke these keys to authorize agent payments through public endpoints.\n</info added on 2025-06-10T07:28:01.084Z>",
           "status": "pending"
         },
         {
@@ -275,7 +275,7 @@
             3,
             4
           ],
-          "details": "Ensure all critical actions are logged, including organization changes, role assignments, API key usage, and blockchain transactions.",
+          "details": "Ensure all critical actions are logged, including organization changes, role assignments, API key usage, and blockchain transactions.\n<info added on 2025-06-10T07:27:37.606Z>\nEnsure integration key management, including authorizing agents to process payments through public payment link endpoints, is also logged and managed alongside API keys for direct API access.\n</info added on 2025-06-10T07:27:37.606Z>",
           "status": "pending"
         },
         {
@@ -402,6 +402,17 @@
           "status": "pending",
           "dependencies": [],
           "parentTaskId": 5
+        },
+        {
+          "id": 18,
+          "title": "Implement Integration Key Management for Payment Links",
+          "description": "Create API endpoints for managing integration keys that connect payment links to authorized agents",
+          "details": "Implement the following functionality:\n- Create integration keys for organizations with proper hashing and prefix generation (wedi_ik_...)\n- Associate integration keys with specific agents\n- Validate integration keys on public payment endpoints\n- Track integration key usage and last used timestamps\n- Implement key rotation and revocation features\n- Ensure payment links are created with valid integration keys\n- Add integration key validation to the payment initiation flow",
+          "status": "pending",
+          "dependencies": [
+            17
+          ],
+          "parentTaskId": 5
         }
       ]
     },
@@ -487,7 +498,7 @@
           "dependencies": [
             1
           ],
-          "details": "Analyze provider capabilities and establish routing rules for optimal transaction processing.",
+          "details": "Analyze provider capabilities and establish routing rules for optimal transaction processing.\n<info added on 2025-06-10T07:25:24.411Z>\nInclude integration key validation in the provider routing logic. When a payment is initiated through a public payment link, validate the integration key to ensure the associated agent is authorized to process payments for that corridor before routing to the appropriate provider.\n</info added on 2025-06-10T07:25:24.411Z>",
           "status": "pending"
         },
         {
@@ -607,6 +618,17 @@
           ],
           "details": "Develop comprehensive logging mechanisms to capture agent reasoning and decision-making processes.",
           "status": "pending"
+        },
+        {
+          "id": 15,
+          "title": "Implement Integration Key Validation for Payment Execution",
+          "description": "Validate integration keys on public payment endpoints to ensure authorized agent access",
+          "details": "Implement validation logic for integration keys when payments are initiated through public endpoints:\n- Extract integration key from payment link data\n- Validate key against hashed values in database\n- Verify associated agent is active and authorized\n- Check agent capabilities match payment corridor requirements\n- Log integration key usage for audit purposes\n- Return appropriate error messages for invalid/expired keys\n- Ensure validation happens before any payment processing begins",
+          "status": "pending",
+          "dependencies": [
+            1
+          ],
+          "parentTaskId": 7
         }
       ]
     },
@@ -780,6 +802,17 @@
           ],
           "details": "Integrate Thirdweb's wallet connection features to allow customers to connect their wallets for payments. Ensure the integration is seamless and supports various wallet providers.",
           "status": "pending"
+        },
+        {
+          "id": 9,
+          "title": "Design Integration Key Management Interface",
+          "description": "Create UI for managing integration keys that connect payment links to agents",
+          "details": "Design user interface components for integration key management:\n- List view showing all integration keys with associated agents\n- Create new integration key form with agent selection\n- Key details view showing usage statistics and last used time\n- Revoke/rotate key functionality with confirmation dialogs\n- Copy key functionality with secure clipboard handling\n- Filter and search integration keys by agent or status\n- Visual indicators for key health and usage patterns\n- Help text explaining the difference between API keys and integration keys",
+          "status": "pending",
+          "dependencies": [
+            5
+          ],
+          "parentTaskId": 9
         }
       ]
     },
@@ -1705,7 +1738,107 @@
       "priority": "high",
       "details": "This task involves developing a robust agent management system that serves as the core execution layer for payment processing. The system should include the following components:\n\n1. **Agent CRUD APIs**: Develop RESTful APIs to create, read, update, and delete agent records. Ensure these APIs are secure and scalable. The APIs must use synchronized Python models and maintain relationships as defined in Prisma, respecting organizationId-based multi-tenancy.\n\n2. **Agent Wallet Creation**: Integrate with Thirdweb Engine to automatically create and manage wallets for each agent. Ensure wallets are securely stored and accessible. Wallet metadata must be stored consistently across both Prisma and SQLAlchemy.\n\n3. **Agent Capability Configuration**: Implement functionality to configure agent capabilities, including supported providers, blockchain chains, and decision authority levels.\n\n4. **Agent Assignment Logic**: Develop logic to assign tasks to agents based on their capabilities and current load. Implement load balancing to optimize performance.\n\n5. **Agent Health Monitoring**: Create a system to monitor agent health and status, including uptime, response times, and error rates.\n\n6. **Agent Decision Logging**: Implement logging for all agent decisions and actions to create an audit trail. Ensure logs are immutable and securely stored.\n\n7. **Agent Performance Metrics**: Develop analytics to track agent performance, including transaction success rates, processing times, and throughput.\n\n8. **Agent Version Control**: Implement version control for agent software, allowing for updates and rollbacks.\n\n9. **Agent Communication Protocols**: Establish protocols for agent-to-agent communication, ensuring secure and efficient data exchange.\n\n10. **Agent Marketplace Infrastructure**: Build infrastructure to support an agent marketplace, enabling dynamic agent deployment and scaling.\n\n11. **Database Synchronization**: Ensure synchronization between Prisma and SQLAlchemy for key models: Agent, AgentDecision, AgentCheckpoint, AgentInteraction, and Wallet. FastAPI endpoints must return responses matching Prisma-generated TypeScript types.\n\nAgents should operate autonomously, executing payments and making decisions based on their configuration and the data they process. Ensure all components are integrated with the existing system architecture and adhere to security best practices.",
       "testStrategy": "1. **API Testing**: Use tools like Postman to test all CRUD operations for agents, ensuring they work as expected and handle edge cases. Verify that the APIs use synchronized models and maintain relationships as defined in Prisma.\n\n2. **Wallet Verification**: Verify that wallets are correctly created and managed by Thirdweb Engine, checking for proper security and accessibility. Ensure wallet metadata is consistently stored across both ORMs.\n\n3. **Capability Configuration Testing**: Test the configuration of agent capabilities to ensure they are correctly set and can be updated as needed.\n\n4. **Assignment Logic Validation**: Simulate various load scenarios to test the agent assignment logic, ensuring tasks are distributed efficiently.\n\n5. **Health Monitoring Checks**: Implement monitoring tools to verify that agent health metrics are accurately tracked and reported.\n\n6. **Audit Trail Review**: Check that all agent decisions are logged correctly and that logs are immutable.\n\n7. **Performance Metrics Analysis**: Analyze performance data to ensure metrics are accurate and provide meaningful insights.\n\n8. **Version Control Testing**: Test agent updates and rollbacks to ensure version control works without disrupting operations.\n\n9. **Communication Protocol Testing**: Simulate agent-to-agent communication to verify protocols are secure and efficient.\n\n10. **Marketplace Functionality**: Test the agent marketplace infrastructure to ensure it supports dynamic deployment and scaling.\n\n11. **Database Synchronization Testing**: Verify that the synchronization between Prisma and SQLAlchemy is accurate for all key models, and that FastAPI endpoints return responses matching Prisma-generated TypeScript types.",
-      "subtasks": []
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "Implement Agent CRUD APIs",
+          "description": "Develop RESTful APIs to create, read, update, and delete agent records. Ensure these APIs are secure and scalable.",
+          "dependencies": [],
+          "details": "Use FastAPI for API development. Implement Prisma models for database operations. Ensure multi-tenancy by using organizationId. Secure the endpoints with proper authentication and authorization mechanisms.",
+          "status": "pending",
+          "testStrategy": "Write unit tests for each CRUD operation. Perform integration testing to ensure APIs work correctly with the database."
+        },
+        {
+          "id": 2,
+          "title": "Integrate Agent Wallet Creation",
+          "description": "Automatically create and manage wallets for each agent using Thirdweb Engine.",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement wallet creation logic in the agent creation API. Store wallet metadata consistently across Prisma and SQLAlchemy. Ensure secure storage of wallet information.",
+          "status": "pending",
+          "testStrategy": "Test wallet creation during agent creation. Verify wallet metadata consistency between databases."
+        },
+        {
+          "id": 3,
+          "title": "Configure Agent Capabilities",
+          "description": "Implement functionality to configure agent capabilities, including supported providers and decision authority levels.",
+          "dependencies": [
+            1
+          ],
+          "details": "Create API endpoints for configuring agent capabilities. Store capability configurations in the database using Prisma models.",
+          "status": "pending",
+          "testStrategy": "Test capability configuration through APIs. Verify that configured capabilities are stored correctly."
+        },
+        {
+          "id": 4,
+          "title": "Implement Agent Assignment Logic",
+          "description": "Develop logic to assign tasks to agents based on their capabilities and current load.",
+          "dependencies": [
+            1,
+            3
+          ],
+          "details": "Create a task assignment algorithm that considers agent capabilities and load. Implement load balancing to optimize performance.",
+          "status": "pending",
+          "testStrategy": "Test task assignment with different scenarios. Verify that tasks are assigned correctly based on capabilities and load."
+        },
+        {
+          "id": 5,
+          "title": "Monitor Agent Health",
+          "description": "Create a system to monitor agent health and status, including uptime, response times, and error rates.",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement health monitoring endpoints. Collect and store health metrics in the database using Prisma models.",
+          "status": "pending",
+          "testStrategy": "Test health monitoring by simulating different agent states. Verify that health metrics are collected and stored correctly."
+        },
+        {
+          "id": 6,
+          "title": "Log Agent Decisions",
+          "description": "Implement logging for all agent decisions and actions to create an audit trail.",
+          "dependencies": [
+            1
+          ],
+          "details": "Create a logging mechanism that records agent decisions. Ensure logs are immutable and securely stored in the database using Prisma models.",
+          "status": "pending",
+          "testStrategy": "Test decision logging by simulating agent decisions. Verify that logs are recorded correctly and are immutable."
+        },
+        {
+          "id": 7,
+          "title": "Track Agent Performance Metrics",
+          "description": "Develop analytics to track agent performance, including transaction success rates and processing times.",
+          "dependencies": [
+            1
+          ],
+          "details": "Implement performance tracking endpoints. Collect and store performance metrics in the database using Prisma models.",
+          "status": "pending",
+          "testStrategy": "Test performance tracking by simulating different agent activities. Verify that performance metrics are collected and stored correctly."
+        },
+        {
+          "id": 8,
+          "title": "Implement Agent Version Control",
+          "description": "Allow for updates and rollbacks of agent software.",
+          "dependencies": [
+            1
+          ],
+          "details": "Create a version control system for agent software. Implement endpoints to update and rollback agent versions.",
+          "status": "pending",
+          "testStrategy": "Test version control by updating and rolling back agent software. Verify that the correct version is active after each operation."
+        },
+        {
+          "id": 9,
+          "title": "Manage Integration Keys for Agents",
+          "description": "Implement integration key generation and management system for connecting agents to payment links",
+          "details": "Develop comprehensive integration key management:\n- Generate secure integration keys with proper prefixes (wedi_ik_...)\n- Hash keys before storage using industry-standard algorithms\n- Associate keys with specific agents and their capabilities\n- Implement key rotation and expiration policies\n- Track key usage statistics and last used timestamps\n- Create API endpoints for key management (create, list, revoke)\n- Ensure proper access control (only organization admins can manage keys)\n- Integrate with payment link creation to ensure valid key assignment",
+          "status": "pending",
+          "dependencies": [
+            1,
+            2
+          ],
+          "parentTaskId": 23
+        }
+      ]
     },
     {
       "id": 24,

@@ -382,7 +382,7 @@ The project will use Turborepo for managing the monorepo, with Bun as the packag
 
 **4. Database Schema (Neon DB - PostgreSQL with Prisma ORM)**
 
-Neon DB provides serverless PostgreSQL. Stack Auth will be used for authentication, integrating with Next.js and Neon. The schema below is designed for multi-tenancy at the `Organization` level. Data segregation will be primarily enforced at the application layer by filtering queries based on `organizationId` derived from the authenticated user's context. Row-Level Security (RLS) in PostgreSQL can be explored as a future enhancement for database-level enforcement.
+Neon DB provides serverless PostgreSQL. **Thirdweb Auth** will be used for authentication, integrating with Next.js and Neon. When users authenticate via Thirdweb (using Google Auth or other providers), a wallet is automatically created for each user, establishing their Web3 identity alongside traditional authentication. The schema below is designed for multi-tenancy at the `Organization` level. Data segregation will be primarily enforced at the application layer by filtering queries based on `organizationId` derived from the authenticated user's context. Row-Level Security (RLS) in PostgreSQL can be explored as a future enhancement for database-level enforcement.
 
 ```prisma
 // packages/prisma/schema.prisma
@@ -414,11 +414,11 @@ model Organization {
 }
 
 model User {
-  id                  String               @id @default(cuid()) // Could be from Stack Auth
+  id                  String               @id @default(cuid())
   email               String               @unique
   name                String?
-  hashedPassword      String?              // If managing passwords directly, otherwise Stack Auth handles
-  authProvider        String?              // e.g., "STACK_AUTH", "GOOGLE"
+  walletAddress       String?              @unique // Thirdweb-created wallet address
+  authProvider        String?              // e.g., "THIRDWEB", "GOOGLE", "EMAIL"
   authProviderId      String?              // User ID from the auth provider
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
@@ -427,6 +427,7 @@ model User {
   auditLogEntries     AuditLogEntry
 
   @@unique([authProvider, authProviderId])
+  @@index([walletAddress])
 }
 
 // Junction table for many-to-many relationship between User and Organization
@@ -462,7 +463,27 @@ model ApiKey {
   revokedAt      DateTime?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  // permissions    Json?     // Granular permissions for the API key
+  permissions    Json?        // Granular permissions for the API key
+}
+
+model IntegrationKey {
+  id             String       @id @default(cuid())
+  hashedKey      String       @unique
+  prefix         String       @unique // e.g., wedi_ik_...
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  agentId        String       // Agent authorized to process payments for this key
+  agent          Agent        @relation(fields: [agentId], references: [id])
+  name           String?
+  description    String?      // Purpose or scope of this integration key
+  lastUsedAt     DateTime?
+  expiresAt      DateTime?
+  revokedAt      DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  paymentLinks   PaymentLink[]
+
+  @@index([agentId])
 }
 
 model PaymentLink {
@@ -470,7 +491,9 @@ model PaymentLink {
   organizationId      String
   organization        Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   createdById         String
-  createdBy           User              @relation("CreatedByUser", fields:, references: [id])
+  createdBy           User              @relation("CreatedByUser", fields: [createdById], references: [id])
+  integrationKeyId    String            // Integration key that authorizes agent for this link
+  integrationKey      IntegrationKey    @relation(fields: [integrationKeyId], references: [id])
   description         String?
   referenceId         String?           // Client's internal reference for the link
   amount              Float             // Amount in the source currency
@@ -486,11 +509,11 @@ model PaymentLink {
   redirectUrlFailure  String?           // URL to redirect to on failed payment
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
-  paymentOrders       PaymentOrder
-  auditLogEntries     AuditLogEntry
+  paymentOrders       PaymentOrder[]
+  auditLogEntries     AuditLogEntry[]
 
   @@index([organizationId])
-  @@index()
+  @@index([integrationKeyId])
 }
 
 enum PaymentLinkStatus {
@@ -608,7 +631,37 @@ model PaymentOrderEvent {
   timestamp      DateTime     @default(now())
 
   @@unique([paymentOrderId, sequenceNumber])
-  @@index()
+  @@index([paymentOrderId])
+}
+
+model Agent {
+  id                  String            @id @default(cuid())
+  organizationId      String
+  organization        Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name                String
+  type                AgentType         @default(PAYMENT_PROCESSOR)
+  walletAddress       String?           // Agent's blockchain wallet for operations
+  capabilities        Json              // Supported providers, corridors, etc.
+  status              AgentStatus       @default(ACTIVE)
+  metadata            Json?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  integrationKeys     IntegrationKey[]
+
+  @@index([organizationId])
+}
+
+enum AgentType {
+  PAYMENT_PROCESSOR
+  FRAUD_DETECTOR
+  RECONCILIATION
+  CUSTOMER_SUPPORT
+}
+
+enum AgentStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
 }
 ```
 
@@ -616,7 +669,10 @@ model PaymentOrderEvent {
 *   Each `Organization` is a tenant.
 *   Users are associated with `Organization`s via `OrganizationUser` with specific roles.
 *   All core data (`PaymentLink`, `PaymentOrder`, `ApiKey`, `ProviderCredential`) is directly linked to an `organizationId`.
-*   **Application Layer Enforcement (MVP):** All database queries made through Prisma from the FastAPI backend will be filtered by `organizationId`. This ID will be derived from the authenticated user's session/token (managed by Stack Auth and passed to the backend).
+*   **Application Layer Enforcement (MVP):** All database queries made through Prisma from the FastAPI backend will be filtered by `organizationId`. This ID will be derived from the authenticated user's JWT token (managed by Thirdweb Auth and validated by the backend).
+*   **Dual Authentication Model:**
+    *   **B2B Users (Dashboard/API):** Authenticate via Thirdweb (Google, email, etc.), receive JWT tokens, and access organization-scoped resources.
+    *   **Payment Links (Public):** Use integration keys to authorize agents for processing payments without requiring end-customer authentication.
 *   **Row-Level Security (RLS) in Neon DB (Future Enhancement):** As the system matures, RLS policies can be defined directly in PostgreSQL to provide an additional layer of data isolation at the database level. Prisma can work with RLS, but it requires careful setup.
 
 **5. Backend (FastAPI - `apps/backend`)**
@@ -626,20 +682,24 @@ model PaymentOrderEvent {
 *   **ORM:** Prisma (Python client or direct SQL if Prisma Python client is not mature enough for all needs; for MVP, direct SQL with Pydantic for validation is also an option if Prisma Python is a hurdle). *Correction: Prisma's primary client is JS/TS. For Python, direct SQL with an async library like `asyncpg` and Pydantic for validation is more common, or using a Python-native ORM like SQLModel or Tortoise ORM. Given the Prisma schema is already defined, using a tool to generate Pydantic models from it could be useful, or manually defining them.*
     *   **Revised DB Access for FastAPI:** Use `asyncpg` for direct async PostgreSQL interaction, with Pydantic models for data validation and serialization, mapping to the Prisma-defined schema.
 *   **API Endpoints:**
-    *   `/auth/*`: Handled by Stack Auth (or proxied if needed).
-    *   `/organizations/*`: CRUD for organizations, inviting users.
-    *   `/users/*`: User profile management.
-    *   `/payment-links/*`: CRUD for payment links.
-    *   `/payment-orders/*`: Status retrieval (primarily for internal use or admin).
+    *   `/auth/*`: JWT validation endpoints for Thirdweb-issued tokens.
+    *   `/organizations/*`: CRUD for organizations, inviting users (requires Thirdweb JWT).
+    *   `/users/*`: User profile management (requires Thirdweb JWT).
+    *   `/payment-links/*`: CRUD for payment links (requires Thirdweb JWT).
+    *   `/payment-links/public/{shortCode}`: Public endpoint for viewing payment link details (no auth required).
+    *   `/payment-orders/*`: Status retrieval (requires Thirdweb JWT or integration key).
+    *   `/payment-orders/initiate`: Public endpoint for initiating payments (requires integration key).
+    *   `/integration-keys/*`: Manage integration keys for agents (requires Thirdweb JWT).
     *   `/webhooks/providers/*`: To receive incoming webhooks from Yoint, Trubit/Prometeo.
 *   **Modules (`app/services/`):**
-    *   **`user_org_service.py`:** Handles logic for user authentication (via Stack Auth context), organization creation, user invitations, role management.
+    *   **`user_org_service.py`:** Handles logic for user authentication (via Thirdweb JWT validation), organization creation, user invitations, role management, and automatic wallet association.
     *   **`payment_link_service.py`:** Business logic for creating, retrieving, updating, and managing the lifecycle of payment links.
     *   **`payment_execution_agent.py` (Core MVP "Agent"):**
-        *   **Trigger:** Invoked when a payment is initiated via a payment link (e.g., through a dedicated API endpoint called by the payment link UI, or after a webhook from an initial provider interaction).
+        *   **Trigger:** Invoked when a payment is initiated via a payment link (e.g., through a public API endpoint called by the payment link UI, authenticated with an integration key).
         *   **Responsibilities:**
-            1.  Create a `PaymentOrder` record.
-            2.  Fetch `ProviderCredential` for the organization.
+            1.  Validate the integration key and ensure the associated agent is authorized.
+            2.  Create a `PaymentOrder` record.
+            3.  Fetch `ProviderCredential` for the organization.
             3.  **Colombia-Mexico Flow Orchestration:**
                 *   Make API calls to Yoint (for Colombia leg).
                 *   Make API calls to Trubit/Prometeo (for Mexico leg).
@@ -663,16 +723,19 @@ model PaymentOrderEvent {
 *   **Forms:** React Hook Form with Zod for validation.
 *   **Key Features:**
     *   **B2B Client Dashboard:**
-        *   Authentication (integrated with Stack Auth).
+        *   Authentication via Thirdweb (Google Auth, email, etc.) with automatic wallet creation.
         *   Organization management (create, view members, invite users).
         *   Payment link creation and management interface.
+        *   Integration key management for connecting payment links to agents.
         *   Dashboard to view payment order statuses and history.
+        *   Wallet management and blockchain transaction history.
         *   Settings (e.g., API key management, provider credential input - securely).
     *   **Payment Link UI:** Simple, responsive page for end-customers to view payment details and be redirected/guided through the payment process with the selected provider (Yoint or Trubit/Prometeo).
 *   **Next.js API Routes (`app/api/`) - Backend For Frontend (BFF):**
     *   Act as a proxy to the FastAPI backend. This allows:
         *   Consolidating multiple backend calls.
-        *   Handling frontend-specific authentication/session logic (with Stack Auth).
+        *   Handling frontend-specific authentication/session logic (with Thirdweb Auth).
+        *   Managing JWT tokens from Thirdweb for backend API calls.
         *   Transforming data for frontend consumption.
         *   Keeping backend API endpoints internal if desired.
     *   Example: `/api/payment-links` in Next.js would call `https://api.wedi.com/v1/payment-links` (FastAPI).
@@ -696,7 +759,33 @@ model PaymentOrderEvent {
     *   (Future) Analytics/BI systems.
 *   **Schema Registry:** Utilize the schema registry provided by the managed Kafka service (e.g., Redpanda Console includes one) or a compatible one to ensure event schema consistency (e.g., using Avro or Protobuf, defined in `packages/types`).
 
-**8. "Payment Execution Agent" - MVP Implementation (FastAPI Module)**
+**8. Authentication Flow & Security Model**
+
+The platform implements a dual authentication model to support both authenticated B2B users and public payment link access:
+
+**B2B User Authentication (Dashboard/API):**
+1. Users log in via Thirdweb using Google Auth or other supported providers
+2. Thirdweb automatically creates a wallet for each user upon first login
+3. Thirdweb issues JWT tokens that contain user identity and wallet information
+4. Frontend stores JWT and includes it in all API requests to the backend
+5. FastAPI backend validates Thirdweb JWTs on protected endpoints
+6. User's organizationId from JWT is used for multi-tenant data filtering
+
+**Payment Link Public Access:**
+1. When creating a payment link, an integration key is assigned to connect it with an authorized agent
+2. End-customers access payment links via public URLs (no authentication required)
+3. Payment initiation requests include the integration key from the payment link
+4. Backend validates the integration key and ensures the associated agent is active
+5. Agent processes the payment using its configured capabilities and provider credentials
+
+**Security Considerations:**
+- All Thirdweb JWTs are validated using Thirdweb's public keys
+- Integration keys are hashed before storage (similar to API keys)
+- Rate limiting applied to public endpoints to prevent abuse
+- Webhook signatures verified for provider callbacks
+- Agent wallets use multi-signature for high-value operations
+
+**9. "Payment Execution Agent" - MVP Implementation (FastAPI Module)**
 
 This is **not** an LLM/LangGraph agent for the MVP. It's a well-structured Python module within the FastAPI backend.
 
@@ -720,7 +809,7 @@ This is **not** an LLM/LangGraph agent for the MVP. It's a well-structured Pytho
     6.  Handle API errors from providers gracefully with retries for transient issues.
     7.  If unrecoverable errors or complex exceptions occur, set `PaymentOrder` status to `REQUIRES_MANUAL_INTERVENTION` and create `ManualProcessStep` entries.
 
-**9. Future Agentic Computing Path**
+**10. Future Agentic Computing Path**
 
 *   **`apps/agents-service` (LangGraph):** [13, 14, 15, 16, 17]
     *   Post-MVP, the logic within the FastAPI "Payment Execution Agent" module can be gradually migrated or augmented by true LangGraph agents.
@@ -733,7 +822,7 @@ This is **not** an LLM/LangGraph agent for the MVP. It's a well-structured Pytho
     *   For example, a client could ask, "What's the status of my payment link to XYZ Corp?" or "Suggest the best way to collect $500 from a client in Brazil."
     *   These CoAgents in the frontend would communicate (likely via the Next.js API routes and then to the `workers-service`) with the backend LangGraph agents to get information or trigger actions.
 
-**10. Development Standards & Best Practices**
+**11. Development Standards & Best Practices**
 
 *   **General:** Adherence to the specified guidelines (Airbnb style, English, named exports, TS, JSDoc, short functions, immutability, RO-RO, naming conventions) will be enforced via linters (ESLint, Flake8/Black/MyPy), Prettier, and code reviews.
 *   **Next.js:** Correct use of Server Components (`async/await` for data fetching) and Client Components (`"use client"` for interactivity). React Context for simple global state, TanStack Query for server state.
@@ -743,7 +832,7 @@ This is **not** an LLM/LangGraph agent for the MVP. It's a well-structured Pytho
 *   **Forms:** React Hook Form for structure and state, Zod for schema-based validation on both frontend and backend (via Pydantic in FastAPI, which can be inspired by Zod schemas).
 *   **Data Handling:** Composite types (Pydantic models in backend, TS interfaces/types in frontend and `packages/types`). Prisma schema defines the canonical data structures.
 
-**11. Deployment Strategy**
+**12. Deployment Strategy**
 
 *   **`apps/frontend` (Next.js):** Vercel (native integration, CI/CD, global CDN).
 *   **`apps/backend` (FastAPI):** Railway (Dockerized deployment, easy scaling, managed services).
@@ -752,6 +841,6 @@ This is **not** an LLM/LangGraph agent for the MVP. It's a well-structured Pytho
 *   **`apps/docs-service` (Scalar Docs):** Can be deployed via Vercel (if static export) or Railway (if needs a small server).
 *   **Database:** Neon DB (Serverless PostgreSQL, integrates well with Vercel and serverless functions).
 *   **Event Bus:** Redpanda Cloud (or similar managed Kafka).
-*   **Authentication:** Stack Auth (integrates with Next.js and Neon DB).
+*   **Authentication:** Thirdweb Auth (integrates with Next.js and automatically creates wallets for users).
 
 This blueprint provides a solid, pragmatic starting point for Wedi's MVP, focusing on delivering core value quickly while establishing a scalable and evolvable architecture that aligns with the long-term vision of agentic computing. The emphasis on managed services and a modular monolith for the backend aims to keep the operational burden manageable for a 2-person team.
