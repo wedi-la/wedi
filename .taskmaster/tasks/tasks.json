@@ -125,65 +125,65 @@
         "27"
       ],
       "priority": "high",
-      "details": "Integrate Thirdweb authentication into the Next.js frontend for seamless web2/web3 login options, including email, social (like Google Auth), and wallet connections. Implement Sign in with Ethereum (SIWE) standard with JWT tokens stored in cookies. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate Thirdweb JWTs and handle automatic blockchain wallet creation for web2 logins. The backend also needs to support a dual authentication model where authenticated users use JWT tokens while payment links use integration keys. Obtain Client ID and Secret Key from the Thirdweb dashboard and use a private key for JWT signing.",
-      "testStrategy": "Test user registration, login, and session persistence using Thirdweb Connect. Verify JWT token validity, expiration handling, and backend validation. Ensure seamless login via email, social (including Google Auth), and wallet connections, test automatic wallet creation for web2 logins, and validate the dual authentication model where authenticated users use JWT tokens while payment links use integration keys.",
+      "details": "Integrate Thirdweb authentication into the Next.js frontend for seamless web2/web3 login options, including email, social (like Google Auth), and wallet connections. Implement Sign in with Ethereum (SIWE) standard with JWT tokens stored in cookies. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate Thirdweb JWTs and handle automatic blockchain wallet creation for web2 logins.",
+      "testStrategy": "Test user registration, login, and session persistence using Thirdweb Connect. Verify JWT token validity, expiration handling, and backend validation. Ensure seamless login via email, social (including Google Auth), and wallet connections, test automatic wallet creation for web2 logins.",
       "subtasks": [
         {
           "id": 1,
-          "title": "Set up Thirdweb client with credentials",
-          "description": "Configure the Thirdweb client with necessary credentials including client ID, secret key, and auth private key.",
+          "title": "Set up Next.js application",
+          "description": "Bootstrap the Next.js application in the apps/web directory to prepare for frontend integration.",
           "dependencies": [],
-          "details": "Follow the Thirdweb documentation to properly set up the client in the Next.js application.",
+          "details": "Initialize a new Next.js project and set up necessary configurations.",
           "status": "pending"
         },
         {
           "id": 2,
+          "title": "Set up Thirdweb client with credentials",
+          "description": "Configure the Thirdweb client with necessary credentials including client ID, secret key, and auth private key.",
+          "dependencies": [
+            1
+          ],
+          "details": "Follow the Thirdweb documentation to properly set up the client in the Next.js application.",
+          "status": "pending"
+        },
+        {
+          "id": 3,
           "title": "Implement ThirdwebProvider in Next.js app layout",
           "description": "Integrate the ThirdwebProvider component into the Next.js application layout to enable authentication features.",
           "dependencies": [
-            1
+            2
           ],
           "details": "Ensure the provider is wrapped around the application to manage authentication state.",
           "status": "pending"
         },
         {
-          "id": 3,
+          "id": 4,
           "title": "Create ConnectButton component with auth callbacks",
           "description": "Develop a ConnectButton component that handles authentication callbacks such as isLoggedIn, doLogin, getLoginPayload, and doLogout.",
           "dependencies": [
-            2
+            3
           ],
           "details": "Use the Thirdweb hooks and methods to manage authentication state and actions. Include support for Google Auth and other social providers.",
           "status": "pending"
         },
         {
-          "id": 4,
+          "id": 5,
           "title": "Implement server actions for secure auth flow",
           "description": "Create server-side actions to handle secure authentication flows including generatePayload, login, isLoggedIn, and logout.",
           "dependencies": [
-            3
-          ],
-          "details": "Ensure these actions are secure and properly manage user sessions. Include support for the dual authentication model where authenticated users use JWT tokens while payment links use integration keys.",
-          "status": "pending"
-        },
-        {
-          "id": 5,
-          "title": "Set up JWT generation and cookie management",
-          "description": "Implement JWT token generation and manage cookies for session persistence.",
-          "dependencies": [
             4
           ],
-          "details": "Ensure tokens are securely generated and stored, and cookies are managed for user sessions. Include support for the dual authentication model where authenticated users use JWT tokens while payment links use integration keys.",
+          "details": "Ensure these actions are secure and properly manage user sessions.",
           "status": "pending"
         },
         {
           "id": 6,
-          "title": "Create Python FastAPI endpoints to validate Thirdweb JWTs",
-          "description": "Develop FastAPI endpoints to validate JWTs generated by Thirdweb for authentication.",
+          "title": "Set up JWT generation and cookie management",
+          "description": "Implement JWT token generation and manage cookies for session persistence.",
           "dependencies": [
             5
           ],
-          "details": "Ensure endpoints are secure and correctly validate the JWTs for user authentication. Include support for the dual authentication model where authenticated users use JWT tokens while payment links use integration keys.",
+          "details": "Ensure tokens are securely generated and stored, and cookies are managed for user sessions.",
           "status": "pending"
         },
         {
@@ -198,14 +198,28 @@
         },
         {
           "id": 8,
+          "title": "Update test strategy for frontend integration",
+          "description": "Revise the test strategy to focus on frontend integration and user experience.",
+          "dependencies": [
+            7
+          ],
+          "details": "Ensure all authentication flows are tested from a user perspective, including edge cases and error handling.",
+          "status": "pending"
+        },
+        {
+          "id": 9,
+          "title": "Python FastAPI endpoints to validate Thirdweb JWTs",
+          "description": "Develop FastAPI endpoints to validate JWTs generated by Thirdweb for authentication.",
+          "dependencies": [],
+          "details": "This subtask is completed as part of task 27.5 with auth router and service.",
+          "status": "done"
+        },
+        {
+          "id": 10,
           "title": "Implement UserRepository with authentication methods",
           "description": "Create UserRepository using the repository pattern to handle user data persistence and authentication-related queries.",
-          "details": "Implement the following methods in UserRepository:\n- create_user() - Create new user with Thirdweb auth data\n- get_user_by_email() - Find user by email for auth\n- get_user_by_auth_provider_id() - Find user by Thirdweb provider ID\n- get_or_create_user() - Upsert pattern for social/wallet logins\n- update_last_login() - Track user activity\n- link_wallet_to_user() - Associate blockchain wallet with user\n- get_user_with_organizations() - Fetch user with their org memberships\n\nEnsure all methods use async/await and handle the multi-tenancy context properly.",
-          "status": "pending",
-          "dependencies": [
-            6
-          ],
-          "parentTaskId": 3
+          "details": "This subtask is completed. UserRepository exists with all required methods.",
+          "status": "done"
         }
       ]
     },
@@ -231,7 +245,7 @@
           "description": "Create a database schema to support multi-tenant organization management, including tables for organizations, users, roles, invitations, API keys, and audit logs.",
           "dependencies": [],
           "details": "Ensure the schema supports CRUD operations for organizations, role assignments, and logging for compliance. Include support for wallet addresses as primary keys and fields for treasury and gas sponsor wallets.",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 2,
@@ -241,7 +255,7 @@
             1
           ],
           "details": "Include endpoints for organization creation, retrieval, update, and deletion with appropriate access control checks. Ensure integration with blockchain wallets and settings for gas sponsorship policies. Respect organizationId-based Row Level Security and ensure API responses match TypeScript types generated by Prisma.",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 3,
@@ -252,7 +266,7 @@
             2
           ],
           "details": "Support role assignments such as OWNER, ADMIN, and MEMBER, and ensure users can be invited and assigned roles correctly. Allow invitations by wallet address or email, with email invitations creating wallets. Ensure Python models match Prisma schema exactly.",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 4,
@@ -297,14 +311,14 @@
             1
           ],
           "details": "Ensure that the implementation approach (manual sync, code generation, or Prisma Client Python) is in place before implementing Python API endpoints. Python models must match Prisma schema exactly, using the same field names and relationships.",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 8,
           "title": "Implement OrganizationRepository with multi-tenancy",
           "description": "Create OrganizationRepository to handle organization data persistence with proper multi-tenancy isolation.",
           "details": "Implement the following repository methods:\n- create_organization() - Create new organization with owner\n- get_organization_by_slug() - Find org by unique slug\n- get_user_organizations() - List all orgs a user belongs to\n- add_user_to_organization() - Add member with role\n- remove_user_from_organization() - Remove member\n- update_user_role() - Change member's role\n- get_organization_members() - List all members with roles\n- check_user_permission() - Verify user has permission in org\n- get_organization_with_stats() - Fetch org with payment/user counts\n\nAll methods must respect multi-tenancy boundaries and use the Unit of Work pattern for transactions.",
-          "status": "pending",
+          "status": "done",
           "dependencies": [
             2
           ],
@@ -374,7 +388,7 @@
           "id": 13,
           "title": "Associate Payment Link with Executing Agent",
           "description": "Update the PaymentLink model to include an executingAgentId field linking to an Agent.",
-          "status": "pending"
+          "status": "done"
         },
         {
           "id": 14,
@@ -399,16 +413,14 @@
           "title": "Implement PaymentLinkRepository with agent integration",
           "description": "Create PaymentLinkRepository to manage payment links with their executing agents and emit events.",
           "details": "Implement repository methods:\n- create_payment_link() - Create with agent assignment and emit PaymentLink.Created event\n- get_payment_link_by_short_code() - Find by unique short code\n- get_organization_payment_links() - List with pagination and filters\n- update_payment_link_status() - Change status and emit status change events\n- assign_agent_to_payment_link() - Update executing agent\n- get_payment_links_by_agent() - Find all links assigned to an agent\n- get_active_payment_links() - Filter by active status\n- expire_old_payment_links() - Batch update expired links\n- get_payment_link_with_orders() - Include payment order history\n\nAfter each write operation, emit appropriate domain events to Redpanda:\n- PaymentLink.Created\n- PaymentLink.StatusChanged\n- PaymentLink.AgentAssigned\n- PaymentLink.Expired",
-          "status": "pending",
-          "dependencies": [],
-          "parentTaskId": 5
+          "status": "done"
         },
         {
           "id": 18,
           "title": "Implement Integration Key Management for Payment Links",
           "description": "Create API endpoints for managing integration keys that connect payment links to authorized agents",
           "details": "Implement the following functionality:\n- Create integration keys for organizations with proper hashing and prefix generation (wedi_ik_...)\n- Associate integration keys with specific agents\n- Validate integration keys on public payment endpoints\n- Track integration key usage and last used timestamps\n- Implement key rotation and revocation features\n- Ensure payment links are created with valid integration keys\n- Add integration key validation to the payment initiation flow",
-          "status": "pending",
+          "status": "done",
           "dependencies": [
             17
           ],
@@ -2138,7 +2150,7 @@
       "description": "Set up a FastAPI application structure with routers, dependency injection, and middleware for a RESTful API.",
       "details": "1. **Set Up FastAPI Application Structure**: Initialize a FastAPI application with a modular structure using routers for different API sections (auth, organizations, users, etc.).\n\n2. **Implement Dependency Injection**: Use FastAPI's dependency injection system to inject repositories into endpoints. Ensure each endpoint uses the repository pattern for data access and manipulation.\n\n3. **Create DTOs with Pydantic**: Define request and response DTOs using Pydantic models for data validation and serialization.\n\n4. **Implement Authentication Middleware**: Use JWT tokens for authentication. Implement middleware to validate JWTs and attach user information to requests.\n\n5. **Organization Context Middleware**: Develop middleware to handle multi-tenancy by determining the organization context from request headers or tokens.\n\n6. **API Versioning**: Set up API versioning by organizing endpoints under the `/api/v1` path.\n\n7. **Error Handling and Exception Middleware**: Implement global error handling and exception middleware to standardize error responses.\n\n8. **OpenAPI Documentation**: Automatically generate OpenAPI documentation with examples for each endpoint using FastAPI's built-in support.\n\n9. **CORS Configuration**: Configure CORS to allow cross-origin requests from trusted domains.\n\n10. **Request Validation and Sanitization**: Ensure all incoming requests are validated and sanitized to prevent injection attacks.\n\n11. **RESTful Endpoint Design**: Implement endpoints following RESTful principles for authentication, organization management, user management, agent management, payment link CRUD, payment order tracking, customer management, product catalog, and webhook management. Ensure each endpoint emits events after state changes.",
       "testStrategy": "1. **Unit Tests**: Write unit tests for each endpoint to verify correct routing, request handling, and response generation.\n\n2. **Integration Tests**: Develop integration tests to ensure that dependency injection works correctly and that repositories are properly utilized.\n\n3. **Middleware Tests**: Test authentication and organization context middleware to ensure they correctly process requests and attach necessary information.\n\n4. **API Documentation Verification**: Check that the OpenAPI documentation is generated correctly and includes all endpoints with examples.\n\n5. **Security Tests**: Conduct security testing to verify JWT validation, CORS configuration, and request sanitization.\n\n6. **Functional Tests**: Perform end-to-end tests to ensure that the API endpoints function as expected and emit events correctly after state changes.",
-      "status": "in-progress",
+      "status": "done",
       "dependencies": [
         26
       ],

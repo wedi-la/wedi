@@ -53,7 +53,7 @@ Test payment link creation with various parameters, including blockchain-specifi
 ### Details:
 
 
-## 13. Associate Payment Link with Executing Agent [pending]
+## 13. Associate Payment Link with Executing Agent [done]
 ### Dependencies: None
 ### Description: Update the PaymentLink model to include an executingAgentId field linking to an Agent.
 ### Details:
@@ -77,7 +77,7 @@ Test payment link creation with various parameters, including blockchain-specifi
 ### Details:
 
 
-## 17. Implement PaymentLinkRepository with agent integration [pending]
+## 17. Implement PaymentLinkRepository with agent integration [done]
 ### Dependencies: None
 ### Description: Create PaymentLinkRepository to manage payment links with their executing agents and emit events.
 ### Details:
@@ -98,7 +98,7 @@ After each write operation, emit appropriate domain events to Redpanda:
 - PaymentLink.AgentAssigned
 - PaymentLink.Expired
 
-## 18. Implement Integration Key Management for Payment Links [pending]
+## 18. Implement Integration Key Management for Payment Links [done]
 ### Dependencies: 5.17
 ### Description: Create API endpoints for managing integration keys that connect payment links to authorized agents
 ### Details:
