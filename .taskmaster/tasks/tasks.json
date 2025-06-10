@@ -2154,8 +2154,8 @@
             7,
             8
           ],
-          "details": "Use a testing framework like pytest to create tests for all endpoints. Include tests for edge cases and error conditions.",
-          "status": "pending",
+          "details": "Use a testing framework like pytest to create tests for all endpoints. Include tests for edge cases and error conditions.\n<info added on 2025-06-10T06:27:06.281Z>\nStarting implementation of testing structure for FastAPI endpoints.\n\nAnalysis of existing setup:\n1. Testing dependencies already present in pyproject.toml:\n   - pytest ^8.3.4\n   - pytest-asyncio ^0.25.0 (for async endpoint testing)\n   - pytest-cov ^6.0.0 (for code coverage)\n   - asyncio_mode = \"auto\" configured\n\n2. Endpoints to test:\n   - Authentication endpoints (/api/v1/auth/*)\n   - Organization management endpoints (/api/v1/organizations/*)\n   - User management endpoints (/api/v1/users/*)\n   - Payment link endpoints (/api/v1/payment-links/*)\n\nImplementation plan:\n1. Create tests directory structure\n2. Set up conftest.py with common fixtures\n3. Create test database configuration\n4. Implement test factories for data generation\n5. Create test files for each endpoint group\n6. Include edge cases and error conditions\n7. Set up GitHub Actions for CI/CD testing\n</info added on 2025-06-10T06:27:06.281Z>",
+          "status": "in-progress",
           "testStrategy": "Run the test suite to ensure all endpoints function as expected and handle errors gracefully."
         }
       ]

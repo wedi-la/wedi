@@ -483,9 +483,34 @@ Use FastAPI's built-in support to generate and customize OpenAPI documentation. 
 ### Details:
 Integrate an event system to emit events (e.g., using a message broker) after successful state changes in endpoints.
 
-## 12. Set Up Testing Structure for Endpoints [pending]
+## 12. Set Up Testing Structure for Endpoints [in-progress]
 ### Dependencies: 27.5, 27.6, 27.7, 27.8
 ### Description: Establish a testing framework for endpoint testing.
 ### Details:
 Use a testing framework like pytest to create tests for all endpoints. Include tests for edge cases and error conditions.
+<info added on 2025-06-10T06:27:06.281Z>
+Starting implementation of testing structure for FastAPI endpoints.
+
+Analysis of existing setup:
+1. Testing dependencies already present in pyproject.toml:
+   - pytest ^8.3.4
+   - pytest-asyncio ^0.25.0 (for async endpoint testing)
+   - pytest-cov ^6.0.0 (for code coverage)
+   - asyncio_mode = "auto" configured
+
+2. Endpoints to test:
+   - Authentication endpoints (/api/v1/auth/*)
+   - Organization management endpoints (/api/v1/organizations/*)
+   - User management endpoints (/api/v1/users/*)
+   - Payment link endpoints (/api/v1/payment-links/*)
+
+Implementation plan:
+1. Create tests directory structure
+2. Set up conftest.py with common fixtures
+3. Create test database configuration
+4. Implement test factories for data generation
+5. Create test files for each endpoint group
+6. Include edge cases and error conditions
+7. Set up GitHub Actions for CI/CD testing
+</info added on 2025-06-10T06:27:06.281Z>
 
