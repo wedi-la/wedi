@@ -1,5 +1,5 @@
 """
-Authentication endpoints compatible with thirdweb auth.
+Authentication endpoints compatible with Clerk + Circle auth.
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -53,7 +53,7 @@ async def generate_payload(
     """
     Generate a SIWE (Sign-In with Ethereum) payload for the frontend to sign.
     
-    This endpoint is called by the thirdweb ConnectButton to get a message
+    This endpoint is called by the Clerk + Circle ConnectButton to get a message
     that the user will sign with their wallet.
     """
     logger.info(f"Generating SIWE payload for address: {request.address}")

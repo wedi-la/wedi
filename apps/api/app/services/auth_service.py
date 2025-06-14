@@ -34,7 +34,7 @@ from app.schemas.wallet import WalletCreate
 
 
 class AuthService:
-    """Service for handling authentication operations compatible with thirdweb."""
+    """Service for handling authentication operations compatible with Clerk + Circle."""
 
     @staticmethod
     async def generate_siwe_payload(
@@ -42,7 +42,7 @@ class AuthService:
     ) -> SIWEPayload:
         """
         Generate a SIWE (Sign-In with Ethereum) payload for the frontend to sign.
-        This is compatible with thirdweb's auth flow.
+        This is compatible with Clerk + Circle's auth flow.
         """
         # Generate a secure nonce
         nonce = secrets.token_urlsafe(32)
@@ -90,7 +90,7 @@ Expiration Time: {expiration_time.isoformat()}"""
     ) -> LoginResponse:
         """
         Verify the signed SIWE message and create a session.
-        This would normally use thirdweb's verifyPayload, but we'll verify manually.
+        This would normally use Clerk + Circle's verifyPayload, but we'll verify manually.
         """
         payload = login_request.payload
         signature = login_request.signature
@@ -178,7 +178,7 @@ Expiration Time: {expiration_time.isoformat()}"""
             
             # Get wallet address from primary wallet or auth_provider_id
             wallet_address = None
-            if user.auth_provider == AuthProvider.THIRDWEB and user.auth_provider_id:
+            if user.auth_provider == AuthProvider.CLERK and user.auth_provider_id:
                 wallet_address = user.auth_provider_id
             elif user.primary_wallet_id:
                 # Get wallet address from primary wallet if needed
@@ -280,7 +280,7 @@ Expiration Time: {expiration_time.isoformat()}"""
         user_create = UserCreate(
             email=email,
             name=f"User {wallet_address[:8]}",
-            auth_provider=AuthProvider.THIRDWEB,
+            auth_provider=AuthProvider.CLERK,
             auth_provider_id=wallet_address
         )
         

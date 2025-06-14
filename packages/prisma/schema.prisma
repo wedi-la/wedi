@@ -87,7 +87,7 @@ model User {
 enum AuthProvider {
   EMAIL
   GOOGLE
-  THIRDWEB
+  CLERK
   WALLET_CONNECT
 }
 

@@ -17,7 +17,7 @@ class UserFactory:
             "id": str(uuid.uuid4()),
             "email": f"test_{uuid.uuid4().hex[:8]}@example.com",
             "name": "Test User",
-            "auth_provider": AuthProvider.THIRDWEB,  # Using wallet auth
+            "auth_provider": AuthProvider.CLERK,  # Using wallet auth
             "auth_provider_id": f"0x{uuid.uuid4().hex[:40]}",  # Mock wallet address
             "email_verified": True,  # Auto-verified for wallet users
             "created_at": datetime.now(timezone.utc),

@@ -3,12 +3,12 @@
 # Status: pending
 # Dependencies: 1, 25, 26, 27
 # Priority: high
-# Description: Set up user authentication using Thirdweb for secure access control, with automatic wallet creation for users logging in via Google Auth or other providers.
+# Description: Set up user authentication using Clerk + Circle for secure access control, with automatic wallet creation for users logging in via Google Auth or other providers.
 # Details:
-Integrate Thirdweb authentication into the Next.js frontend for seamless web2/web3 login options, including email, social (like Google Auth), and wallet connections. Implement Sign in with Ethereum (SIWE) standard with JWT tokens stored in cookies. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate Thirdweb JWTs and handle automatic blockchain wallet creation for web2 logins.
+Integrate Clerk + Circle authentication into the Next.js frontend for seamless web2/web3 login options, including email, social (like Google Auth), and wallet connections. Implement Sign in with Ethereum (SIWE) standard with JWT tokens stored in cookies. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate Clerk + Circle JWTs and handle automatic blockchain wallet creation for web2 logins.
 
 # Test Strategy:
-Test user registration, login, and session persistence using Thirdweb Connect. Verify JWT token validity, expiration handling, and backend validation. Ensure seamless login via email, social (including Google Auth), and wallet connections, test automatic wallet creation for web2 logins.
+Test user registration, login, and session persistence using Clerk + Circle Connect. Verify JWT token validity, expiration handling, and backend validation. Ensure seamless login via email, social (including Google Auth), and wallet connections, test automatic wallet creation for web2 logins.
 
 # Subtasks:
 ## 1. Set up Next.js application [pending]
@@ -17,15 +17,15 @@ Test user registration, login, and session persistence using Thirdweb Connect. V
 ### Details:
 Initialize a new Next.js project and set up necessary configurations.
 
-## 2. Set up Thirdweb client with credentials [pending]
+## 2. Set up Clerk + Circle client with credentials [pending]
 ### Dependencies: 3.1
-### Description: Configure the Thirdweb client with necessary credentials including client ID, secret key, and auth private key.
+### Description: Configure the Clerk + Circle client with necessary credentials including client ID, secret key, and auth private key.
 ### Details:
-Follow the Thirdweb documentation to properly set up the client in the Next.js application.
+Follow the Clerk + Circle documentation to properly set up the client in the Next.js application.
 
-## 3. Implement ThirdwebProvider in Next.js app layout [pending]
+## 3. Implement Clerk + CircleProvider in Next.js app layout [pending]
 ### Dependencies: 3.2
-### Description: Integrate the ThirdwebProvider component into the Next.js application layout to enable authentication features.
+### Description: Integrate the Clerk + CircleProvider component into the Next.js application layout to enable authentication features.
 ### Details:
 Ensure the provider is wrapped around the application to manage authentication state.
 
@@ -33,7 +33,7 @@ Ensure the provider is wrapped around the application to manage authentication s
 ### Dependencies: 3.3
 ### Description: Develop a ConnectButton component that handles authentication callbacks such as isLoggedIn, doLogin, getLoginPayload, and doLogout.
 ### Details:
-Use the Thirdweb hooks and methods to manage authentication state and actions. Include support for Google Auth and other social providers.
+Use the Clerk + Circle hooks and methods to manage authentication state and actions. Include support for Google Auth and other social providers.
 
 ## 5. Implement server actions for secure auth flow [pending]
 ### Dependencies: 3.4
@@ -51,7 +51,7 @@ Ensure tokens are securely generated and stored, and cookies are managed for use
 ### Dependencies: 3.6
 ### Description: Develop functionality to automatically create wallets for users logging in via web2 methods such as email or social logins (including Google Auth).
 ### Details:
-Integrate with Thirdweb to create wallets seamlessly during the authentication process.
+Integrate with Clerk + Circle to create wallets seamlessly during the authentication process.
 
 ## 8. Update test strategy for frontend integration [pending]
 ### Dependencies: 3.7
@@ -59,9 +59,9 @@ Integrate with Thirdweb to create wallets seamlessly during the authentication p
 ### Details:
 Ensure all authentication flows are tested from a user perspective, including edge cases and error handling.
 
-## 9. Python FastAPI endpoints to validate Thirdweb JWTs [done]
+## 9. Python FastAPI endpoints to validate Clerk + Circle JWTs [done]
 ### Dependencies: None
-### Description: Develop FastAPI endpoints to validate JWTs generated by Thirdweb for authentication.
+### Description: Develop FastAPI endpoints to validate JWTs generated by Clerk + Circle for authentication.
 ### Details:
 This subtask is completed as part of task 27.5 with auth router and service.
 

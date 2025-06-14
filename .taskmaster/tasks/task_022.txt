@@ -1,16 +1,16 @@
 # Task ID: 22
-# Title: Implement Web3 Payment Infrastructure with Thirdweb
+# Title: Implement Web3 Payment Infrastructure with Clerk + Circle
 # Status: pending
 # Dependencies: 2, 3, 4, 21
 # Priority: high
-# Description: Develop a comprehensive Web3 payment system using Thirdweb, including smart contract wallets, gas sponsorship, payment contracts, and transaction monitoring.
+# Description: Develop a comprehensive Web3 payment system using Clerk + Circle, including smart contract wallets, gas sponsorship, payment contracts, and transaction monitoring.
 # Details:
-1. Set up smart contract wallets for organizations, including treasury and operations wallets, using Thirdweb's wallet management tools. Ensure these wallets are securely integrated with the organization's account.
-2. Implement gas sponsorship for user transactions using Thirdweb Engine, allowing organizations to cover transaction fees for users. Configure sponsorship policies and ensure they are enforced through the backend.
+1. Set up smart contract wallets for organizations, including treasury and operations wallets, using Clerk + Circle's wallet management tools. Ensure these wallets are securely integrated with the organization's account.
+2. Implement gas sponsorship for user transactions using Clerk + Circle Engine, allowing organizations to cover transaction fees for users. Configure sponsorship policies and ensure they are enforced through the backend.
 3. Create payment smart contracts to handle escrow and automated settlements. Use Solidity to define contract logic and deploy these contracts on the blockchain. Ensure contracts are secure and audited.
-4. Integrate Thirdweb's session keys for delegated payments, allowing users to authorize payments without exposing private keys. Implement session management and key rotation strategies.
+4. Integrate Clerk + Circle's session keys for delegated payments, allowing users to authorize payments without exposing private keys. Implement session management and key rotation strategies.
 5. Develop a system for generating payment links with on-chain metadata. Ensure links are secure, easily shareable, and trackable.
-6. Set up a webhook system to monitor blockchain transactions and trigger backend processes. Use Thirdweb's webhook capabilities to receive real-time updates on transaction statuses.
+6. Set up a webhook system to monitor blockchain transactions and trigger backend processes. Use Clerk + Circle's webhook capabilities to receive real-time updates on transaction statuses.
 7. Implement fallback mechanisms for failed transactions, including retries, user notifications, and manual intervention options. Ensure the system can gracefully handle errors and maintain data integrity.
 
 # Test Strategy:
@@ -23,29 +23,29 @@
 7. Induce transaction failures and test fallback mechanisms, including retries and notifications. Ensure system stability and data consistency during error handling.
 
 # Subtasks:
-## 1. Set Up Thirdweb SDK [pending]
+## 1. Set Up Clerk + Circle SDK [pending]
 ### Dependencies: None
-### Description: Initialize the Thirdweb SDK to facilitate Web3 development.
+### Description: Initialize the Clerk + Circle SDK to facilitate Web3 development.
 ### Details:
-Install the Thirdweb SDK and configure it for your project environment.
+Install the Clerk + Circle SDK and configure it for your project environment.
 
 ## 2. Implement Smart Contract Wallet Creation and Management [pending]
 ### Dependencies: 22.1
 ### Description: Develop functionality for creating and managing smart contract wallets.
 ### Details:
-Utilize Thirdweb's smart wallet features to create and manage user wallets programmatically.
+Utilize Clerk + Circle's smart wallet features to create and manage user wallets programmatically.
 
 ## 3. Enable Gas Sponsorship for Gasless Transactions [pending]
 ### Dependencies: 22.2
 ### Description: Implement gas sponsorship to allow users to perform transactions without gas fees.
 ### Details:
-Configure gasless transactions using Thirdweb's gas sponsorship capabilities to enhance user experience.
+Configure gasless transactions using Clerk + Circle's gas sponsorship capabilities to enhance user experience.
 
 ## 4. Deploy Payment Smart Contract [pending]
 ### Dependencies: 22.1
 ### Description: Deploy a smart contract to handle payment processing.
 ### Details:
-Use Thirdweb's deployment tools to deploy a payment smart contract tailored to your application's needs.
+Use Clerk + Circle's deployment tools to deploy a payment smart contract tailored to your application's needs.
 
 ## 5. Generate NFT Receipts for Payments [pending]
 ### Dependencies: 22.4
@@ -57,7 +57,7 @@ Implement functionality to mint NFTs upon successful payment transactions, servi
 ### Dependencies: 22.1
 ### Description: Configure the application to support multiple blockchain networks.
 ### Details:
-Leverage Thirdweb's multi-chain capabilities to enable seamless operation across various blockchains.
+Leverage Clerk + Circle's multi-chain capabilities to enable seamless operation across various blockchains.
 
 ## 7. Develop Wallet Connection UI Components [pending]
 ### Dependencies: 22.2

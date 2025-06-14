@@ -180,14 +180,14 @@ Utilize existing Pydantic schemas from Task 26 located in apps/api/app/schemas/ 
 ### Details:
 Create routes for login, logout, and token refresh. Use JWTs for token management.
 <info added on 2025-06-08T19:47:38.594Z>
-Initial Analysis and Implementation Plan for Thirdweb Authentication Integration:
+Initial Analysis and Implementation Plan for Clerk + Circle Authentication Integration:
 
-Based on thirdweb documentation analysis:
-1. Thirdweb Auth uses Sign-In with Ethereum (SIWE) standard for passwordless authentication
-2. Frontend uses thirdweb ConnectButton with auth configuration
+Based on Clerk + Circle documentation analysis:
+1. Clerk + Circle Auth uses Sign-In with Ethereum (SIWE) standard for passwordless authentication
+2. Frontend uses Clerk + Circle ConnectButton with auth configuration
 3. Backend needs to:
    - Generate SIWE payloads for login
-   - Verify signed payloads using thirdweb/auth
+   - Verify signed payloads using Clerk + Circle/auth
    - Issue JWT tokens for session management
    - Handle refresh tokens and logout
 
@@ -200,7 +200,7 @@ Implementation approach:
   - POST /api/v1/auth/logout - Invalidate session
   - GET /api/v1/auth/me - Get current user info
 - Integrate with existing JWT middleware from Task 27.2
-- Use thirdweb/auth library for SIWE handling
+- Use Clerk + Circle/auth library for SIWE handling
 - Store sessions in database with proper cleanup
 
 Files to create/modify:
@@ -210,10 +210,10 @@ Files to create/modify:
 - Update main.py to register auth routes
 </info added on 2025-06-08T19:47:38.594Z>
 <info added on 2025-06-08T19:55:52.592Z>
-Successfully implemented thirdweb-compatible authentication endpoints:
+Successfully implemented Clerk + Circle-compatible authentication endpoints:
 
 1. Created auth service (app/services/auth_service.py):
-   - Generates SIWE payloads compatible with thirdweb frontend
+   - Generates SIWE payloads compatible with Clerk + Circle frontend
    - Handles user login with wallet address (creates user if not exists)
    - Issues JWT tokens for session management
    - Supports token refresh and logout
@@ -245,7 +245,7 @@ Successfully implemented thirdweb-compatible authentication endpoints:
 
 Note: Signature verification is placeholder - in production would use web3 libraries to verify SIWE signatures.
 
-All endpoints are now ready for integration with thirdweb frontend ConnectButton.
+All endpoints are now ready for integration with Clerk + Circle frontend ConnectButton.
 </info added on 2025-06-08T19:55:52.592Z>
 
 ## 6. Implement Organization Management Endpoints [done]
@@ -335,7 +335,7 @@ Starting implementation of User Management Endpoints:
 Analysis of requirements:
 1. Need CRUD endpoints for user management
 2. Must implement proper permission checks (users can view/edit their own profile, admins can manage all users)
-3. Should integrate with thirdweb authentication
+3. Should integrate with Clerk + Circle authentication
 4. Handle wallet addresses as part of user management
 5. Support user profile updates
 

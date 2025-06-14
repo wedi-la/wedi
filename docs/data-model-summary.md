@@ -18,7 +18,7 @@ This document provides a high-level summary of the Wedi platform's data model ar
 
 ### 1. Multi-Tenant Foundation
 - **Organization**: Root tenant entity with compliance tracking
-- **User**: Supports multiple auth providers (Email, Google, Thirdweb)
+- **User**: Supports multiple auth providers (Email, Google, Clerk + Circle)
 - **OrganizationUser**: Junction table for role-based access
 
 ### 2. Payment Core
@@ -72,7 +72,7 @@ CREATED → AWAITING_PAYMENT → PROCESSING → COMPLETED
 For the initial MVP, prioritize:
 1. Core models: Organization, User, PaymentLink, PaymentOrder
 2. Basic provider integration (Yoint for Colombia, Trubit for Mexico)
-3. Simple wallet support for Thirdweb authentication
+3. Simple wallet support for Clerk + Circle authentication
 4. Essential audit logging for compliance
 
 ## Future Enhancements

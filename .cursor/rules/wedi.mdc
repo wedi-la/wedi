@@ -35,7 +35,7 @@ validation = "Zod"
 
 # --> Data & State
 database = "Neon DB (Serverless PostgreSQL)"
-authentication = "Thirdweb Auth" # Integrated with Neon DB via webhooks/triggers
+authentication = "Clerk + Circle Auth" # Integrated with Neon DB via webhooks/triggers
 frontend_data_fetching = "TanStack Query (React Query)"
 frontend_state_management = "React Context, Zustand (for complex state)"
 

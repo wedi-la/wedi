@@ -73,7 +73,7 @@ Add methods for user-specific operations such as finding users by email or usern
 <info added on 2025-06-08T06:59:16.981Z>
 Successfully implemented UserRepository with the following authentication-specific queries:
 - get_by_email(): Retrieve user by email with optional organization loading
-- get_by_auth_provider(): Find user by OAuth provider (Google, Thirdweb, etc.)
+- get_by_auth_provider(): Find user by OAuth provider (Google, Clerk + Circle, etc.)
 - get_by_wallet_address(): Look up user by their primary wallet address
 - get_organizations(): Get all organizations a user belongs to
 - search(): Search users by email or name with pagination

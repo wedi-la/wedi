@@ -670,7 +670,7 @@ exports.ComplianceStatus = exports.$Enums.ComplianceStatus = {
 exports.AuthProvider = exports.$Enums.AuthProvider = {
   EMAIL: 'EMAIL',
   GOOGLE: 'GOOGLE',
-  THIRDWEB: 'THIRDWEB',
+  CLERK: 'CLERK',
   WALLET_CONNECT: 'WALLET_CONNECT'
 };
 

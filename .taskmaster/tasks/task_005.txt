@@ -5,7 +5,7 @@
 # Priority: high
 # Description: Develop the model and API for creating and managing payment links with blockchain integration, executed by autonomous AI agents.
 # Details:
-Define the PaymentLink model and implement the POST /payment-links API endpoint. Integrate blockchain features such as smart contract addresses, on-chain payment metadata, and NFT-based payment receipts. Support link customization options including amount, currency, metadata, and time-locked expiration. Enable QR codes with wallet connection deep links and support gasless transactions through sponsored payments. Ensure multi-currency support with on-chain conversion rates. Associate each payment link with an executing agent that handles the entire payment flow. Agents have their own Thirdweb smart wallets, support specific providers (Yoint, Trubit), and blockchain chains. Implement new entities: Customer, Product & Price, Subscription, and CustomerPaymentMethod.
+Define the PaymentLink model and implement the POST /payment-links API endpoint. Integrate blockchain features such as smart contract addresses, on-chain payment metadata, and NFT-based payment receipts. Support link customization options including amount, currency, metadata, and time-locked expiration. Enable QR codes with wallet connection deep links and support gasless transactions through sponsored payments. Ensure multi-currency support with on-chain conversion rates. Associate each payment link with an executing agent that handles the entire payment flow. Agents have their own Clerk + Circle smart wallets, support specific providers (Yoint, Trubit), and blockchain chains. Implement new entities: Customer, Product & Price, Subscription, and CustomerPaymentMethod.
 
 # Test Strategy:
 Test payment link creation with various parameters, including blockchain-specific features and agent execution. Verify correct data storage, retrieval, and blockchain interactions. Ensure QR codes function correctly and test gasless transaction capabilities. Validate agent assignment and execution, product and price management, and customer operations.
@@ -25,7 +25,7 @@ Test payment link creation with various parameters, including blockchain-specifi
 
 ## 8. Integrate NFT-based Payment Receipts [pending]
 ### Dependencies: None
-### Description: Integrate with Thirdweb to support NFT-based payment receipts for each transaction.
+### Description: Integrate with Clerk + Circle to support NFT-based payment receipts for each transaction.
 ### Details:
 
 

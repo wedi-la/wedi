@@ -9,7 +9,7 @@ This task involves developing a robust agent management system that serves as th
 
 1. **Agent CRUD APIs**: Develop RESTful APIs to create, read, update, and delete agent records. Ensure these APIs are secure and scalable. The APIs must use synchronized Python models and maintain relationships as defined in Prisma, respecting organizationId-based multi-tenancy.
 
-2. **Agent Wallet Creation**: Integrate with Thirdweb Engine to automatically create and manage wallets for each agent. Ensure wallets are securely stored and accessible. Wallet metadata must be stored consistently across both Prisma and SQLAlchemy.
+2. **Agent Wallet Creation**: Integrate with Clerk + Circle Engine to automatically create and manage wallets for each agent. Ensure wallets are securely stored and accessible. Wallet metadata must be stored consistently across both Prisma and SQLAlchemy.
 
 3. **Agent Capability Configuration**: Implement functionality to configure agent capabilities, including supported providers, blockchain chains, and decision authority levels.
 
@@ -34,7 +34,7 @@ Agents should operate autonomously, executing payments and making decisions base
 # Test Strategy:
 1. **API Testing**: Use tools like Postman to test all CRUD operations for agents, ensuring they work as expected and handle edge cases. Verify that the APIs use synchronized models and maintain relationships as defined in Prisma.
 
-2. **Wallet Verification**: Verify that wallets are correctly created and managed by Thirdweb Engine, checking for proper security and accessibility. Ensure wallet metadata is consistently stored across both ORMs.
+2. **Wallet Verification**: Verify that wallets are correctly created and managed by Clerk + Circle Engine, checking for proper security and accessibility. Ensure wallet metadata is consistently stored across both ORMs.
 
 3. **Capability Configuration Testing**: Test the configuration of agent capabilities to ensure they are correctly set and can be updated as needed.
 
@@ -63,7 +63,7 @@ Use FastAPI for API development. Implement Prisma models for database operations
 
 ## 2. Integrate Agent Wallet Creation [pending]
 ### Dependencies: 23.1
-### Description: Automatically create and manage wallets for each agent using Thirdweb Engine.
+### Description: Automatically create and manage wallets for each agent using Clerk + Circle Engine.
 ### Details:
 Implement wallet creation logic in the agent creation API. Store wallet metadata consistently across Prisma and SQLAlchemy. Ensure secure storage of wallet information.
 

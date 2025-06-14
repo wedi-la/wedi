@@ -49,7 +49,7 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
         "/api/v1/auth/forgot-password",
         "/api/v1/auth/reset-password",
         "/api/v1/auth/verify-email",
-        "/api/v1/auth/payload",  # For thirdweb SIWE payload generation
+        "/api/v1/auth/payload",  # For Clerk + Circle SIWE payload generation
         "/api/v1/auth/validate-key",  # For integration key validation
     }
     

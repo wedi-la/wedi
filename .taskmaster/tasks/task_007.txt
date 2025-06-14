@@ -5,7 +5,7 @@
 # Priority: high
 # Description: Develop the logic for executing payments through autonomous AI agents using LangGraph.
 # Details:
-Create an agent-centric architecture where autonomous AI agents handle payment execution. Each agent listens for Payment.Initiated events from Redpanda, uses its own Thirdweb smart wallet for blockchain operations, and orchestrates the entire payment flow. Agents select providers based on capabilities, handle callbacks/webhooks, emit terminal events, and log all reasoning and decisions for auditability. The system is event-driven with agents as primary consumers, making decisions based on provider availability, transaction parameters, success rates, and cost optimization.
+Create an agent-centric architecture where autonomous AI agents handle payment execution. Each agent listens for Payment.Initiated events from Redpanda, uses its own Clerk + Circle smart wallet for blockchain operations, and orchestrates the entire payment flow. Agents select providers based on capabilities, handle callbacks/webhooks, emit terminal events, and log all reasoning and decisions for auditability. The system is event-driven with agents as primary consumers, making decisions based on provider availability, transaction parameters, success rates, and cost optimization.
 
 # Test Strategy:
 Test payment execution with various scenarios using autonomous agents, including successful and failed transactions. Verify agent decision-making, provider selection, and event emission. Ensure audit logs are comprehensive.
@@ -78,7 +78,7 @@ Develop mechanisms to update and propagate payment statuses to maintain consiste
 ### Dependencies: None
 ### Description: Create the architecture for autonomous AI agents to handle payment execution.
 ### Details:
-Design agents to listen for Payment.Initiated events, use Thirdweb smart wallets, and orchestrate payment flows autonomously.
+Design agents to listen for Payment.Initiated events, use Clerk + Circle smart wallets, and orchestrate payment flows autonomously.
 
 ## 12. Implement Agent Decision-Making Logic [pending]
 ### Dependencies: 7.11

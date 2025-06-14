@@ -75,7 +75,7 @@ async def test_event_emission():
     test_event = UserCreatedEvent(
         user_id="test-user-123",
         email="test@example.com",
-        auth_provider=AuthProvider.THIRDWEB,
+        auth_provider=AuthProvider.CLERK,
     )
     
     await event_publisher.publish(test_event)

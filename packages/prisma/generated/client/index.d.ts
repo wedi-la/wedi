@@ -182,7 +182,7 @@ export type ComplianceStatus = (typeof ComplianceStatus)[keyof typeof Compliance
 export const AuthProvider: {
   EMAIL: 'EMAIL',
   GOOGLE: 'GOOGLE',
-  THIRDWEB: 'THIRDWEB',
+  CLERK: 'CLERK',
   WALLET_CONNECT: 'WALLET_CONNECT'
 };
 

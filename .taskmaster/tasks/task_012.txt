@@ -3,9 +3,9 @@
 # Status: pending
 # Dependencies: 4
 # Priority: medium
-# Description: Implement role-based access control for organization management with Thirdweb wallet-based authentication.
+# Description: Implement role-based access control for organization management with Clerk + Circle wallet-based authentication.
 # Details:
-Enhance the user management system to support role-based permissions and access control for different organization roles. Roles are tied to wallet addresses instead of traditional user IDs. Support smart contract wallets with delegated permissions and on-chain role verification for critical operations. Implement gas sponsorship permissions based on roles, wallet-specific API permissions for Engine access, and time-bound role assignments with expiration. Ensure multi-signature requirements for admin operations. The RBAC system should seamlessly work with both EOA wallets and smart contract wallets created through Thirdweb.
+Enhance the user management system to support role-based permissions and access control for different organization roles. Roles are tied to wallet addresses instead of traditional user IDs. Support smart contract wallets with delegated permissions and on-chain role verification for critical operations. Implement gas sponsorship permissions based on roles, wallet-specific API permissions for Engine access, and time-bound role assignments with expiration. Ensure multi-signature requirements for admin operations. The RBAC system should seamlessly work with both EOA wallets and smart contract wallets created through Clerk + Circle.
 
 # Test Strategy:
 Test access control by simulating actions with different wallet roles and verifying permission enforcement. Validate on-chain role verification and multi-signature requirements. Test gas sponsorship and API permissions for Engine access. Ensure time-bound role assignments expire correctly.

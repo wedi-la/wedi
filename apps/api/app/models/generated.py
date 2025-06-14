@@ -49,7 +49,7 @@ class AuthProvider(enum.Enum):
     """Generated from Prisma enum AuthProvider"""
     EMAIL = "EMAIL"
     GOOGLE = "GOOGLE"
-    THIRDWEB = "THIRDWEB"
+    CLERK = "CLERK"
     WALLET_CONNECT = "WALLET_CONNECT"
 
 class BillingInterval(enum.Enum):

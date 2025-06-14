@@ -221,18 +221,18 @@
     },
     {
       "taskId": 21,
-      "taskTitle": "Integrate Thirdweb Engine with FastAPI Backend",
+      "taskTitle": "Integrate Clerk + Circle Engine with FastAPI Backend",
       "complexityScore": 5,
       "recommendedSubtasks": 3,
-      "expansionPrompt": "Break down this task with a focus on integrate thirdweb engine with fastapi backend.",
+      "expansionPrompt": "Break down this task with a focus on integrate Clerk + Circle engine with fastapi backend.",
       "reasoning": "Automatically added due to missing analysis in AI response."
     },
     {
       "taskId": 22,
-      "taskTitle": "Implement Web3 Payment Infrastructure with Thirdweb",
+      "taskTitle": "Implement Web3 Payment Infrastructure with Clerk + Circle",
       "complexityScore": 5,
       "recommendedSubtasks": 3,
-      "expansionPrompt": "Break down this task with a focus on implement web3 payment infrastructure with thirdweb.",
+      "expansionPrompt": "Break down this task with a focus on implement web3 payment infrastructure with Clerk + Circle.",
       "reasoning": "Automatically added due to missing analysis in AI response."
     }
   ]

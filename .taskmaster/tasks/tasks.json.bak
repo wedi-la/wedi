@@ -14,14 +14,14 @@
     {
       "id": 2,
       "title": "Design Core Database Schema",
-      "description": "Define the core database schema for multi-tenancy, payment processing, and Thirdweb authentication using Prisma ORM.",
+      "description": "Define the core database schema for multi-tenancy, payment processing, and Clerk + Circle authentication using Prisma ORM.",
       "status": "done",
       "dependencies": [
         1
       ],
       "priority": "high",
-      "details": "Use Prisma ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, Wallet, Agent, Customer, Product, and Price. Implement multi-tenant data model with Organization-based data isolation. Configure Prisma to work with Neon DB (serverless PostgreSQL). Support Thirdweb authentication by storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types. Set up the Prisma client and migrations. Ensure the packages structure includes packages/prisma for schema and client configuration, packages/ui for shared React components with Shadcn UI, and packages/types for shared TypeScript types. Integrate Agents as the primary execution layer, linking PaymentLink to Agent (executingAgentId) and Agent to Wallet (agentWalletId).",
-      "testStrategy": "Run Prisma migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Thirdweb authentication support by testing wallet address storage and linkage with web2 identities. Ensure the workspace configuration supports the proper structure. Test the integration of Agents with PaymentLink and Wallet, and validate the new Customer, Product, and Price entities.",
+      "details": "Use Prisma ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, Wallet, Agent, Customer, Product, and Price. Implement multi-tenant data model with Organization-based data isolation. Configure Prisma to work with Neon DB (serverless PostgreSQL). Support Clerk + Circle authentication by storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types. Set up the Prisma client and migrations. Ensure the packages structure includes packages/prisma for schema and client configuration, packages/ui for shared React components with Shadcn UI, and packages/types for shared TypeScript types. Integrate Agents as the primary execution layer, linking PaymentLink to Agent (executingAgentId) and Agent to Wallet (agentWalletId).",
+      "testStrategy": "Run Prisma migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Clerk + Circle authentication support by testing wallet address storage and linkage with web2 identities. Ensure the workspace configuration supports the proper structure. Test the integration of Agents with PaymentLink and Wallet, and validate the new Customer, Product, and Price entities.",
       "subtasks": [
         {
           "id": 1,
@@ -88,7 +88,7 @@
           "dependencies": [
             2
           ],
-          "details": "Create SQLAlchemy models for PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, and Wallet in apps/api/app/models/ to ensure full compatibility with the Prisma schema.\n<info added on 2025-06-08T05:44:32.637Z>\nSuccessfully created comprehensive SQLAlchemy models matching the Prisma schema:\n\n**Models Created:**\n\n1. **PaymentLink** (app/models/payment_link.py)\n   - Complete model with all fields from Prisma schema\n   - Relationships to Organization, User, Agent, PaymentOrder\n   - Proper indexes and unique constraints\n\n2. **PaymentOrder** (app/models/payment_order.py)\n   - Full payment transaction representation\n   - Links to PaymentLink, Customer, Subscription, Agent\n   - Provider transaction tracking\n\n3. **Wallet** (app/models/wallet.py)\n   - Blockchain wallet model for agents\n   - Thirdweb smart wallet support\n   - Balance tracking and gas policy configuration\n\n4. **Agent** (app/models/agent.py)\n   - AI agent model for payment orchestration\n   - Capabilities, supported providers/chains configuration\n   - Model config and prompt templates\n   - Transaction limits and approval policies\n\n5. **Customer** (app/models/customer.py)\n   - Tenant's end-customer model\n   - Stripe-like customer management\n   - Address, payment methods, subscription support\n\n6. **Provider** (app/models/provider.py)\n   - Payment service provider configuration\n   - Supported countries, currencies, methods\n   - Fee structure and limits\n\n7. **ProviderTransaction** (app/models/provider_transaction.py)\n   - Individual transactions with providers\n   - Request/response data storage\n   - Error handling and retry tracking\n\n8. **Membership** (app/models/membership.py)\n   - User-Organization linking with roles\n   - Invitation tracking\n   - Permissions management\n\n9. **Updated Models:**\n   - Organization: Added all relationships to new models\n   - User: Added memberships and payment link relationships\n\n**Key Features:**\n- All models inherit from Base with UUID and timestamps\n- Proper type hints with TYPE_CHECKING imports\n- SQLAlchemy 2.0 style with Mapped types\n- Comprehensive indexes for performance\n- JSONB fields for flexible metadata storage\n- Foreign key relationships with proper cascading\n\n**Models Still Needed (lower priority):**\n- AgentLog, AuditLog\n- Product, Price, Subscription\n- CustomerPaymentMethod\n- ProviderCredential\n- Webhook\n\nThe core payment processing models are complete and ready for use with the multi-tenant architecture.\n</info added on 2025-06-08T05:44:32.637Z>",
+          "details": "Create SQLAlchemy models for PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, and Wallet in apps/api/app/models/ to ensure full compatibility with the Prisma schema.\n<info added on 2025-06-08T05:44:32.637Z>\nSuccessfully created comprehensive SQLAlchemy models matching the Prisma schema:\n\n**Models Created:**\n\n1. **PaymentLink** (app/models/payment_link.py)\n   - Complete model with all fields from Prisma schema\n   - Relationships to Organization, User, Agent, PaymentOrder\n   - Proper indexes and unique constraints\n\n2. **PaymentOrder** (app/models/payment_order.py)\n   - Full payment transaction representation\n   - Links to PaymentLink, Customer, Subscription, Agent\n   - Provider transaction tracking\n\n3. **Wallet** (app/models/wallet.py)\n   - Blockchain wallet model for agents\n   - Clerk + Circle smart wallet support\n   - Balance tracking and gas policy configuration\n\n4. **Agent** (app/models/agent.py)\n   - AI agent model for payment orchestration\n   - Capabilities, supported providers/chains configuration\n   - Model config and prompt templates\n   - Transaction limits and approval policies\n\n5. **Customer** (app/models/customer.py)\n   - Tenant's end-customer model\n   - Stripe-like customer management\n   - Address, payment methods, subscription support\n\n6. **Provider** (app/models/provider.py)\n   - Payment service provider configuration\n   - Supported countries, currencies, methods\n   - Fee structure and limits\n\n7. **ProviderTransaction** (app/models/provider_transaction.py)\n   - Individual transactions with providers\n   - Request/response data storage\n   - Error handling and retry tracking\n\n8. **Membership** (app/models/membership.py)\n   - User-Organization linking with roles\n   - Invitation tracking\n   - Permissions management\n\n9. **Updated Models:**\n   - Organization: Added all relationships to new models\n   - User: Added memberships and payment link relationships\n\n**Key Features:**\n- All models inherit from Base with UUID and timestamps\n- Proper type hints with TYPE_CHECKING imports\n- SQLAlchemy 2.0 style with Mapped types\n- Comprehensive indexes for performance\n- JSONB fields for flexible metadata storage\n- Foreign key relationships with proper cascading\n\n**Models Still Needed (lower priority):**\n- AgentLog, AuditLog\n- Product, Price, Subscription\n- CustomerPaymentMethod\n- ProviderCredential\n- Webhook\n\nThe core payment processing models are complete and ready for use with the multi-tenant architecture.\n</info added on 2025-06-08T05:44:32.637Z>",
           "status": "done"
         },
         {
@@ -116,7 +116,7 @@
     {
       "id": 3,
       "title": "Implement User Authentication",
-      "description": "Set up user authentication using Thirdweb for secure access control, with automatic wallet creation for users logging in via Google Auth or other providers.",
+      "description": "Set up user authentication using Clerk + Circle for secure access control, with automatic wallet creation for users logging in via Google Auth or other providers.",
       "status": "pending",
       "dependencies": [
         1,
@@ -125,21 +125,21 @@
         "27"
       ],
       "priority": "high",
-      "details": "Integrate Thirdweb authentication into the Next.js frontend for seamless web2/web3 login options, including email, social (like Google Auth), and wallet connections. Implement Sign in with Ethereum (SIWE) standard with JWT tokens stored in cookies. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate Thirdweb JWTs and handle automatic blockchain wallet creation for web2 logins. The backend also needs to support a dual authentication model where authenticated users use JWT tokens while payment links use integration keys. Obtain Client ID and Secret Key from the Thirdweb dashboard and use a private key for JWT signing.",
-      "testStrategy": "Test user registration, login, and session persistence using Thirdweb Connect. Verify JWT token validity, expiration handling, and backend validation. Ensure seamless login via email, social (including Google Auth), and wallet connections, test automatic wallet creation for web2 logins, and validate the dual authentication model where authenticated users use JWT tokens while payment links use integration keys.",
+      "details": "Integrate Clerk + Circle authentication into the Next.js frontend for seamless web2/web3 login options, including email, social (like Google Auth), and wallet connections. Implement Sign in with Ethereum (SIWE) standard with JWT tokens stored in cookies. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate Clerk + Circle JWTs and handle automatic blockchain wallet creation for web2 logins. The backend also needs to support a dual authentication model where authenticated users use JWT tokens while payment links use integration keys. Obtain Client ID and Secret Key from the Clerk + Circle dashboard and use a private key for JWT signing.",
+      "testStrategy": "Test user registration, login, and session persistence using Clerk + Circle Connect. Verify JWT token validity, expiration handling, and backend validation. Ensure seamless login via email, social (including Google Auth), and wallet connections, test automatic wallet creation for web2 logins, and validate the dual authentication model where authenticated users use JWT tokens while payment links use integration keys.",
       "subtasks": [
         {
           "id": 1,
-          "title": "Set up Thirdweb client with credentials",
-          "description": "Configure the Thirdweb client with necessary credentials including client ID, secret key, and auth private key.",
+          "title": "Set up Clerk + Circle client with credentials",
+          "description": "Configure the Clerk + Circle client with necessary credentials including client ID, secret key, and auth private key.",
           "dependencies": [],
-          "details": "Follow the Thirdweb documentation to properly set up the client in the Next.js application.",
+          "details": "Follow the Clerk + Circle documentation to properly set up the client in the Next.js application.",
           "status": "pending"
         },
         {
           "id": 2,
-          "title": "Implement ThirdwebProvider in Next.js app layout",
-          "description": "Integrate the ThirdwebProvider component into the Next.js application layout to enable authentication features.",
+          "title": "Implement Clerk + CircleProvider in Next.js app layout",
+          "description": "Integrate the Clerk + CircleProvider component into the Next.js application layout to enable authentication features.",
           "dependencies": [
             1
           ],
@@ -153,7 +153,7 @@
           "dependencies": [
             2
           ],
-          "details": "Use the Thirdweb hooks and methods to manage authentication state and actions. Include support for Google Auth and other social providers.",
+          "details": "Use the Clerk + Circle hooks and methods to manage authentication state and actions. Include support for Google Auth and other social providers.",
           "status": "pending"
         },
         {
@@ -178,8 +178,8 @@
         },
         {
           "id": 6,
-          "title": "Create Python FastAPI endpoints to validate Thirdweb JWTs",
-          "description": "Develop FastAPI endpoints to validate JWTs generated by Thirdweb for authentication.",
+          "title": "Create Python FastAPI endpoints to validate Clerk + Circle JWTs",
+          "description": "Develop FastAPI endpoints to validate JWTs generated by Clerk + Circle for authentication.",
           "dependencies": [
             5
           ],
@@ -193,14 +193,14 @@
           "dependencies": [
             6
           ],
-          "details": "Integrate with Thirdweb to create wallets seamlessly during the authentication process.",
+          "details": "Integrate with Clerk + Circle to create wallets seamlessly during the authentication process.",
           "status": "pending"
         },
         {
           "id": 8,
           "title": "Implement UserRepository with authentication methods",
           "description": "Create UserRepository using the repository pattern to handle user data persistence and authentication-related queries.",
-          "details": "Implement the following methods in UserRepository:\n- create_user() - Create new user with Thirdweb auth data\n- get_user_by_email() - Find user by email for auth\n- get_user_by_auth_provider_id() - Find user by Thirdweb provider ID\n- get_or_create_user() - Upsert pattern for social/wallet logins\n- update_last_login() - Track user activity\n- link_wallet_to_user() - Associate blockchain wallet with user\n- get_user_with_organizations() - Fetch user with their org memberships\n\nEnsure all methods use async/await and handle the multi-tenancy context properly.",
+          "details": "Implement the following methods in UserRepository:\n- create_user() - Create new user with Clerk + Circle auth data\n- get_user_by_email() - Find user by email for auth\n- get_user_by_auth_provider_id() - Find user by Clerk + Circle provider ID\n- get_or_create_user() - Upsert pattern for social/wallet logins\n- update_last_login() - Track user activity\n- link_wallet_to_user() - Associate blockchain wallet with user\n- get_user_with_organizations() - Fetch user with their org memberships\n\nEnsure all methods use async/await and handle the multi-tenancy context properly.",
           "status": "pending",
           "dependencies": [
             6
@@ -212,7 +212,7 @@
     {
       "id": 4,
       "title": "Develop Organization Management",
-      "description": "Implement organization and user management features for multi-tenancy with Thirdweb authentication and blockchain wallet integration.",
+      "description": "Implement organization and user management features for multi-tenancy with Clerk + Circle authentication and blockchain wallet integration.",
       "status": "pending",
       "dependencies": [
         2,
@@ -222,7 +222,7 @@
         "27"
       ],
       "priority": "high",
-      "details": "Create APIs for organization creation, user roles management, and team invitations. Implement role-based access control (Owner, Admin, Member). Integrate Thirdweb authentication to support blockchain wallets, treasury wallets, and gas sponsor wallets. Support user identification by wallet addresses and email invitations that create wallets. Implement organization settings for gas sponsorship policies and wallet allowlists/blocklists. Ensure database model synchronization between Prisma and SQLAlchemy, respecting organizationId-based Row Level Security and matching field names and relationships.",
+      "details": "Create APIs for organization creation, user roles management, and team invitations. Implement role-based access control (Owner, Admin, Member). Integrate Clerk + Circle authentication to support blockchain wallets, treasury wallets, and gas sponsor wallets. Support user identification by wallet addresses and email invitations that create wallets. Implement organization settings for gas sponsorship policies and wallet allowlists/blocklists. Ensure database model synchronization between Prisma and SQLAlchemy, respecting organizationId-based Row Level Security and matching field names and relationships.",
       "testStrategy": "Test organization creation, user role assignments, and access control by simulating different user roles and permissions. Verify blockchain wallet integration, including treasury and gas sponsor wallets. Test user invitations by wallet address and email, and ensure API keys are tied to organization wallets. Validate audit logs for both traditional actions and blockchain transactions. Ensure API responses match TypeScript types generated by Prisma and verify that both ORMs handle multi-tenant data isolation correctly.",
       "subtasks": [
         {
@@ -325,7 +325,7 @@
         "27"
       ],
       "priority": "high",
-      "details": "Define the PaymentLink model and implement the POST /payment-links API endpoint. Integrate blockchain features such as smart contract addresses, on-chain payment metadata, and NFT-based payment receipts. Support link customization options including amount, currency, metadata, and time-locked expiration. Enable QR codes with wallet connection deep links and support gasless transactions through sponsored payments. Ensure multi-currency support with on-chain conversion rates. Associate each payment link with an executing agent that handles the entire payment flow. Agents have their own Thirdweb smart wallets, support specific providers (Yoint, Trubit), and blockchain chains. Implement new entities: Customer, Product & Price, Subscription, and CustomerPaymentMethod.",
+      "details": "Define the PaymentLink model and implement the POST /payment-links API endpoint. Integrate blockchain features such as smart contract addresses, on-chain payment metadata, and NFT-based payment receipts. Support link customization options including amount, currency, metadata, and time-locked expiration. Enable QR codes with wallet connection deep links and support gasless transactions through sponsored payments. Ensure multi-currency support with on-chain conversion rates. Associate each payment link with an executing agent that handles the entire payment flow. Agents have their own Clerk + Circle smart wallets, support specific providers (Yoint, Trubit), and blockchain chains. Implement new entities: Customer, Product & Price, Subscription, and CustomerPaymentMethod.",
       "testStrategy": "Test payment link creation with various parameters, including blockchain-specific features and agent execution. Verify correct data storage, retrieval, and blockchain interactions. Ensure QR codes function correctly and test gasless transaction capabilities. Validate agent assignment and execution, product and price management, and customer operations.",
       "subtasks": [
         {
@@ -343,7 +343,7 @@
         {
           "id": 8,
           "title": "Integrate NFT-based Payment Receipts",
-          "description": "Integrate with Thirdweb to support NFT-based payment receipts for each transaction.",
+          "description": "Integrate with Clerk + Circle to support NFT-based payment receipts for each transaction.",
           "status": "pending"
         },
         {
@@ -480,7 +480,7 @@
         6
       ],
       "priority": "high",
-      "details": "Create an agent-centric architecture where autonomous AI agents handle payment execution. Each agent listens for Payment.Initiated events from Redpanda, uses its own Thirdweb smart wallet for blockchain operations, and orchestrates the entire payment flow. Agents select providers based on capabilities, handle callbacks/webhooks, emit terminal events, and log all reasoning and decisions for auditability. The system is event-driven with agents as primary consumers, making decisions based on provider availability, transaction parameters, success rates, and cost optimization.",
+      "details": "Create an agent-centric architecture where autonomous AI agents handle payment execution. Each agent listens for Payment.Initiated events from Redpanda, uses its own Clerk + Circle smart wallet for blockchain operations, and orchestrates the entire payment flow. Agents select providers based on capabilities, handle callbacks/webhooks, emit terminal events, and log all reasoning and decisions for auditability. The system is event-driven with agents as primary consumers, making decisions based on provider availability, transaction parameters, success rates, and cost optimization.",
       "testStrategy": "Test payment execution with various scenarios using autonomous agents, including successful and failed transactions. Verify agent decision-making, provider selection, and event emission. Ensure audit logs are comprehensive.",
       "subtasks": [
         {
@@ -586,7 +586,7 @@
           "title": "Develop Autonomous Agent Architecture",
           "description": "Create the architecture for autonomous AI agents to handle payment execution.",
           "dependencies": [],
-          "details": "Design agents to listen for Payment.Initiated events, use Thirdweb smart wallets, and orchestrate payment flows autonomously.",
+          "details": "Design agents to listen for Payment.Initiated events, use Clerk + Circle smart wallets, and orchestrate payment flows autonomously.",
           "status": "pending"
         },
         {
@@ -795,12 +795,12 @@
         },
         {
           "id": 8,
-          "title": "Integrate Thirdweb Wallet Connection",
-          "description": "Implement wallet connection functionality using Thirdweb.",
+          "title": "Integrate Clerk + Circle Wallet Connection",
+          "description": "Implement wallet connection functionality using Clerk + Circle.",
           "dependencies": [
             2
           ],
-          "details": "Integrate Thirdweb's wallet connection features to allow customers to connect their wallets for payments. Ensure the integration is seamless and supports various wallet providers.",
+          "details": "Integrate Clerk + Circle's wallet connection features to allow customers to connect their wallets for payments. Ensure the integration is seamless and supports various wallet providers.",
           "status": "pending"
         }
       ]
@@ -971,13 +971,13 @@
     {
       "id": 12,
       "title": "Develop Role-Based Access Control",
-      "description": "Implement role-based access control for organization management with Thirdweb wallet-based authentication.",
+      "description": "Implement role-based access control for organization management with Clerk + Circle wallet-based authentication.",
       "status": "pending",
       "dependencies": [
         4
       ],
       "priority": "medium",
-      "details": "Enhance the user management system to support role-based permissions and access control for different organization roles. Roles are tied to wallet addresses instead of traditional user IDs. Support smart contract wallets with delegated permissions and on-chain role verification for critical operations. Implement gas sponsorship permissions based on roles, wallet-specific API permissions for Engine access, and time-bound role assignments with expiration. Ensure multi-signature requirements for admin operations. The RBAC system should seamlessly work with both EOA wallets and smart contract wallets created through Thirdweb.",
+      "details": "Enhance the user management system to support role-based permissions and access control for different organization roles. Roles are tied to wallet addresses instead of traditional user IDs. Support smart contract wallets with delegated permissions and on-chain role verification for critical operations. Implement gas sponsorship permissions based on roles, wallet-specific API permissions for Engine access, and time-bound role assignments with expiration. Ensure multi-signature requirements for admin operations. The RBAC system should seamlessly work with both EOA wallets and smart contract wallets created through Clerk + Circle.",
       "testStrategy": "Test access control by simulating actions with different wallet roles and verifying permission enforcement. Validate on-chain role verification and multi-signature requirements. Test gas sponsorship and API permissions for Engine access. Ensure time-bound role assignments expire correctly.",
       "subtasks": [
         {
@@ -1498,8 +1498,8 @@
     },
     {
       "id": 21,
-      "title": "Integrate Thirdweb Engine with FastAPI Backend",
-      "description": "Integrate Thirdweb Engine with the FastAPI backend to focus on agent wallet infrastructure, including setup, agent wallet creation, gas sponsorship, multi-signature support, wallet monitoring, transaction queuing, nonce management, and webhook integration.",
+      "title": "Integrate Clerk + Circle Engine with FastAPI Backend",
+      "description": "Integrate Clerk + Circle Engine with the FastAPI backend to focus on agent wallet infrastructure, including setup, agent wallet creation, gas sponsorship, multi-signature support, wallet monitoring, transaction queuing, nonce management, and webhook integration.",
       "status": "pending",
       "dependencies": [
         1,
@@ -1507,15 +1507,15 @@
         3
       ],
       "priority": "high",
-      "details": "1. Set up Thirdweb Engine Cloud or self-hosted instance according to https://portal.thirdweb.com/engine/v2 documentation.\n2. Create smart contract wallets for each autonomous payment agent via the Engine.\n3. Implement gas sponsorship capabilities to allow agents to execute transactions without direct gas costs.\n4. Enable multi-signature support for high-value operations to enhance security.\n5. Monitor wallet balances and manage wallets effectively, including allowlists and blocklists.\n6. Implement transaction queue monitoring and nonce management to handle concurrent operations.\n7. Create webhook endpoints in the FastAPI backend to handle Engine callbacks for transaction status updates.\n\nEnsure all components are properly integrated and tested within the existing FastAPI architecture, following best practices for security and performance.",
-      "testStrategy": "1. Verify that Thirdweb Engine is correctly set up and accessible from the backend.\n2. Test the creation and management of agent wallets, ensuring each wallet is correctly configured.\n3. Validate gas sponsorship by executing transactions and confirming that gas costs are covered.\n4. Confirm multi-signature functionality by requiring multiple approvals for high-value transactions.\n5. Check wallet monitoring by tracking balance changes and managing allowlists/blocklists.\n6. Verify transaction queuing and nonce management by simulating multiple concurrent transactions.\n7. Test webhook endpoints by triggering Engine callbacks and verifying proper handling of transaction status updates.\n\nPerform integration testing to ensure all components work together seamlessly within the FastAPI backend.",
+      "details": "1. Set up Clerk + Circle Engine Cloud or self-hosted instance according to https://portal.thirdweb.com/engine/v2 documentation.\n2. Create smart contract wallets for each autonomous payment agent via the Engine.\n3. Implement gas sponsorship capabilities to allow agents to execute transactions without direct gas costs.\n4. Enable multi-signature support for high-value operations to enhance security.\n5. Monitor wallet balances and manage wallets effectively, including allowlists and blocklists.\n6. Implement transaction queue monitoring and nonce management to handle concurrent operations.\n7. Create webhook endpoints in the FastAPI backend to handle Engine callbacks for transaction status updates.\n\nEnsure all components are properly integrated and tested within the existing FastAPI architecture, following best practices for security and performance.",
+      "testStrategy": "1. Verify that Clerk + Circle Engine is correctly set up and accessible from the backend.\n2. Test the creation and management of agent wallets, ensuring each wallet is correctly configured.\n3. Validate gas sponsorship by executing transactions and confirming that gas costs are covered.\n4. Confirm multi-signature functionality by requiring multiple approvals for high-value transactions.\n5. Check wallet monitoring by tracking balance changes and managing allowlists/blocklists.\n6. Verify transaction queuing and nonce management by simulating multiple concurrent transactions.\n7. Test webhook endpoints by triggering Engine callbacks and verifying proper handling of transaction status updates.\n\nPerform integration testing to ensure all components work together seamlessly within the FastAPI backend.",
       "subtasks": [
         {
           "id": 1,
-          "title": "Set Up Thirdweb Engine Instance",
-          "description": "Deploy and configure a Thirdweb Engine instance, either cloud-hosted or self-hosted, following the v2 documentation.",
+          "title": "Set Up Clerk + Circle Engine Instance",
+          "description": "Deploy and configure a Clerk + Circle Engine instance, either cloud-hosted or self-hosted, following the v2 documentation.",
           "dependencies": [],
-          "details": "Choose between a cloud-hosted or self-hosted Thirdweb Engine instance. For self-hosting, ensure Docker, PostgresDB (version 14+), and Redis (version 7.2.4+) are installed. Follow the setup instructions provided in the Thirdweb Engine v2 documentation.",
+          "details": "Choose between a cloud-hosted or self-hosted Clerk + Circle Engine instance. For self-hosting, ensure Docker, PostgresDB (version 14+), and Redis (version 7.2.4+) are installed. Follow the setup instructions provided in the Clerk + Circle Engine v2 documentation.",
           "status": "pending",
           "testStrategy": "Verify the Engine instance is running by accessing its URL and confirming the response indicates a successful setup."
         },
@@ -1526,18 +1526,18 @@
           "dependencies": [
             1
           ],
-          "details": "In the Thirdweb dashboard, navigate to the Engine section and generate access tokens. Assign necessary permissions to these tokens to enable backend operations.",
+          "details": "In the Clerk + Circle dashboard, navigate to the Engine section and generate access tokens. Assign necessary permissions to these tokens to enable backend operations.",
           "status": "pending",
           "testStrategy": "Use the generated access tokens to make authenticated API requests to the Engine and confirm successful responses."
         },
         {
           "id": 3,
           "title": "Implement Python Client for Engine API",
-          "description": "Develop a Python client to interact with Thirdweb Engine API endpoints from the FastAPI backend.",
+          "description": "Develop a Python client to interact with Clerk + Circle Engine API endpoints from the FastAPI backend.",
           "dependencies": [
             2
           ],
-          "details": "Utilize the Thirdweb Engine API documentation to implement a Python client that can perform necessary operations such as deploying contracts, sending transactions, and querying data.",
+          "details": "Utilize the Clerk + Circle Engine API documentation to implement a Python client that can perform necessary operations such as deploying contracts, sending transactions, and querying data.",
           "status": "pending",
           "testStrategy": "Execute test API calls using the Python client and verify correct interactions with the Engine."
         },
@@ -1581,7 +1581,7 @@
           "dependencies": [
             3
           ],
-          "details": "Use the Thirdweb Engine to create smart contract wallets tailored for each agent, ensuring they have the necessary capabilities for autonomous operation.",
+          "details": "Use the Clerk + Circle Engine to create smart contract wallets tailored for each agent, ensuring they have the necessary capabilities for autonomous operation.",
           "status": "pending",
           "testStrategy": "Verify the creation of smart contract wallets by checking their deployment and configuration within the Engine."
         },
@@ -1611,9 +1611,9 @@
     },
     {
       "id": 22,
-      "title": "Implement Web3 Payment Infrastructure with Thirdweb",
-      "description": "Develop a comprehensive Web3 payment system using Thirdweb, including smart contract wallets, gas sponsorship, payment contracts, and transaction monitoring.",
-      "details": "1. Set up smart contract wallets for organizations, including treasury and operations wallets, using Thirdweb's wallet management tools. Ensure these wallets are securely integrated with the organization's account.\n2. Implement gas sponsorship for user transactions using Thirdweb Engine, allowing organizations to cover transaction fees for users. Configure sponsorship policies and ensure they are enforced through the backend.\n3. Create payment smart contracts to handle escrow and automated settlements. Use Solidity to define contract logic and deploy these contracts on the blockchain. Ensure contracts are secure and audited.\n4. Integrate Thirdweb's session keys for delegated payments, allowing users to authorize payments without exposing private keys. Implement session management and key rotation strategies.\n5. Develop a system for generating payment links with on-chain metadata. Ensure links are secure, easily shareable, and trackable.\n6. Set up a webhook system to monitor blockchain transactions and trigger backend processes. Use Thirdweb's webhook capabilities to receive real-time updates on transaction statuses.\n7. Implement fallback mechanisms for failed transactions, including retries, user notifications, and manual intervention options. Ensure the system can gracefully handle errors and maintain data integrity.",
+      "title": "Implement Web3 Payment Infrastructure with Clerk + Circle",
+      "description": "Develop a comprehensive Web3 payment system using Clerk + Circle, including smart contract wallets, gas sponsorship, payment contracts, and transaction monitoring.",
+      "details": "1. Set up smart contract wallets for organizations, including treasury and operations wallets, using Clerk + Circle's wallet management tools. Ensure these wallets are securely integrated with the organization's account.\n2. Implement gas sponsorship for user transactions using Clerk + Circle Engine, allowing organizations to cover transaction fees for users. Configure sponsorship policies and ensure they are enforced through the backend.\n3. Create payment smart contracts to handle escrow and automated settlements. Use Solidity to define contract logic and deploy these contracts on the blockchain. Ensure contracts are secure and audited.\n4. Integrate Clerk + Circle's session keys for delegated payments, allowing users to authorize payments without exposing private keys. Implement session management and key rotation strategies.\n5. Develop a system for generating payment links with on-chain metadata. Ensure links are secure, easily shareable, and trackable.\n6. Set up a webhook system to monitor blockchain transactions and trigger backend processes. Use Clerk + Circle's webhook capabilities to receive real-time updates on transaction statuses.\n7. Implement fallback mechanisms for failed transactions, including retries, user notifications, and manual intervention options. Ensure the system can gracefully handle errors and maintain data integrity.",
       "testStrategy": "1. Verify that smart contract wallets are correctly set up and integrated with organization accounts by checking wallet addresses and balances.\n2. Test gas sponsorship by executing user transactions and confirming that fees are covered by the organization. Validate sponsorship policies through transaction logs.\n3. Deploy payment smart contracts on a test network and conduct escrow and settlement transactions. Verify contract logic and security through audits and test cases.\n4. Test session key integration by performing delegated payments and ensuring keys are managed securely. Check for proper session expiration and key rotation.\n5. Generate payment links and confirm they contain correct on-chain metadata. Test link sharing and tracking functionality.\n6. Simulate blockchain transactions and ensure webhooks trigger appropriate backend processes. Verify real-time transaction monitoring and logging.\n7. Induce transaction failures and test fallback mechanisms, including retries and notifications. Ensure system stability and data consistency during error handling.",
       "status": "pending",
       "dependencies": [
@@ -1626,10 +1626,10 @@
       "subtasks": [
         {
           "id": 1,
-          "title": "Set Up Thirdweb SDK",
-          "description": "Initialize the Thirdweb SDK to facilitate Web3 development.",
+          "title": "Set Up Clerk + Circle SDK",
+          "description": "Initialize the Clerk + Circle SDK to facilitate Web3 development.",
           "dependencies": [],
-          "details": "Install the Thirdweb SDK and configure it for your project environment.",
+          "details": "Install the Clerk + Circle SDK and configure it for your project environment.",
           "status": "pending"
         },
         {
@@ -1639,7 +1639,7 @@
           "dependencies": [
             1
           ],
-          "details": "Utilize Thirdweb's smart wallet features to create and manage user wallets programmatically.",
+          "details": "Utilize Clerk + Circle's smart wallet features to create and manage user wallets programmatically.",
           "status": "pending"
         },
         {
@@ -1649,7 +1649,7 @@
           "dependencies": [
             2
           ],
-          "details": "Configure gasless transactions using Thirdweb's gas sponsorship capabilities to enhance user experience.",
+          "details": "Configure gasless transactions using Clerk + Circle's gas sponsorship capabilities to enhance user experience.",
           "status": "pending"
         },
         {
@@ -1659,7 +1659,7 @@
           "dependencies": [
             1
           ],
-          "details": "Use Thirdweb's deployment tools to deploy a payment smart contract tailored to your application's needs.",
+          "details": "Use Clerk + Circle's deployment tools to deploy a payment smart contract tailored to your application's needs.",
           "status": "pending"
         },
         {
@@ -1679,7 +1679,7 @@
           "dependencies": [
             1
           ],
-          "details": "Leverage Thirdweb's multi-chain capabilities to enable seamless operation across various blockchains.",
+          "details": "Leverage Clerk + Circle's multi-chain capabilities to enable seamless operation across various blockchains.",
           "status": "pending"
         },
         {
@@ -1725,8 +1725,8 @@
         "26"
       ],
       "priority": "high",
-      "details": "This task involves developing a robust agent management system that serves as the core execution layer for payment processing. The system should include the following components:\n\n1. **Agent CRUD APIs**: Develop RESTful APIs to create, read, update, and delete agent records. Ensure these APIs are secure and scalable. The APIs must use synchronized Python models and maintain relationships as defined in Prisma, respecting organizationId-based multi-tenancy.\n\n2. **Agent Wallet Creation**: Integrate with Thirdweb Engine to automatically create and manage wallets for each agent. Ensure wallets are securely stored and accessible. Wallet metadata must be stored consistently across both Prisma and SQLAlchemy.\n\n3. **Agent Capability Configuration**: Implement functionality to configure agent capabilities, including supported providers, blockchain chains, and decision authority levels.\n\n4. **Agent Assignment Logic**: Develop logic to assign tasks to agents based on their capabilities and current load. Implement load balancing to optimize performance.\n\n5. **Agent Health Monitoring**: Create a system to monitor agent health and status, including uptime, response times, and error rates.\n\n6. **Agent Decision Logging**: Implement logging for all agent decisions and actions to create an audit trail. Ensure logs are immutable and securely stored.\n\n7. **Agent Performance Metrics**: Develop analytics to track agent performance, including transaction success rates, processing times, and throughput.\n\n8. **Agent Version Control**: Implement version control for agent software, allowing for updates and rollbacks.\n\n9. **Agent Communication Protocols**: Establish protocols for agent-to-agent communication, ensuring secure and efficient data exchange.\n\n10. **Agent Marketplace Infrastructure**: Build infrastructure to support an agent marketplace, enabling dynamic agent deployment and scaling.\n\n11. **Database Synchronization**: Ensure synchronization between Prisma and SQLAlchemy for key models: Agent, AgentDecision, AgentCheckpoint, AgentInteraction, and Wallet. FastAPI endpoints must return responses matching Prisma-generated TypeScript types.\n\nAgents should operate autonomously, executing payments and making decisions based on their configuration and the data they process. Ensure all components are integrated with the existing system architecture and adhere to security best practices.",
-      "testStrategy": "1. **API Testing**: Use tools like Postman to test all CRUD operations for agents, ensuring they work as expected and handle edge cases. Verify that the APIs use synchronized models and maintain relationships as defined in Prisma.\n\n2. **Wallet Verification**: Verify that wallets are correctly created and managed by Thirdweb Engine, checking for proper security and accessibility. Ensure wallet metadata is consistently stored across both ORMs.\n\n3. **Capability Configuration Testing**: Test the configuration of agent capabilities to ensure they are correctly set and can be updated as needed.\n\n4. **Assignment Logic Validation**: Simulate various load scenarios to test the agent assignment logic, ensuring tasks are distributed efficiently.\n\n5. **Health Monitoring Checks**: Implement monitoring tools to verify that agent health metrics are accurately tracked and reported.\n\n6. **Audit Trail Review**: Check that all agent decisions are logged correctly and that logs are immutable.\n\n7. **Performance Metrics Analysis**: Analyze performance data to ensure metrics are accurate and provide meaningful insights.\n\n8. **Version Control Testing**: Test agent updates and rollbacks to ensure version control works without disrupting operations.\n\n9. **Communication Protocol Testing**: Simulate agent-to-agent communication to verify protocols are secure and efficient.\n\n10. **Marketplace Functionality**: Test the agent marketplace infrastructure to ensure it supports dynamic deployment and scaling.\n\n11. **Database Synchronization Testing**: Verify that the synchronization between Prisma and SQLAlchemy is accurate for all key models, and that FastAPI endpoints return responses matching Prisma-generated TypeScript types.",
+      "details": "This task involves developing a robust agent management system that serves as the core execution layer for payment processing. The system should include the following components:\n\n1. **Agent CRUD APIs**: Develop RESTful APIs to create, read, update, and delete agent records. Ensure these APIs are secure and scalable. The APIs must use synchronized Python models and maintain relationships as defined in Prisma, respecting organizationId-based multi-tenancy.\n\n2. **Agent Wallet Creation**: Integrate with Clerk + Circle Engine to automatically create and manage wallets for each agent. Ensure wallets are securely stored and accessible. Wallet metadata must be stored consistently across both Prisma and SQLAlchemy.\n\n3. **Agent Capability Configuration**: Implement functionality to configure agent capabilities, including supported providers, blockchain chains, and decision authority levels.\n\n4. **Agent Assignment Logic**: Develop logic to assign tasks to agents based on their capabilities and current load. Implement load balancing to optimize performance.\n\n5. **Agent Health Monitoring**: Create a system to monitor agent health and status, including uptime, response times, and error rates.\n\n6. **Agent Decision Logging**: Implement logging for all agent decisions and actions to create an audit trail. Ensure logs are immutable and securely stored.\n\n7. **Agent Performance Metrics**: Develop analytics to track agent performance, including transaction success rates, processing times, and throughput.\n\n8. **Agent Version Control**: Implement version control for agent software, allowing for updates and rollbacks.\n\n9. **Agent Communication Protocols**: Establish protocols for agent-to-agent communication, ensuring secure and efficient data exchange.\n\n10. **Agent Marketplace Infrastructure**: Build infrastructure to support an agent marketplace, enabling dynamic agent deployment and scaling.\n\n11. **Database Synchronization**: Ensure synchronization between Prisma and SQLAlchemy for key models: Agent, AgentDecision, AgentCheckpoint, AgentInteraction, and Wallet. FastAPI endpoints must return responses matching Prisma-generated TypeScript types.\n\nAgents should operate autonomously, executing payments and making decisions based on their configuration and the data they process. Ensure all components are integrated with the existing system architecture and adhere to security best practices.",
+      "testStrategy": "1. **API Testing**: Use tools like Postman to test all CRUD operations for agents, ensuring they work as expected and handle edge cases. Verify that the APIs use synchronized models and maintain relationships as defined in Prisma.\n\n2. **Wallet Verification**: Verify that wallets are correctly created and managed by Clerk + Circle Engine, checking for proper security and accessibility. Ensure wallet metadata is consistently stored across both ORMs.\n\n3. **Capability Configuration Testing**: Test the configuration of agent capabilities to ensure they are correctly set and can be updated as needed.\n\n4. **Assignment Logic Validation**: Simulate various load scenarios to test the agent assignment logic, ensuring tasks are distributed efficiently.\n\n5. **Health Monitoring Checks**: Implement monitoring tools to verify that agent health metrics are accurately tracked and reported.\n\n6. **Audit Trail Review**: Check that all agent decisions are logged correctly and that logs are immutable.\n\n7. **Performance Metrics Analysis**: Analyze performance data to ensure metrics are accurate and provide meaningful insights.\n\n8. **Version Control Testing**: Test agent updates and rollbacks to ensure version control works without disrupting operations.\n\n9. **Communication Protocol Testing**: Simulate agent-to-agent communication to verify protocols are secure and efficient.\n\n10. **Marketplace Functionality**: Test the agent marketplace infrastructure to ensure it supports dynamic deployment and scaling.\n\n11. **Database Synchronization Testing**: Verify that the synchronization between Prisma and SQLAlchemy is accurate for all key models, and that FastAPI endpoints return responses matching Prisma-generated TypeScript types.",
       "subtasks": []
     },
     {
@@ -1907,7 +1907,7 @@
           "dependencies": [
             1
           ],
-          "details": "Add methods for user-specific operations such as finding users by email or username.\n<info added on 2025-06-08T06:59:16.981Z>\nSuccessfully implemented UserRepository with the following authentication-specific queries:\n- get_by_email(): Retrieve user by email with optional organization loading\n- get_by_auth_provider(): Find user by OAuth provider (Google, Thirdweb, etc.)\n- get_by_wallet_address(): Look up user by their primary wallet address\n- get_organizations(): Get all organizations a user belongs to\n- search(): Search users by email or name with pagination\n- update_last_login(): Update last login timestamp\n- verify_email(): Mark email as verified\n- set_primary_wallet(): Set user's primary wallet with validation\n- get_by_organization(): Get all users in a specific organization\n\nAlso created comprehensive user schemas using Pydantic:\n- UserBase, UserCreate, UserUpdate for CRUD operations\n- UserAuthInfo for authentication context\n- UserWithOrganizations for related data loading\n\nThe repository properly extends BaseRepository and handles authentication-specific concerns while maintaining clean separation of concerns.\n</info added on 2025-06-08T06:59:16.981Z>",
+          "details": "Add methods for user-specific operations such as finding users by email or username.\n<info added on 2025-06-08T06:59:16.981Z>\nSuccessfully implemented UserRepository with the following authentication-specific queries:\n- get_by_email(): Retrieve user by email with optional organization loading\n- get_by_auth_provider(): Find user by OAuth provider (Google, Clerk + Circle, etc.)\n- get_by_wallet_address(): Look up user by their primary wallet address\n- get_organizations(): Get all organizations a user belongs to\n- search(): Search users by email or name with pagination\n- update_last_login(): Update last login timestamp\n- verify_email(): Mark email as verified\n- set_primary_wallet(): Set user's primary wallet with validation\n- get_by_organization(): Get all users in a specific organization\n\nAlso created comprehensive user schemas using Pydantic:\n- UserBase, UserCreate, UserUpdate for CRUD operations\n- UserAuthInfo for authentication context\n- UserWithOrganizations for related data loading\n\nThe repository properly extends BaseRepository and handles authentication-specific concerns while maintaining clean separation of concerns.\n</info added on 2025-06-08T06:59:16.981Z>",
           "status": "done",
           "testStrategy": "Test user-specific queries to ensure they return expected results."
         },
@@ -2084,7 +2084,7 @@
             3,
             4
           ],
-          "details": "Create routes for login, logout, and token refresh. Use JWTs for token management.\n<info added on 2025-06-08T19:47:38.594Z>\nInitial Analysis and Implementation Plan for Thirdweb Authentication Integration:\n\nBased on thirdweb documentation analysis:\n1. Thirdweb Auth uses Sign-In with Ethereum (SIWE) standard for passwordless authentication\n2. Frontend uses thirdweb ConnectButton with auth configuration\n3. Backend needs to:\n   - Generate SIWE payloads for login\n   - Verify signed payloads using thirdweb/auth\n   - Issue JWT tokens for session management\n   - Handle refresh tokens and logout\n\nImplementation approach:\n- Create auth router at /api/v1/auth/*\n- Endpoints needed:\n  - POST /api/v1/auth/payload - Generate SIWE payload\n  - POST /api/v1/auth/login - Verify signature and issue JWT\n  - POST /api/v1/auth/refresh - Refresh access token\n  - POST /api/v1/auth/logout - Invalidate session\n  - GET /api/v1/auth/me - Get current user info\n- Integrate with existing JWT middleware from Task 27.2\n- Use thirdweb/auth library for SIWE handling\n- Store sessions in database with proper cleanup\n\nFiles to create/modify:\n- app/routers/auth.py - Authentication endpoints\n- app/services/auth_service.py - Business logic for auth\n- app/api/v1/__init__.py - Include auth router\n- Update main.py to register auth routes\n</info added on 2025-06-08T19:47:38.594Z>\n<info added on 2025-06-08T19:55:52.592Z>\nSuccessfully implemented thirdweb-compatible authentication endpoints:\n\n1. Created auth service (app/services/auth_service.py):\n   - Generates SIWE payloads compatible with thirdweb frontend\n   - Handles user login with wallet address (creates user if not exists)\n   - Issues JWT tokens for session management\n   - Supports token refresh and logout\n   - Retrieves current user information\n\n2. Created auth schemas (app/schemas/auth.py):\n   - SIWEPayloadRequest/Response for SIWE message generation\n   - LoginRequest/Response for authentication flow\n   - TokenRefreshRequest/Response for token management\n   - CurrentUserResponse for user info endpoint\n\n3. Created auth router (app/routers/auth.py):\n   - POST /api/v1/auth/payload - Generate SIWE payload\n   - POST /api/v1/auth/login - Verify signature and issue JWT\n   - POST /api/v1/auth/refresh - Refresh access token\n   - POST /api/v1/auth/logout - Logout endpoint\n   - GET /api/v1/auth/me - Get current user info\n\n4. Updated infrastructure:\n   - Created v1 router in app/api/v1/__init__.py\n   - Updated main.py to include v1 router\n   - Added FRONTEND_URL and ALLOWED_HOSTS to config\n\n5. Key design decisions:\n   - Users created from wallet automatically get verified email status\n   - Wallet is created separately and linked as primary wallet\n   - Organizations are fetched from user repository\n   - Auth endpoints are public except /me and /logout which require JWT\n\nNote: Signature verification is placeholder - in production would use web3 libraries to verify SIWE signatures.\n\nAll endpoints are now ready for integration with thirdweb frontend ConnectButton.\n</info added on 2025-06-08T19:55:52.592Z>",
+          "details": "Create routes for login, logout, and token refresh. Use JWTs for token management.\n<info added on 2025-06-08T19:47:38.594Z>\nInitial Analysis and Implementation Plan for Clerk + Circle Authentication Integration:\n\nBased on thirdweb documentation analysis:\n1. Clerk + Circle Auth uses Sign-In with Ethereum (SIWE) standard for passwordless authentication\n2. Frontend uses thirdweb ConnectButton with auth configuration\n3. Backend needs to:\n   - Generate SIWE payloads for login\n   - Verify signed payloads using thirdweb/auth\n   - Issue JWT tokens for session management\n   - Handle refresh tokens and logout\n\nImplementation approach:\n- Create auth router at /api/v1/auth/*\n- Endpoints needed:\n  - POST /api/v1/auth/payload - Generate SIWE payload\n  - POST /api/v1/auth/login - Verify signature and issue JWT\n  - POST /api/v1/auth/refresh - Refresh access token\n  - POST /api/v1/auth/logout - Invalidate session\n  - GET /api/v1/auth/me - Get current user info\n- Integrate with existing JWT middleware from Task 27.2\n- Use thirdweb/auth library for SIWE handling\n- Store sessions in database with proper cleanup\n\nFiles to create/modify:\n- app/routers/auth.py - Authentication endpoints\n- app/services/auth_service.py - Business logic for auth\n- app/api/v1/__init__.py - Include auth router\n- Update main.py to register auth routes\n</info added on 2025-06-08T19:47:38.594Z>\n<info added on 2025-06-08T19:55:52.592Z>\nSuccessfully implemented thirdweb-compatible authentication endpoints:\n\n1. Created auth service (app/services/auth_service.py):\n   - Generates SIWE payloads compatible with thirdweb frontend\n   - Handles user login with wallet address (creates user if not exists)\n   - Issues JWT tokens for session management\n   - Supports token refresh and logout\n   - Retrieves current user information\n\n2. Created auth schemas (app/schemas/auth.py):\n   - SIWEPayloadRequest/Response for SIWE message generation\n   - LoginRequest/Response for authentication flow\n   - TokenRefreshRequest/Response for token management\n   - CurrentUserResponse for user info endpoint\n\n3. Created auth router (app/routers/auth.py):\n   - POST /api/v1/auth/payload - Generate SIWE payload\n   - POST /api/v1/auth/login - Verify signature and issue JWT\n   - POST /api/v1/auth/refresh - Refresh access token\n   - POST /api/v1/auth/logout - Logout endpoint\n   - GET /api/v1/auth/me - Get current user info\n\n4. Updated infrastructure:\n   - Created v1 router in app/api/v1/__init__.py\n   - Updated main.py to include v1 router\n   - Added FRONTEND_URL and ALLOWED_HOSTS to config\n\n5. Key design decisions:\n   - Users created from wallet automatically get verified email status\n   - Wallet is created separately and linked as primary wallet\n   - Organizations are fetched from user repository\n   - Auth endpoints are public except /me and /logout which require JWT\n\nNote: Signature verification is placeholder - in production would use web3 libraries to verify SIWE signatures.\n\nAll endpoints are now ready for integration with thirdweb frontend ConnectButton.\n</info added on 2025-06-08T19:55:52.592Z>",
           "status": "done",
           "testStrategy": "Test authentication endpoints with valid and invalid credentials."
         },

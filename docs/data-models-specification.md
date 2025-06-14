@@ -102,7 +102,7 @@ model User {
 enum AuthProvider {
   EMAIL
   GOOGLE
-  THIRDWEB
+  CLERK
   WALLET_CONNECT
 }
 
@@ -932,7 +932,7 @@ enum UserRole {
 Focus on:
 1. Core models: Organization, User, PaymentLink, PaymentOrder
 2. Basic provider integration (Yoint, Trubit)
-3. Simple wallet support for Thirdweb
+3. Simple wallet support for Clerk + Circle
 4. Essential audit logging
 
 ### Post-MVP Phase

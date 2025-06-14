@@ -1,11 +1,11 @@
 # Task ID: 21
-# Title: Integrate Thirdweb Engine with FastAPI Backend
+# Title: Integrate Clerk + Circle Engine with FastAPI Backend
 # Status: pending
 # Dependencies: 1, 2, 3
 # Priority: high
-# Description: Integrate Thirdweb Engine with the FastAPI backend to focus on agent wallet infrastructure, including setup, agent wallet creation, gas sponsorship, multi-signature support, wallet monitoring, transaction queuing, nonce management, and webhook integration.
+# Description: Integrate Clerk + Circle Engine with the FastAPI backend to focus on agent wallet infrastructure, including setup, agent wallet creation, gas sponsorship, multi-signature support, wallet monitoring, transaction queuing, nonce management, and webhook integration.
 # Details:
-1. Set up Thirdweb Engine Cloud or self-hosted instance according to https://portal.thirdweb.com/engine/v2 documentation.
+1. Set up Clerk + Circle Engine Cloud or self-hosted instance according to https://portal.Clerk + Circle.com/engine/v2 documentation.
 2. Create smart contract wallets for each autonomous payment agent via the Engine.
 3. Implement gas sponsorship capabilities to allow agents to execute transactions without direct gas costs.
 4. Enable multi-signature support for high-value operations to enhance security.
@@ -16,7 +16,7 @@
 Ensure all components are properly integrated and tested within the existing FastAPI architecture, following best practices for security and performance.
 
 # Test Strategy:
-1. Verify that Thirdweb Engine is correctly set up and accessible from the backend.
+1. Verify that Clerk + Circle Engine is correctly set up and accessible from the backend.
 2. Test the creation and management of agent wallets, ensuring each wallet is correctly configured.
 3. Validate gas sponsorship by executing transactions and confirming that gas costs are covered.
 4. Confirm multi-signature functionality by requiring multiple approvals for high-value transactions.
@@ -27,23 +27,23 @@ Ensure all components are properly integrated and tested within the existing Fas
 Perform integration testing to ensure all components work together seamlessly within the FastAPI backend.
 
 # Subtasks:
-## 1. Set Up Thirdweb Engine Instance [pending]
+## 1. Set Up Clerk + Circle Engine Instance [pending]
 ### Dependencies: None
-### Description: Deploy and configure a Thirdweb Engine instance, either cloud-hosted or self-hosted, following the v2 documentation.
+### Description: Deploy and configure a Clerk + Circle Engine instance, either cloud-hosted or self-hosted, following the v2 documentation.
 ### Details:
-Choose between a cloud-hosted or self-hosted Thirdweb Engine instance. For self-hosting, ensure Docker, PostgresDB (version 14+), and Redis (version 7.2.4+) are installed. Follow the setup instructions provided in the Thirdweb Engine v2 documentation.
+Choose between a cloud-hosted or self-hosted Clerk + Circle Engine instance. For self-hosting, ensure Docker, PostgresDB (version 14+), and Redis (version 7.2.4+) are installed. Follow the setup instructions provided in the Clerk + Circle Engine v2 documentation.
 
 ## 2. Generate and Configure Engine Access Tokens [pending]
 ### Dependencies: 21.1
 ### Description: Create access tokens with appropriate permissions for backend operations.
 ### Details:
-In the Thirdweb dashboard, navigate to the Engine section and generate access tokens. Assign necessary permissions to these tokens to enable backend operations.
+In the Clerk + Circle dashboard, navigate to the Engine section and generate access tokens. Assign necessary permissions to these tokens to enable backend operations.
 
 ## 3. Implement Python Client for Engine API [pending]
 ### Dependencies: 21.2
-### Description: Develop a Python client to interact with Thirdweb Engine API endpoints from the FastAPI backend.
+### Description: Develop a Python client to interact with Clerk + Circle Engine API endpoints from the FastAPI backend.
 ### Details:
-Utilize the Thirdweb Engine API documentation to implement a Python client that can perform necessary operations such as deploying contracts, sending transactions, and querying data.
+Utilize the Clerk + Circle Engine API documentation to implement a Python client that can perform necessary operations such as deploying contracts, sending transactions, and querying data.
 
 ## 4. Set Up Backend Wallet Management [pending]
 ### Dependencies: 21.3
@@ -67,7 +67,7 @@ Utilize the Engine's built-in nonce management features to handle multiple trans
 ### Dependencies: 21.3
 ### Description: Develop functionality to create smart contract wallets for each autonomous payment agent.
 ### Details:
-Use the Thirdweb Engine to create smart contract wallets tailored for each agent, ensuring they have the necessary capabilities for autonomous operation.
+Use the Clerk + Circle Engine to create smart contract wallets tailored for each agent, ensuring they have the necessary capabilities for autonomous operation.
 
 ## 8. Implement Gas Sponsorship for Transactions [pending]
 ### Dependencies: 21.7

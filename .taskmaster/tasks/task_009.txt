@@ -53,11 +53,11 @@ Utilize WebSocket or similar technologies to provide merchants with live updates
 ### Details:
 Ensure all interfaces are mobile-friendly by leveraging Shadcn UI components and Tailwind CSS. Test designs across various devices to guarantee a consistent user experience.
 
-## 8. Integrate Thirdweb Wallet Connection [pending]
+## 8. Integrate Clerk + Circle Wallet Connection [pending]
 ### Dependencies: 9.2
-### Description: Implement wallet connection functionality using Thirdweb.
+### Description: Implement wallet connection functionality using Clerk + Circle.
 ### Details:
-Integrate Thirdweb's wallet connection features to allow customers to connect their wallets for payments. Ensure the integration is seamless and supports various wallet providers.
+Integrate Clerk + Circle's wallet connection features to allow customers to connect their wallets for payments. Ensure the integration is seamless and supports various wallet providers.
 
 ## 9. Design Integration Key Management Interface [pending]
 ### Dependencies: 9.5
