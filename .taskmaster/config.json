@@ -1,8 +1,8 @@
 {
   "models": {
     "main": {
-      "provider": "openai",
-      "modelId": "gpt-4o",
+      "provider": "ollama",
+      "modelId": "devstral:latest",
       "maxTokens": 120000,
       "temperature": 0.2
     },

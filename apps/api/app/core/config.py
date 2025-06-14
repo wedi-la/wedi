@@ -60,6 +60,18 @@ class Settings(BaseSettings):
     TRUBIT_API_URL: str = "https://api.trubit.com"
     TRUBIT_API_KEY: Optional[str] = None
     
+    # Clerk Authentication
+    CLERK_API_KEY: Optional[str] = None
+    CLERK_SECRET_KEY: Optional[str] = None
+    CLERK_FRONTEND_API: Optional[str] = None
+    CLERK_JWT_VERIFICATION_KEY: Optional[str] = None
+    
+    # Circle Wallet
+    CIRCLE_API_KEY: Optional[str] = None
+    CIRCLE_API_URL: str = "https://api.circle.com"
+    CIRCLE_ENVIRONMENT: str = "sandbox"
+    CIRCLE_ENTITY_SECRET: Optional[str] = None
+    
 
     
     class Config:
@@ -86,9 +98,24 @@ def validate_settings():
         
         if not settings.DATABASE_URL:
             errors.append("DATABASE_URL must be set")
+        
+        # Clerk validation
+        if not settings.CLERK_API_KEY:
+            errors.append("CLERK_API_KEY must be set in production")
+        if not settings.CLERK_SECRET_KEY:
+            errors.append("CLERK_SECRET_KEY must be set in production")
+        if not settings.CLERK_JWT_VERIFICATION_KEY:
+            errors.append("CLERK_JWT_VERIFICATION_KEY must be set in production")
+        
+        # Circle validation
+        if not settings.CIRCLE_API_KEY:
+            errors.append("CIRCLE_API_KEY must be set in production")
+        if not settings.CIRCLE_ENTITY_SECRET:
+            errors.append("CIRCLE_ENTITY_SECRET must be set in production")
     
     if errors:
         raise ValueError(f"Configuration errors: {', '.join(errors)}")
+
 
 
 

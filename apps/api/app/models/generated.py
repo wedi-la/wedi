@@ -1,6 +1,6 @@
 """
 SQLAlchemy models generated from Prisma schema
-Generated at: 2025-06-10T03:01:53.060219
+Generated at: 2025-06-14T09:16:41.038948
 """
 
 from datetime import datetime
@@ -203,6 +203,7 @@ class WalletType(enum.Enum):
     EOA = "EOA"
     SMART_WALLET = "SMART_WALLET"
     MULTI_SIG = "MULTI_SIG"
+    CIRCLE = "CIRCLE"
 
 class Agent(Base):
     """Generated from Prisma model Agent"""

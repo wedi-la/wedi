@@ -3,12 +3,12 @@
 # Status: done
 # Dependencies: 1
 # Priority: high
-# Description: Define the core database schema for multi-tenancy, payment processing, and Clerk + Circle authentication using Prisma ORM.
+# Description: Define the core database schema for multi-tenancy, payment processing, and Clerk authentication with Circle USDC wallet management using Prisma ORM.
 # Details:
-Use Prisma ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, Wallet, Agent, Customer, Product, and Price. Implement multi-tenant data model with Organization-based data isolation. Configure Prisma to work with Neon DB (serverless PostgreSQL). Support Clerk + Circle authentication by storing user wallet addresses, linking web2 identities to blockchain wallets, and tracking wallet types. Set up the Prisma client and migrations. Ensure the packages structure includes packages/prisma for schema and client configuration, packages/ui for shared React components with Shadcn UI, and packages/types for shared TypeScript types. Integrate Agents as the primary execution layer, linking PaymentLink to Agent (executingAgentId) and Agent to Wallet (agentWalletId).
+Use Prisma ORM to define the schema for core entities such as Organization, User, PaymentLink, PaymentOrder, ProviderTransaction, AuditLog, Wallet, Agent, Customer, Product, and Price. Implement multi-tenant data model with Organization-based data isolation. Configure Prisma to work with Neon DB (serverless PostgreSQL). Support Clerk authentication for user identity and Circle USDC for wallet management, linking web2 identities to blockchain wallets, and tracking wallet types. Set up the Prisma client and migrations. Ensure the packages structure includes packages/prisma for schema and client configuration, packages/ui for shared React components with Shadcn UI, and packages/types for shared TypeScript types. Integrate Agents as the primary execution layer, linking PaymentLink to Agent (executingAgentId) and Agent to Wallet (agentWalletId).
 
 # Test Strategy:
-Run Prisma migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Clerk + Circle authentication support by testing wallet address storage and linkage with web2 identities. Ensure the workspace configuration supports the proper structure. Test the integration of Agents with PaymentLink and Wallet, and validate the new Customer, Product, and Price entities.
+Run Prisma migrations and verify schema correctness. Test multi-tenancy by creating multiple organizations and ensuring data isolation. Verify Clerk authentication support and Circle USDC wallet management by testing wallet address storage and linkage with web2 identities. Ensure the workspace configuration supports the proper structure. Test the integration of Agents with PaymentLink and Wallet, and validate the new Customer, Product, and Price entities.
 
 # Subtasks:
 ## 1. Review Prisma Schema and Data Model Specifications [done]

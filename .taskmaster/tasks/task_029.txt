@@ -1,0 +1,97 @@
+# Task ID: 29
+# Title: Implement Circle SDK for Wallet Functionality
+# Status: in-progress
+# Dependencies: None
+# Priority: high
+# Description: Integrate Circle's API for developer-controlled wallets to replace the existing wallet implementation using direct HTTP calls with httpx.AsyncClient instead of the Circle SDK, due to Pydantic version conflicts.
+# Details:
+1. Set up direct HTTP API calls using httpx.AsyncClient
+2. Create a dedicated Circle service in app/services directory
+3. Update the wallet repository to leverage direct Circle API calls for wallet operations
+4. Implement Circle wallet creation, balance checks, and transaction functionalities using direct API calls
+5. Update wallet model to accommodate Circle wallet properties
+6. Create new endpoints for Circle-specific wallet operations
+7. Ensure proper error handling for Circle API responses
+8. Update environment configuration for Circle API keys and HMAC signature generation
+9. Document the wallet operations in the README
+
+# Test Strategy:
+
+
+# Subtasks:
+## 1. Install and configure Circle SDK [done]
+### Dependencies: None
+### Description: Install Circle SDK and set up initial configuration
+### Details:
+1. Install Circle SDK for Python: `pip install circle-sdk`
+2. Update pyproject.toml to include this dependency
+3. Add Circle API keys to environment variables in .env file
+4. Update config.py to load Circle API configuration
+5. Set up a basic Circle client initialization function
+6. Add proper error handling for API connection issues
+<info added on 2025-06-14T16:52:14.493Z>
+1. Replaced Circle SDK with direct HTTP API calls using httpx.AsyncClient
+2. Configured environment variables: CIRCLE_API_KEY, CIRCLE_ENTITY_SECRET, CIRCLE_API_URL
+3. Updated pyproject.toml to include httpx and other necessary dependencies
+4. Implemented HMAC signature generation for secure API requests
+</info added on 2025-06-14T16:52:14.493Z>
+
+## 2. Create Circle wallet service [done]
+### Dependencies: None
+### Description: Create a Circle service class to handle wallet operations using direct HTTP calls
+### Details:
+1. Create a new file `app/services/circle_service.py`
+2. Implement methods for wallet creation using direct API calls
+3. Add functions for managing wallet balances and transactions with httpx.AsyncClient
+4. Implement USDC transfer functionality using direct API calls
+5. Add proper error handling for Circle API responses
+6. Create utility functions for wallet address validation
+7. Implement developer-controlled wallet operations as specified in Circle docs
+8. Set up authentication headers and HMAC signature generation for entity secret ciphertext
+<info added on 2025-06-14T16:52:54.559Z>
+Successfully completed the implementation of the CircleService class in app/services/circle_service.py. The service now uses direct HTTP API calls with httpx.AsyncClient instead of the Circle SDK. Implemented all necessary methods including __init__, _generate_entity_secret_ciphertext, create_wallet_set, get_wallet_sets, get_wallet_set, update_wallet_set, create_wallet, get_wallets, get_wallet, get_wallet_addresses, get_balances, create_transaction, get_wallet_transactions, and _map_token_to_chain. All methods now handle API requests directly with proper authentication headers and error handling.
+</info added on 2025-06-14T16:52:54.559Z>
+
+## 3. Update wallet repository for Circle integration [done]
+### Dependencies: None
+### Description: Update the wallet repository to integrate with direct Circle API calls
+### Details:
+1. Modify the existing wallet repository in `app/repositories/wallet.py` to use direct API calls
+2. Update methods for wallet creation, balance checks, and transactions using httpx.AsyncClient
+3. Replace blockchain direct interaction with Circle API calls
+4. Maintain backward compatibility with existing API contracts where possible
+5. Ensure proper error handling for Circle API responses
+6. Add new methods specific to Circle wallet functionality
+<info added on 2025-06-14T16:53:34.602Z>
+Updated the wallet repository in `app/repositories/wallet.py` to use direct HTTP implementation of Circle API calls instead of the SDK, ensuring proper interaction with CircleService and handling returned dictionary data structures rather than SDK Pydantic models. The repository now supports creation, retrieval, and management of Circle wallets and wallet sets without depending on Circle SDK's Pydantic models, maintaining compatibility with clerk-backend-api v3.0.3 which requires Pydantic v2.
+</info added on 2025-06-14T16:53:34.602Z>
+
+## 4. Update Wallet data models and schemas [done]
+### Dependencies: None
+### Description: Update Wallet models and data schemas for Circle integration
+### Details:
+1. Update the Wallet model in app/models to include Circle-specific fields
+2. Add new fields for Circle wallet IDs, state tracking, and metadata
+3. Update the wallet schemas in app/schemas/wallet.py to reflect these changes
+4. Create new schemas for Circle-specific API requests and responses
+5. Ensure backward compatibility with existing code where possible
+6. Update any necessary database migrations
+<info added on 2025-06-14T16:54:19.709Z>
+We've simplified the Wallet data models to work with direct HTTP API calls instead of Circle SDK models. Rather than creating complex Pydantic models that mirror the Circle SDK models, we're now working directly with dictionary representations of API responses. This avoids Pydantic version conflicts between clerk-backend-api (v3.0.3, requiring Pydantic v2.x) and the Circle SDK (requiring Pydantic v1.x). The data schemas have been updated to handle the dictionary structures returned by our custom CircleService implementation.
+</info added on 2025-06-14T16:54:19.709Z>
+
+## 5. Update wallet API endpoints for Circle SDK [in-progress]
+### Dependencies: None
+### Description: Create and update wallet API endpoints for Circle operations using direct HTTP calls
+### Details:
+1. Create new endpoints for Circle-specific wallet operations
+2. Update existing wallet endpoints to use direct Circle API calls with httpx.AsyncClient
+3. Add endpoint for wallet creation using Circle's developer-controlled wallets
+4. Implement endpoints for USDC transfers
+5. Add endpoints for checking transaction status
+6. Ensure proper validation and error handling
+7. Update documentation for all endpoints
+<info added on 2025-06-14T16:55:02.175Z>
+Updated wallet API endpoints in app/routers/circle_wallet.py to use custom CircleService with direct HTTP calls instead of Circle SDK. Implemented missing 'require_active_organization' function in app/api/dependencies.py to fix dependency issues. Adjusted endpoints to handle dictionary responses from CircleService for compatibility with clerk-backend-api v3.0.3 and Pydantic v2.x. Subtask is now in-progress pending thorough testing of API endpoints.
+</info added on 2025-06-14T16:55:02.175Z>
+

@@ -298,6 +298,7 @@ enum WalletType {
   EOA                   // Externally Owned Account
   SMART_WALLET          // Smart Contract Wallet
   MULTI_SIG             // Multi-signature Wallet
+  CIRCLE                // Circle Developer-Controlled Wallet
 }
 
 model BlockchainTransaction {

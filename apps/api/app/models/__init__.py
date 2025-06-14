@@ -136,3 +136,6 @@ if hasattr(Organization, '__table__'):
         Organization.owner_id = Column(String, nullable=False)
         # Note: We can't add the foreign key constraint dynamically
         # This would need to be done in a migration 
+
+# Import the model extensions (clerk_id field, etc.)
+from .extensions import *

@@ -68,6 +68,11 @@ class User(UserInDBBase):
     pass
 
 
+class UserOut(User):
+    """Schema for user returned in API responses with only necessary fields."""
+    pass
+
+
 class UserWithOrganizations(User):
     """Schema for user with their organizations."""
     

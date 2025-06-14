@@ -1,0 +1,82 @@
+# Task ID: 28
+# Title: Integrate Clerk Python SDK for Authentication
+# Status: done
+# Dependencies: None
+# Priority: high
+# Description: Replace the current JWT-based authentication with Clerk's Python SDK for secure authentication management
+# Details:
+1. Install Clerk Python SDK via `pip install clerk-sdk-python`
+2. Create a dedicated Clerk service in the app/services directory
+3. Update authentication dependencies to use Clerk session verification
+4. Modify current auth router endpoints to leverage Clerk SDK
+5. Update the User model to accommodate Clerk user properties
+6. Implement proper session verification middleware
+7. Update environment configuration for Clerk API keys
+8. Document the authentication flow in the README
+
+# Test Strategy:
+
+
+# Subtasks:
+## 1. Install and configure Clerk Python SDK [done]
+### Dependencies: None
+### Description: Add Clerk SDK to the project dependencies and set up initial configuration
+### Details:
+1. Install the Clerk Python SDK using pip: `pip install clerk-sdk-python`
+2. Update pyproject.toml to include this dependency
+3. Add Clerk API keys to environment variables in .env file and update config.py to load them
+4. Create a basic Clerk client initialization in a new module
+
+## 2. Create Clerk authentication service [done]
+### Dependencies: None
+### Description: Create a Clerk service class to handle authentication operations
+### Details:
+1. Create a new file `app/services/clerk_service.py` 
+2. Implement methods for user verification using Clerk's SDK
+3. Add functions for retrieving user data from Clerk
+4. Implement session verification logic
+5. Add error handling for Clerk API responses
+6. Create utility functions for token validation
+
+## 3. Update authentication middleware for Clerk [done]
+### Dependencies: None
+### Description: Update authentication middleware to use Clerk token verification
+### Details:
+1. Modify `app/api/dependencies.py` to use Clerk session verification
+2. Update the `get_current_user` and related dependency functions
+3. Replace JWT verification with Clerk token validation
+4. Add proper error handling for authentication failures
+5. Update documentation strings to reflect new authentication flow
+
+## 4. Refactor auth endpoints for Clerk integration [done]
+### Dependencies: None
+### Description: Update auth router endpoints to leverage Clerk SDK
+### Details:
+1. Refactor the `/auth/login` endpoint to work with Clerk authentication flow
+2. Update the `/auth/me` endpoint to use Clerk user data
+3. Modify refresh token logic to work with Clerk sessions
+4. Update logout endpoint to properly revoke Clerk sessions
+5. Add any new endpoints necessary for Clerk-specific functionality
+6. Update schema validation and response models for Clerk compatibility
+
+## 5. Adapt User model for Clerk integration [done]
+### Dependencies: None
+### Description: Update User model and repository to work with Clerk user data
+### Details:
+1. Update the User model to include Clerk-specific fields (clerk_id, metadata fields)
+2. Modify the UserRepository to sync with Clerk user data
+3. Add methods to fetch and update user data based on Clerk identifiers
+4. Ensure consistency between local user records and Clerk user records
+5. Update any database migrations needed for the schema changes
+
+## 6. Implement Clerk webhooks [done]
+### Dependencies: None
+### Description: Implement Clerk webhooks handling for user events
+### Details:
+1. Create a new endpoint to handle Clerk webhooks
+2. Implement event handlers for user creation, updates, and deletion events
+3. Add signature verification for webhook security
+4. Set up database synchronization based on webhook events
+5. Add logging for webhook events
+6. Update relevant documentation
+

@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import AsyncGenerator, Optional
 
 from fastapi import BackgroundTasks, Depends, HTTPException, Header, Request, status
-from jose import JWTError, jwt
+from jose import JWTError, jwt  # Keeping for backward compatibility
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -18,6 +18,7 @@ from app.db.unit_of_work import UnitOfWork
 from app.middleware.multi_tenancy import get_current_organization_id, current_organization_id
 from app.models import User
 from app.repositories.user import UserRepository
+from app.services.clerk_service import clerk_service
 
 logger = get_logger(__name__)
 
@@ -103,14 +104,16 @@ async def get_wallet_repository(
 # Authentication dependencies
 async def get_current_user_optional(
     authorization: Optional[str] = Header(None),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    user_repository: UserRepository = Depends(get_user_repository)
 ) -> Optional[User]:
     """
-    Get current user from JWT token (optional).
+    Get current user from Clerk session token (optional).
     
     Args:
         authorization: Authorization header value
         db: Database session
+        user_repository: User repository instance
         
     Returns:
         User if authenticated, None otherwise
@@ -123,28 +126,67 @@ async def get_current_user_optional(
         scheme, token = authorization.split()
         if scheme.lower() != "bearer":
             return None
+            
+        # Legacy JWT fallback for backward compatibility
+        if token.count(".") == 2:
+            try:
+                # Decode JWT token (legacy method)
+                payload = jwt.decode(
+                    token,
+                    settings.SECRET_KEY,
+                    algorithms=[settings.ALGORITHM]
+                )
+                
+                user_id: str = payload.get("sub")
+                if user_id is None:
+                    return None
+                
+                user = await user_repository.get(db, id=user_id)
+                
+                if user is None:
+                    return None
+                    
+                logger.debug("Authenticated via legacy JWT token", user_id=str(user.id))
+                return user
+            except (JWTError, ValueError):
+                # Fall through to try Clerk if JWT fails
+                pass
         
-        # Decode JWT token
-        payload = jwt.decode(
-            token,
-            settings.SECRET_KEY,
-            algorithms=[settings.ALGORITHM]
-        )
+        # Use Clerk to verify the token
+        clerk_user_data = await clerk_service.get_user_by_token(token)
+        clerk_id = clerk_user_data.get("id")
         
-        user_id: str = payload.get("sub")
-        if user_id is None:
+        if not clerk_id:
+            logger.warning("Invalid Clerk token - no user ID")
             return None
+            
+        # Try to find user by clerk_id first
+        user = await user_repository.get_by_clerk_id(db, clerk_id=clerk_id)
         
-        # Get user from database
-        user_repo = UserRepository()
-        user = await user_repo.get(db, id=user_id)
-        
-        if user is None:
-            return None
-        
+        # If not found, try email
+        if not user and clerk_user_data.get("email_addresses"):
+            email = clerk_user_data["email_addresses"][0].get("email_address")
+            if email:
+                user = await user_repository.get_by_email(db, email=email)
+                
+        # If we found a user but clerk_id doesn't match, update it
+        if user and user.clerk_id != clerk_id:
+            user = await user_repository.update(db, db_obj=user, obj_in={"clerk_id": clerk_id})
+            
+        # If still no user, create one
+        if not user:
+            user = await clerk_service.create_or_update_local_user(
+                db, clerk_user_data, user_repository
+            )
+            
+        # Sync user data if needed
+        user = await clerk_service.sync_user_data(user, clerk_user_data, user_repository, db)
+            
+        logger.debug("Authenticated via Clerk", user_id=str(user.id))
         return user
         
-    except (JWTError, ValueError):
+    except (ValueError, HTTPException) as e:
+        logger.warning(f"Authentication failed: {str(e)}")
         return None
 
 
@@ -196,8 +238,25 @@ async def get_current_active_user(
     """
     # Add additional checks for user status if needed
     # For now, we consider all authenticated users as active
-    
     return current_user
+
+
+async def get_current_user_id(
+    current_user: User = Depends(get_current_user)
+) -> Optional[str]:
+    """
+    Get current authenticated user ID.
+    
+    Args:
+        current_user: Authenticated user from get_current_user dependency
+        
+    Returns:
+        User ID if authenticated, None if optional auth is enabled and no user
+        
+    Raises:
+        HTTPException: If user is not authenticated and optional auth is disabled
+    """
+    return current_user.id if current_user else None
 
 
 # Organization context dependencies
@@ -262,6 +321,54 @@ async def require_organization_context(
     # For now, we'll assume the organization ID is valid
     
     return organization_id
+
+
+async def require_active_organization(
+    organization_id: str = Depends(require_organization_context),
+    db: AsyncSession = Depends(get_db),
+    organization_repository = Depends(get_organization_repository)
+) -> str:
+    """
+    Require active organization context for multi-tenant operations.
+    
+    Args:
+        organization_id: Organization ID from context
+        db: Database session
+        organization_repository: Organization repository
+        
+    Returns:
+        Valid and active organization ID
+        
+    Raises:
+        HTTPException: If organization not found or not active
+    """
+    try:
+        # Get organization from database
+        organization = await organization_repository.get(
+            db=db,
+            id=organization_id
+        )
+        
+        if not organization:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Organization not found: {organization_id}"
+            )
+            
+        if not organization.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Organization is not active: {organization_id}"
+            )
+            
+        return organization_id
+        
+    except Exception as e:
+        logger.error(f"Error validating organization: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error validating organization: {str(e)}"
+        )
 
 
 # Pagination dependencies

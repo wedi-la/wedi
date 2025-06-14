@@ -3,12 +3,12 @@
 # Status: pending
 # Dependencies: 1, 25, 26, 27
 # Priority: high
-# Description: Set up user authentication using Clerk + Circle for secure access control, with automatic wallet creation for users logging in via Google Auth or other providers.
+# Description: Set up user authentication using Clerk for secure access control, with Circle USDC wallet creation for users logging in via Google Auth or other providers.
 # Details:
-Integrate Clerk + Circle authentication into the Next.js frontend for seamless web2/web3 login options, including email, social (like Google Auth), and wallet connections. Implement Sign in with Ethereum (SIWE) standard with JWT tokens stored in cookies. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate Clerk + Circle JWTs and handle automatic blockchain wallet creation for web2 logins.
+Integrate Clerk authentication into the Next.js frontend for seamless web2 login options, including email and social (like Google Auth) authentication methods. Use Clerk's secure JWT tokens stored in cookies for session management. Ensure server actions are used for a secure authentication flow. Integrate with the Python backend to validate Clerk JWTs. Separately implement Circle USDC for wallet management and creation for authenticated users.
 
 # Test Strategy:
-Test user registration, login, and session persistence using Clerk + Circle Connect. Verify JWT token validity, expiration handling, and backend validation. Ensure seamless login via email, social (including Google Auth), and wallet connections, test automatic wallet creation for web2 logins.
+Test user registration, login, and session persistence using Clerk. Verify JWT token validity, expiration handling, and backend validation. Ensure seamless login via email and social (including Google Auth). Test Circle USDC wallet creation flow for authenticated users.
 
 # Subtasks:
 ## 1. Set up Next.js application [pending]
@@ -17,23 +17,23 @@ Test user registration, login, and session persistence using Clerk + Circle Conn
 ### Details:
 Initialize a new Next.js project and set up necessary configurations.
 
-## 2. Set up Clerk + Circle client with credentials [pending]
+## 2. Set up Clerk client with credentials [pending]
 ### Dependencies: 3.1
-### Description: Configure the Clerk + Circle client with necessary credentials including client ID, secret key, and auth private key.
+### Description: Configure the Clerk client with necessary credentials including client ID and secret key.
 ### Details:
-Follow the Clerk + Circle documentation to properly set up the client in the Next.js application.
+Follow the Clerk documentation to properly set up the client in the Next.js application.
 
-## 3. Implement Clerk + CircleProvider in Next.js app layout [pending]
+## 3. Implement ClerkProvider in Next.js app layout [pending]
 ### Dependencies: 3.2
-### Description: Integrate the Clerk + CircleProvider component into the Next.js application layout to enable authentication features.
+### Description: Integrate the ClerkProvider component into the Next.js application layout to enable authentication features.
 ### Details:
-Ensure the provider is wrapped around the application to manage authentication state.
+Ensure the ClerkProvider is wrapped around the application to manage authentication state and user sessions.
 
 ## 4. Create ConnectButton component with auth callbacks [pending]
 ### Dependencies: 3.3
 ### Description: Develop a ConnectButton component that handles authentication callbacks such as isLoggedIn, doLogin, getLoginPayload, and doLogout.
 ### Details:
-Use the Clerk + Circle hooks and methods to manage authentication state and actions. Include support for Google Auth and other social providers.
+Use the Clerk hooks and methods to manage authentication state and actions. Include support for Google Auth and other social providers.
 
 ## 5. Implement server actions for secure auth flow [pending]
 ### Dependencies: 3.4
@@ -47,11 +47,11 @@ Ensure these actions are secure and properly manage user sessions.
 ### Details:
 Ensure tokens are securely generated and stored, and cookies are managed for user sessions.
 
-## 7. Implement automatic wallet creation for web2 logins [pending]
+## 7. Implement Circle USDC wallet creation for authenticated users [pending]
 ### Dependencies: 3.6
-### Description: Develop functionality to automatically create wallets for users logging in via web2 methods such as email or social logins (including Google Auth).
+### Description: Develop functionality to create Circle USDC wallets for users after they authenticate via Clerk using email or social logins (including Google Auth).
 ### Details:
-Integrate with Clerk + Circle to create wallets seamlessly during the authentication process.
+Integrate with Circle USDC API to create wallets for users after they successfully authenticate with Clerk.
 
 ## 8. Update test strategy for frontend integration [pending]
 ### Dependencies: 3.7

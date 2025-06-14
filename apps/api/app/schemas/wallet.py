@@ -14,6 +14,7 @@ class WalletType(str, Enum):
     EOA = "EOA"
     SMART_WALLET = "SMART_WALLET"
     MULTI_SIG = "MULTI_SIG"
+    CIRCLE = "CIRCLE"
 
 
 class ChainInfo(BaseModel):
@@ -208,3 +209,78 @@ class MultiSigConfig(BaseModel):
         if owners and v > len(owners):
             raise ValueError("Required confirmations cannot exceed number of owners")
         return v 
+
+
+# Circle Wallet Schemas
+
+class CircleWalletSetCreate(BaseModel):
+    """Schema for creating a Circle wallet set."""
+    name: str = Field(..., description="Name for the wallet set")
+
+
+class CircleWalletSet(BaseModel):
+    """Schema for a Circle wallet set."""
+    id: str = Field(..., description="Circle wallet set ID")
+    name: str = Field(..., description="Name of the wallet set")
+    organization_id: str = Field(..., description="Organization ID that owns this wallet set")
+    created_at: datetime
+
+
+class CircleWalletCreate(BaseModel):
+    """Schema for creating a Circle wallet."""
+    wallet_set_id: str = Field(..., description="Circle wallet set ID")
+    blockchain: str = Field(..., description="Blockchain identifier (e.g., 'MATIC-MUMBAI')")
+    is_test: bool = Field(False, description="Whether this is a test wallet")
+    
+    @field_validator("blockchain")
+    @classmethod
+    def validate_blockchain(cls, v: str) -> str:
+        """Validate blockchain identifier."""
+        valid_blockchains = [
+            "ETH-GOERLI", "ETH-SEPOLIA", "ETH-MAINNET",
+            "MATIC-MUMBAI", "MATIC-MAINNET",
+            "AVAXC-MAINNET", "AVAXC-TESTNET"
+        ]
+        if v not in valid_blockchains:
+            raise ValueError(f"Invalid blockchain: {v}. Must be one of {valid_blockchains}")
+        return v
+
+
+class CircleWallet(BaseModel):
+    """Schema for a Circle wallet."""
+    id: str = Field(..., description="Our internal wallet ID")
+    address: str = Field(..., description="Wallet address")
+    circle_wallet_id: str = Field(..., description="Circle wallet ID")
+    circle_wallet_set_id: str = Field(..., description="Circle wallet set ID")
+    blockchain: str = Field(..., description="Blockchain identifier")
+    chain_id: int = Field(..., description="Blockchain chain ID")
+    user_id: Optional[str] = None
+    organization_id: Optional[str] = None
+    created_at: datetime
+
+
+class CircleWalletBalance(BaseModel):
+    """Schema for Circle wallet balance."""
+    wallet_id: str
+    address: str
+    chain_id: int
+    balances: List[Dict[str, Any]] = Field(default_factory=list)
+    last_updated: datetime
+
+
+class CircleWalletTransaction(BaseModel):
+    """Schema for Circle wallet transaction."""
+    id: str
+    wallet_id: str
+    status: str
+    type: str
+    blockchain: str
+    from_address: str
+    to_address: Optional[str] = None
+    amount: Optional[str] = None
+    token_id: Optional[str] = None
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    hash: Optional[str] = None
+    state: Optional[str] = None
+    error: Optional[str] = None

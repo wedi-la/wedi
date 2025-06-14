@@ -2,6 +2,8 @@
 User repository with authentication-specific queries.
 """
 from typing import List, Optional
+from datetime import datetime
+from passlib.context import CryptContext
 
 from sqlalchemy import and_, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -10,6 +12,10 @@ from sqlalchemy.orm import selectinload
 from app.models import AuthProvider, Organization, OrganizationUser, User
 from app.schemas import UserCreate, UserUpdate
 from app.repositories.base import BaseRepository
+
+
+# Reuse the same password context for all operations
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class UserRepository(BaseRepository[User, UserCreate, UserUpdate]):
@@ -53,6 +59,64 @@ class UserRepository(BaseRepository[User, UserCreate, UserUpdate]):
         
         result = await db.execute(query)
         return result.scalar_one_or_none()
+        
+    async def get_by_clerk_id(
+        self,
+        db: AsyncSession,
+        *,
+        clerk_id: str
+    ) -> Optional[User]:
+        """
+        Get user by Clerk ID.
+        
+        Args:
+            db: Database session
+            clerk_id: Clerk user ID
+            
+        Returns:
+            User or None if not found
+        """
+        query = select(User).where(User.clerk_id == clerk_id)
+        result = await db.execute(query)
+        return result.scalar_one_or_none()
+    
+    async def authenticate(
+        self,
+        db: AsyncSession,
+        *,
+        email: str,
+        password: str
+    ) -> Optional[User]:
+        """
+        Authenticate user with email and password.
+        
+        Args:
+            db: Database session
+            email: User email
+            password: User password
+            
+        Returns:
+            User if authentication successful, None otherwise
+        """
+        user = await self.get_by_email(db, email=email)
+        
+        if not user:
+            return None
+            
+        # Check if user has a password set (they might use OAuth only)
+        if not user.hashed_password:
+            return None
+            
+        # Verify password
+        if not pwd_context.verify(password, user.hashed_password):
+            return None
+            
+        # Update last login
+        user.last_login_at = datetime.utcnow()
+        db.add(user)
+        await db.flush()
+            
+        return user
     
     async def get_by_auth_provider(
         self,
