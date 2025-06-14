@@ -24,7 +24,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@types/react": "^18.3.4",
+    "@types/react": "^19.1.8",
     "@types/react-dom": "^18.3.0",
     "@wedi/typescript-config": "workspace:*",
     "eslint": "^8.57.0",
