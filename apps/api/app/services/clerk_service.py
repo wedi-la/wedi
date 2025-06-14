@@ -13,6 +13,9 @@ from app.core.config import settings
 from app.core.logging import get_logger
 from app.models import User
 from app.repositories.user import UserRepository
+from dotenv import load_dotenv
+
+load_dotenv()
 
 logger = get_logger(__name__)
 

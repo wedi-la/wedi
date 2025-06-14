@@ -70,17 +70,17 @@ class CircleWalletRepository(WalletRepository):
             CircleWalletSet: Created wallet set
         """
         try:
-            # Create wallet set in Circle
+            # Create wallet set in Circle - now returns a dictionary, not SDK model
             circle_wallet_set = await circle_service.create_wallet_set(wallet_set.name)
             
             # Store the wallet set ID in metadata
             # In a real implementation, we would create a dedicated DB table for wallet sets
             # but for now, we'll add metadata to the organization
             
-            # Return wallet set info
+            # Return wallet set info - extract data from dictionary response
             return CircleWalletSet(
-                id=circle_wallet_set.id,
-                name=circle_wallet_set.name,
+                id=circle_wallet_set.get("id"),
+                name=circle_wallet_set.get("name"),
                 organization_id=organization_id,
                 created_at=datetime.utcnow()
             )
@@ -121,23 +121,31 @@ class CircleWalletRepository(WalletRepository):
                 "app_environment": "production" if not wallet_data.is_test else "sandbox"
             }
             
-            # Create wallet in Circle
+            # Create wallet in Circle - now returns a dictionary, not SDK model
             circle_wallet = await circle_service.create_wallet(
                 wallet_set_id=wallet_data.wallet_set_id,
                 blockchain=wallet_data.blockchain,
                 metadata=metadata
             )
             
-            # Get wallet address
+            # Extract wallet ID from dictionary response
+            circle_wallet_id = circle_wallet.get("id")
+            if not circle_wallet_id:
+                raise ExternalServiceError(
+                    message="Failed to get wallet ID from Circle response",
+                    service="circle"
+                )
+            
+            # Get addresses for this wallet
             addresses = await circle_service.get_wallet_addresses(
-                wallet_set_id=wallet_data.wallet_set_id,
-                wallet_id=circle_wallet.id
+                wallet_id=circle_wallet_id
             )
             
+            # Find matching address for this blockchain
             address = None
             for addr in addresses:
-                if addr.get('blockchain') == wallet_data.blockchain:
-                    address = addr.get('address')
+                if addr.get("blockchain") == wallet_data.blockchain:
+                    address = addr.get("address")
                     break
             
             if not address:
@@ -159,29 +167,30 @@ class CircleWalletRepository(WalletRepository):
             
             chain_id = chain_id_mapping.get(wallet_data.blockchain, 0)
             
-            # Create wallet record in our database
-            wallet_create = WalletCreate(
+            # Create new wallet in DB
+            wallet = Wallet(
+                id=str(uuid.uuid4()),
                 address=address,
                 chain_id=chain_id,
-                type=SQLAlchemyWalletType.CIRCLE,
-                smart_wallet_config={
-                    "circle_wallet_id": circle_wallet.id,
+                type=SQLAlchemyWalletType.CIRCLE,  # Enum value
+                user_id=user_id,
+                organization_id=organization_id,
+                metadata={
+                    "circle_wallet_id": circle_wallet_id,
                     "circle_wallet_set_id": wallet_data.wallet_set_id,
                     "blockchain": wallet_data.blockchain,
-                    "created_at": datetime.utcnow().isoformat()
-                },
-                user_id=user_id,
-                organization_id=organization_id
+                    "created_at": datetime.utcnow().isoformat(),
+                }
             )
             
             # Create wallet in DB
-            wallet = await self.create(db, obj_in=wallet_create)
+            wallet = await self.create(db, obj_in=wallet)
             
             # Return wallet with Circle-specific fields
             return CircleWallet(
                 id=wallet.id,
                 address=address,
-                circle_wallet_id=circle_wallet.id,
+                circle_wallet_id=circle_wallet_id,
                 circle_wallet_set_id=wallet_data.wallet_set_id,
                 blockchain=wallet_data.blockchain,
                 chain_id=chain_id,
@@ -215,42 +224,40 @@ class CircleWalletRepository(WalletRepository):
             List[CircleWallet]: Wallets in the set
         """
         try:
-            # Get all wallets in the set from Circle
-            circle_wallets = await circle_service.get_wallets(wallet_set_id)
+            # Get wallets from Circle - now returns a list of dictionaries
+            wallets_data = await circle_service.get_wallets(wallet_set_id=wallet_set_id)
             
-            # Get all our wallet records that reference these Circle wallets
-            config_filter = func.json_extract_path_text(
-                Wallet.smart_wallet_config, 'circle_wallet_set_id'
-            ) == wallet_set_id
-            
-            query = select(Wallet).where(
-                and_(
-                    Wallet.type == SQLAlchemyWalletType.CIRCLE,
-                    config_filter
-                )
-            )
-            
-            result = await db.execute(query)
-            db_wallets = list(result.scalars().all())
-            
-            # Map Circle wallets to our DB records
+            # Map to schema
             wallets = []
-            for db_wallet in db_wallets:
-                config = db_wallet.smart_wallet_config or {}
-                circle_wallet_id = config.get('circle_wallet_id')
-                blockchain = config.get('blockchain')
-                
-                wallets.append(CircleWallet(
-                    id=db_wallet.id,
-                    address=db_wallet.address,
-                    circle_wallet_id=circle_wallet_id,
-                    circle_wallet_set_id=wallet_set_id,
-                    blockchain=blockchain,
-                    chain_id=db_wallet.chain_id,
-                    user_id=db_wallet.user_id,
-                    organization_id=db_wallet.organization_id,
-                    created_at=db_wallet.created_at
-                ))
+            for wallet_data in wallets_data:
+                # Fetch our internal wallet record if it exists
+                wallet_query = select(Wallet).where(
+                    and_(
+                        Wallet.metadata['circle_wallet_id'].astext == wallet_data.get("id"),
+                        Wallet.type == SQLAlchemyWalletType.CIRCLE,
+                    )
+                )
+                wallet_result = await db.execute(wallet_query)
+                wallet = wallet_result.scalar_one_or_none()
+
+                if wallet:
+                    # Extract blockchain from wallet metadata
+                    blockchain = wallet.metadata.get("blockchain")
+                    
+                    # Map to CircleWallet schema
+                    wallet_model = CircleWallet(
+                        id=wallet.id,
+                        address=wallet.address,
+                        circle_wallet_id=wallet_data.get("id"),
+                        circle_wallet_set_id=wallet_set_id,
+                        blockchain=blockchain,
+                        chain_id=wallet.chain_id,
+                        user_id=wallet.user_id,
+                        organization_id=wallet.organization_id,
+                        created_at=wallet.created_at,
+                    )
+                    
+                    wallets.append(wallet_model)
             
             return wallets
         except ExternalServiceError as e:
@@ -288,7 +295,7 @@ class CircleWalletRepository(WalletRepository):
                 entity="wallet"
             )
         
-        config = wallet.smart_wallet_config or {}
+        config = wallet.metadata or {}
         circle_wallet_id = config.get('circle_wallet_id')
         circle_wallet_set_id = config.get('circle_wallet_set_id')
         blockchain = config.get('blockchain')
@@ -300,8 +307,8 @@ class CircleWalletRepository(WalletRepository):
             )
         
         try:
-            # Get wallet details from Circle
-            circle_wallet = await circle_service.get_wallet(
+            # Get wallet details from Circle - now returns dictionary
+            wallet_data = await circle_service.get_wallet(
                 wallet_set_id=circle_wallet_set_id,
                 wallet_id=circle_wallet_id
             )
@@ -352,7 +359,7 @@ class CircleWalletRepository(WalletRepository):
                 entity="wallet"
             )
         
-        config = wallet.smart_wallet_config or {}
+        config = wallet.metadata or {}
         circle_wallet_id = config.get('circle_wallet_id')
         circle_wallet_set_id = config.get('circle_wallet_set_id')
         
@@ -363,11 +370,19 @@ class CircleWalletRepository(WalletRepository):
             )
         
         try:
-            # Get wallet balances from Circle
-            balances = await circle_service.get_balances(
-                wallet_set_id=circle_wallet_set_id,
+            # Get balances from Circle - now returns dictionary
+            balances_data = await circle_service.get_balances(
                 wallet_id=circle_wallet_id
             )
+            
+            # Format the balances
+            balances = []
+            for balance in balances_data:
+                balances.append({
+                    "token": balance.get("token_id"),
+                    "amount": balance.get("amount"),
+                    "formatted_amount": str(Decimal(balance.get("amount", "0")) / Decimal(10**6)),  # Assuming 6 decimals (USDC)
+                })
             
             return CircleWalletBalance(
                 wallet_id=wallet_id,
@@ -564,8 +579,8 @@ class CircleWalletRepository(WalletRepository):
 
             circle_wallet_id = metadata["circle_wallet_id"]
 
-            # Get transactions from Circle
-            transactions_data = await self.circle_service.get_wallet_transactions(
+            # Get transactions from Circle - directly uses circle_service now
+            transactions_data = await circle_service.get_wallet_transactions(
                 wallet_id=circle_wallet_id,
                 from_date=start_date,
                 to_date=end_date,
@@ -576,20 +591,32 @@ class CircleWalletRepository(WalletRepository):
             # Map Circle transaction responses to our schema
             transactions = []
             for tx_data in transactions_data.get("data", []):
+                # Handle possible missing or null fields in the dictionary response
+                created_at_str = tx_data.get("created_at")
+                updated_at_str = tx_data.get("updated_at")
+                
+                try:
+                    created_at = datetime.fromisoformat(created_at_str.replace("Z", "+00:00")) if created_at_str else datetime.utcnow()
+                    updated_at = datetime.fromisoformat(updated_at_str.replace("Z", "+00:00")) if updated_at_str else None
+                except (ValueError, AttributeError):
+                    created_at = datetime.utcnow()
+                    updated_at = None
+                    
                 tx = CircleWalletTransaction(
-                    id=tx_data["id"],
+                    id=tx_data.get("id", str(uuid.uuid4())),
                     wallet_id=wallet_id,
-                    destination_address=tx_data.get("destination_address", ""),
-                    amount=Decimal(tx_data.get("amount", "0")),
+                    status=tx_data.get("status", "unknown"),
+                    type=tx_data.get("type", "unknown"),
+                    blockchain=tx_data.get("blockchain", ""),
+                    from_address=tx_data.get("source_address", ""),
+                    to_address=tx_data.get("destination_address", ""),
+                    amount=tx_data.get("amount", ""),
                     token_id=tx_data.get("token_id", "USDC"),
-                    fee=Decimal(tx_data.get("fee", "0")),
-                    source_address=tx_data.get("source_address", ""),
-                    status=tx_data["status"],
-                    transaction_hash=tx_data.get("transaction_hash"),
-                    created_at=datetime.fromisoformat(tx_data["created_at"].replace("Z", "+00:00")),
-                    updated_at=datetime.fromisoformat(tx_data["updated_at"].replace("Z", "+00:00")),
-                    block_number=tx_data.get("block_number"),
-                    block_hash=tx_data.get("block_hash"),
+                    created_at=created_at,
+                    updated_at=updated_at,
+                    hash=tx_data.get("transaction_hash"),
+                    state=tx_data.get("state"),
+                    error=tx_data.get("error")
                 )
                 transactions.append(tx)
 
