@@ -59,26 +59,6 @@ class UserRepository(BaseRepository[User, UserCreate, UserUpdate]):
         
         result = await db.execute(query)
         return result.scalar_one_or_none()
-        
-    async def get_by_clerk_id(
-        self,
-        db: AsyncSession,
-        *,
-        clerk_id: str
-    ) -> Optional[User]:
-        """
-        Get user by Clerk ID.
-        
-        Args:
-            db: Database session
-            clerk_id: Clerk user ID
-            
-        Returns:
-            User or None if not found
-        """
-        query = select(User).where(User.clerk_id == clerk_id)
-        result = await db.execute(query)
-        return result.scalar_one_or_none()
     
     async def authenticate(
         self,
