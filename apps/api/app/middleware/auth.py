@@ -14,9 +14,11 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import Response
 
 from app.core.logging import get_logger
-from app.core.security import decode_token, verify_token_type
+from app.core.security import decode_token, verify_token_type # decode_token and verify_token_type might be removed later if not used
 from app.db.session import get_db
 from app.repositories.user import UserRepository
+from app.services.clerk_service import clerk_service
+from app.models import AuthProvider
 
 logger = get_logger(__name__)
 
@@ -75,8 +77,15 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
         Returns:
             Response from the endpoint
         """
+        request.state.active_org_id = None
+        request.state.active_org_role = None
+        request.state.active_org_permissions = None
+
         # Check if path is public
         if self._is_public_path(request.url.path):
+            # For public paths, user and user_id should also be explicitly None
+            request.state.user = None
+            request.state.user_id = None
             return await call_next(request)
         
         # Extract token from Authorization header
@@ -96,46 +105,57 @@ class JWTAuthMiddleware(BaseHTTPMiddleware):
                 request.state.user_id = None
                 return await call_next(request)
             
-            # Decode and validate token
-            payload = decode_token(token)
-            
-            # Verify it's an access token
-            if not verify_token_type(payload, "access"):
-                logger.warning("Invalid token type")
-                request.state.user = None
-                request.state.user_id = None
-                return await call_next(request)
+            # Validate token using ClerkService
+            payload = await clerk_service.verify_token(token) # This will raise HTTPException on failure
             
             # Extract user ID
-            user_id = payload.get("sub")
-            if not user_id:
-                logger.warning("No subject in token")
+            clerk_user_id = payload.get("sub")
+            if not clerk_user_id:
+                logger.warning("No subject in token after Clerk verification") # Should ideally not happen if verify_token succeeds
                 request.state.user = None
                 request.state.user_id = None
                 return await call_next(request)
             
             # Attach user ID to request
-            request.state.user_id = user_id
+            request.state.user_id = clerk_user_id
+
+            # Extract organization details from Clerk token
+            request.state.active_org_id = payload.get("org_id")
+            request.state.active_org_role = payload.get("org_role")
+            request.state.active_org_permissions = payload.get("org_permissions") # Or "permissions" if that's the claim name
+
+            logger.debug(
+                "Clerk org claims extracted",
+                org_id=request.state.active_org_id,
+                org_role=request.state.active_org_role,
+            )
             
             # Optional: Load full user object (expensive, do only if needed)
             # This could be moved to a dependency instead
             if request.url.path.startswith("/api/v1/") and not request.url.path.startswith("/api/v1/auth/"):
                 async with get_db() as db:
                     user_repo = UserRepository()
-                    user = await user_repo.get(db, id=user_id)
+                    user = await user_repo.get_by_auth_provider(db, provider=AuthProvider.CLERK, provider_id=clerk_user_id)
                     if not user:
-                        logger.warning(f"User {user_id} not found")
+                        logger.warning(f"User with Clerk ID {clerk_user_id} not found in local DB")
+                        # Decide handling: either user is None, or raise error, or try to create/sync.
+                        # For now, let's set user to None and keep request.state.user_id as clerk_user_id.
                         request.state.user = None
-                        request.state.user_id = None
                     else:
                         request.state.user = user
+                        # Optional: If request.state.user_id is intended to be the internal DB user ID
+                        # request.state.user_id = user.id
+                        # However, the plan is to keep it as Clerk's user ID from the token. So, the line above is commented out.
             else:
                 request.state.user = None
             
-        except (ValueError, JWTError) as e:
+        except (ValueError, JWTError, HTTPException) as e: # Added HTTPException here
             logger.warning(f"JWT validation error: {e}")
             request.state.user = None
             request.state.user_id = None
+            request.state.active_org_id = None
+            request.state.active_org_role = None
+            request.state.active_org_permissions = None
         
         return await call_next(request)
     
@@ -184,20 +204,19 @@ async def get_current_user_from_token(
         return None
     
     try:
-        payload = decode_token(credentials.credentials)
-        
-        if not verify_token_type(payload, "access"):
-            return None
-        
-        user_id = payload.get("sub")
+        payload = await clerk_service.verify_token(credentials.credentials)
+        user_id = payload.get("sub") # This is the Clerk User ID
         return user_id
     
-    except (JWTError, Exception) as e:
+    except HTTPException: # Catch HTTPException from verify_token
+        logger.warning("Token validation failed in get_current_user_from_token")
+        return None
+    except (JWTError, Exception) as e: # Keep other generic error handling if necessary
         logger.warning(f"Token validation error: {e}")
         return None
 
 
-def require_auth(credentials: HTTPAuthorizationCredentials = security) -> str:
+async def require_auth(credentials: HTTPAuthorizationCredentials = security) -> str:
     """
     Dependency that requires valid authentication.
     
@@ -208,7 +227,7 @@ def require_auth(credentials: HTTPAuthorizationCredentials = security) -> str:
         User ID
         
     Raises:
-        HTTPException: If not authenticated
+        HTTPException: If not authenticated or token is invalid
     """
     if not credentials:
         raise HTTPException(
@@ -217,30 +236,19 @@ def require_auth(credentials: HTTPAuthorizationCredentials = security) -> str:
             headers={"WWW-Authenticate": "Bearer"},
         )
     
-    try:
-        payload = decode_token(credentials.credentials)
-        
-        if not verify_token_type(payload, "access"):
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid token type",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        
-        user_id = payload.get("sub")
-        if not user_id:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid token",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-        
-        return user_id
+    # No try-except here, as verify_token will raise HTTPException
+    # which FastAPI will handle, effectively replacing the old error raising.
+    payload = await clerk_service.verify_token(credentials.credentials)
     
-    except JWTError as e:
-        logger.warning(f"JWT error: {e}")
+    user_id = payload.get("sub") # This is the Clerk User ID
+    if not user_id:
+        # This case should ideally be covered by verify_token raising an exception
+        # if the token is malformed or doesn't contain a sub.
+        # However, keeping it as a safeguard.
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
+            detail="Invalid token: No user identifier",
             headers={"WWW-Authenticate": "Bearer"},
-        ) 
+        )
+
+    return user_id
